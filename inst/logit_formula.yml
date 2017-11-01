@@ -1,0 +1,14 @@
+base:
+    REANALYSIS_air_sfc_DailyMean
+    REANALYSIS_shum_2m_DailyMean
+    REANALYSIS_snowc_DailyMean
+    REANALYSIS_tcdc_DailyMean
+    USElevation_mea100
+
+MAIACUS_Optical_Depth_055_Terra_Nearest4:
+    REANALYSIS_air_sfc_DailyMean
+    REANALYSIS_shum_2m_DailyMean
+    REANALYSIS_snowc_DailyMean
+    REANALYSIS_tcdc_DailyMean
+    USElevation_mea100
+    
