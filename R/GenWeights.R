@@ -7,6 +7,8 @@
 #' @param query the data for which the neighbors need to be found
 #' @param k the number of neighbors being searched for
 #' @param threshold the maximum distance for a neighbor to be given a weight
+#' @param term the power that the distance is raised to when the weight matrix
+#'     is generated.
 #'
 #' @import RANN
 #' @export
