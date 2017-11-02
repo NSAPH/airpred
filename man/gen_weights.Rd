@@ -4,7 +4,7 @@
 \alias{gen_weights}
 \title{Generate geographic weighting matrix}
 \usage{
-gen_weights(orig, query, k = 4, threshold, term = 1)
+gen_weights(orig, query, k = 4, threshold)
 }
 \arguments{
 \item{orig}{the data in which the neighbors are being found}
@@ -13,10 +13,7 @@ gen_weights(orig, query, k = 4, threshold, term = 1)
 
 \item{k}{the number of neighbors being searched for}
 
-\item{threshold}{the maximum distance for a neighbor to be given a weight}
-
-\item{term}{the power that the distance is raised to when the weight matrix
-is generated.}
+\item{threshold}{}
 }
 \description{
 Given two sets of points, generate a matrix of weights for the k nearest neighbors
