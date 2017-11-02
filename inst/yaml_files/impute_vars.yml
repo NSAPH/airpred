@@ -1,0 +1,25 @@
+base:
+    REANALYSIS_soilm_DailyMean
+    REANALYSIS_gflux_DailyMean
+    MAIACUS_Optical_Depth_047_Aqua_Nearest4
+    MAIACUS_Optical_Depth_055_Aqua_Nearest4
+    MAIACUS_Optical_Depth_047_Terra_Nearest4
+    MAIACUS_Optical_Depth_055_Terra_Nearest4
+    MOD09A1
+    MOD13A2_Nearest4
+    MOD11A1_LST_Day_1km_Nearest4
+    MOD11A1_LST_Night_1km_Nearest4
+    MOD11A1_Clear_day_cov_Nearest4
+    MOD11A1_Clear_night_cov_Nearest4
+    OMTO3e_ColumnAmountO3
+    OMUVBd_UVindex_Mean
+    OMSO2e_ColumnAmountSO2_PBL_Mean
+    OMNO2d_ColumnAmountNO2StratoCloudScreened_Mean
+    OMAERUVd_UVAerosolIndex_Mean
+    OMAEROe_VISAerosolIndex_Mean
+    OMAEROe_UVAerosolIndex_Mean
+    OMO3PR
+    MOD04L2_550
+    MAIACUS_cosVZA_Terra_Nearest
+    MAIACUS_cosVZA_Aqua_Nearest
+    

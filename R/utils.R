@@ -10,3 +10,25 @@ load_yaml <- function(path, var="base") {
 
   return(strsplit(file_list[[var]], " ")[[1]])
 }
+
+Vector2FormulaString <- function(strvec) {
+  if (length(strvec)==1) {
+    return(strvec)
+  }
+  else {
+      out <- strvec[1]
+      for (string in strvec[2:length(strvec)]) {
+        out <- paste(out, string, sep = "+")
+      }
+  }
+  return(out)
+}
+
+get_formula<- function(path, var="base") {
+  out <- load_yaml(path, var)
+  out <- Vector2FormulaString(out)
+  return(out)
+}
+
+
+
