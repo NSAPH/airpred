@@ -8,6 +8,7 @@
 #'
 #'
 #' @import dplyr
+#' @import tidyr
 #' @importFrom stats as.formula binomial glm predict.glm
 #' @include utils.R
 #' @export
@@ -35,17 +36,60 @@ get_logit_weights <- function(info, var) {
 #' @return a vector of the imputed values
 #' @export
 #'
-#' @importFrom nlme lme
+#' @importFrom lme4 lmer
 #' @examples
 MLE_impute <- function(info, var) {
-  info$weights <- get_logit_weights(info, var)
+  weights <- get_logit_weights(info, var)
   covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"), var)
-  randoms <- get_formula(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"), "random")
 
+  ## Generate Model
+  m1.lme <- lmer(as.formula(paste0(var,"~",covars)),info, weights = info$weights)
 
+  ## Replace Values
+  new_vals <- predict(m1.lme)
+  info[[var]][is.na(info[[var]])] <- new_vals[is.na(info[[var]])]
 
-  m1.lme <- lme(as.formula(paste0(var,"~",covars)),info,
-                random = as.formula(paste0("~",randoms)), weights = ~weights)
+  return(info)
+
+}
+
+impute_all <- function(info) {
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  for (variable in impute_vars){
+    info <- MLE_impute(info, variable)
+  }
+
+  return(info)
+}
+
+MLE_mcimpute <- function(var, info) {
+  weights <- get_logit_weights(info, var)
+  covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"), var)
+
+  ## Generate Model
+  m1.lme <- lmer(as.formula(paste0(var,"~",covars)),info, weights = info$weights)
+
+  ## Replace Values
+  new_vals <- predict(m1.lme)
+
+  return(new_vals)
+
+}
+
+#' Parallel implementation of Imputation algorithm
+#'
+#' @param info
+#'
+#' @return
+#' @export
+#'
+#' @import parallel
+#' @seealso impute_all
+#' @examples
+impute_all_parallel <- function(info) {
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+
+  predictions <- mclapply(impute_vars, MLE_mcimpute, info = info, mc.cores = detectCores())
 
 
 }

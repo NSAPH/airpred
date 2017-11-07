@@ -35,6 +35,5 @@ base:
     CMAQ_PM25_Vertical
     CMAQ_PM25_NO3
     CMAQ_PM25_SO4
-random:
     (1|CalendarDay)
     (1|PM25_Region)

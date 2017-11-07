@@ -16,4 +16,8 @@ Collate:
     'GenWeights.R'
     'utils.R'
     'Impute.R'
-Suggests: testthat
+Suggests: testthat,
+          RANN,
+          yaml,
+          dplyr,
+          nlme
