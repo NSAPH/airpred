@@ -11,7 +11,7 @@ base:
     REANALYSIS_snowc_DailyMean
     REANALYSIS_tcdc_DailyMean
     REANALYSIS_omega_DailyMean
-    REANALYSIS_windspeed_10m_DailyMean_1
+    REANALYSIS_windspeed_10m_DailyMean
     REANALYSIS_weasd_DailyMean
     REANALYSIS_prate_DailyMean
     REANALYSIS_vis_DailyMean
@@ -35,5 +35,6 @@ base:
     CMAQ_PM25_Vertical
     CMAQ_PM25_NO3
     CMAQ_PM25_SO4
+random:
     (1|CalendarDay)
     (1|PM25_Region)
