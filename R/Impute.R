@@ -8,7 +8,6 @@
 #'
 #'
 #' @import dplyr
-#' @import tidyr
 #' @importFrom stats as.formula binomial glm predict.glm
 #' @include utils.R
 #' @export
@@ -37,6 +36,7 @@ get_logit_weights <- function(info, var) {
 #' @export
 #'
 #' @importFrom lme4 lmer
+#' @importFrom stats predict
 #' @examples
 MLE_impute <- function(info, var) {
   weights <- get_logit_weights(info, var)
@@ -53,6 +53,14 @@ MLE_impute <- function(info, var) {
 
 }
 
+#' Impute full dataset
+#'
+#' @param info the dataset being imputed
+#'
+#' @return data.table with replaced missing values
+#' @export
+#'
+#' @examples
 impute_all <- function(info) {
   impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
   for (variable in impute_vars){
@@ -78,7 +86,7 @@ MLE_mcimpute <- function(var, info) {
 
 #' Parallel implementation of Imputation algorithm
 #'
-#' @param info
+#' @param info the dataset being imputed
 #'
 #' @return
 #' @export

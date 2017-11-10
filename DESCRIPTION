@@ -7,7 +7,7 @@ Depends: R (>= 3.4.0)
 Imports: RANN,
          yaml,
          dplyr,
-         nlme
+         lme4
 License: GPL
 Encoding: UTF-8
 LazyData: true
@@ -16,8 +16,5 @@ Collate:
     'GenWeights.R'
     'utils.R'
     'Impute.R'
-Suggests: testthat,
-          RANN,
-          yaml,
-          dplyr,
-          nlme
+Suggests: testthat
+
