@@ -1,0 +1,382 @@
+GFEDFireCarbon:
+- GFED
+- GFEDFireCarbon_Mean_Thres100000_
+USElevation_dsc10000:
+- LandUse
+- USElevation_dsc10000_
+USElevation_max100:
+- LandUse
+- USElevation_max100_
+USElevation_max10000:
+- LandUse
+- USElevation_max10000_
+USElevation_mea100:
+- LandUse
+- USElevation_mea100_
+USElevation_mea10000:
+- LandUse
+- USElevation_mea10000_
+USElevation_med100:
+- LandUse
+- USElevation_med100_
+USElevation_med10000:
+- LandUse
+- USElevation_med10000_
+USElevation_min100:
+- LandUse
+- USElevation_min100_
+USElevation_min10000:
+- LandUse
+- USElevation_min10000_
+USElevation_std100:
+- LandUse
+- USElevation_std100_
+USElevation_std10000:
+- LandUse
+- USElevation_std10000_
+USElevation_bln100:
+- LandUse
+- USElevation_bln100_
+USElevation_bln10000:
+- LandUse
+- USElevation_bln10000_
+NLCD_Barren100:
+- LandUse
+- NLCD_Barren100_
+NLCD_Barren10000:
+- LandUse
+- NLCD_Barren10000_
+NLCD_Developed100:
+- LandUse
+- NLCD_Developed100_
+NLCD_Developed10000:
+- LandUse
+- NLCD_Developed10000_
+NLCD_Herbaceous100:
+- LandUse
+- NLCD_Herbaceous100_
+NLCD_Herbaceous10000:
+- LandUse
+- NLCD_Herbaceous10000_
+NLCD_Planted100:
+- LandUse
+- NLCD_Planted100_
+NLCD_Planted10000:
+- LandUse
+- NLCD_Planted10000_
+NLCD_Shrubland100:
+- LandUse
+- NLCD_Shrubland100_
+NLCD_Shrubland10000:
+- LandUse
+- NLCD_Shrubland10000_
+NLCD_Water100:
+- LandUse
+- NLCD_Water100_
+NLCD_Water10000:
+- LandUse
+- NLCD_Water10000_
+NLCD_Wetlands100:
+- LandUse
+- NLCD_Wetlands100_
+NLCD_Wetlands10000:
+- LandUse
+- NLCD_Wetlands10000_
+NLCD_Impervious100:
+- LandUse
+- NLCD_Impervious100_
+NLCD_Impervious10000:
+- LandUse
+- NLCD_Impervious10000_
+RoadDensity_primaryroads1000:
+- LandUse
+- RoadDensity_primaryroads1000_
+RoadDensity_primaryroads10000:
+- LandUse
+- RoadDensity_primaryroads10000_
+RoadDensity_prisecroads1000:
+- LandUse
+- RoadDensity_prisecroads1000_
+RoadDensity_prisecroads10000:
+- LandUse
+- RoadDensity_prisecroads10000_
+RoadDensity_roads1000:
+- LandUse
+- RoadDensity_roads1000_
+Business_Restaurant1000:
+- LandUse
+- Business_Restaurant1000_
+PM25_Region:
+- LandUse
+- AQRVPM25Site_Region_
+Ozone_Region:
+- LandUse
+- EPACastNetOzoneSite_Region_
+NO2_Region:
+- LandUse
+- EPANO2Site_Region_
+MAIACUS_Optical_Depth_047_Aqua_Nearest4:
+- MAIACUS
+- MAIACUSAqua_Optical_Depth_047_Nearest4_
+MAIACUS_Optical_Depth_055_Aqua_Nearest4:
+- MAIACUS
+- MAIACUSAqua_Optical_Depth_055_Nearest4_
+MAIACUS_Optical_Depth_047_Terra_Nearest4:
+- MAIACUS
+- MAIACUSTerra_Optical_Depth_047_Nearest4_
+MAIACUS_Optical_Depth_055_Terra_Nearest4:
+- MAIACUS
+- MAIACUSTerra_Optical_Depth_055_Nearest4_
+MAIACUS_cosVZA_Aqua_Nearest:
+- MAIACUS
+- MAIACUSAqua_cosVZA_Nearest_
+MAIACUS_cosVZA_Terra_Nearest:
+- MAIACUS
+- MAIACUSTerra_cosVZA_Nearest_
+REANALYSIS_hpbl_DailyMax:
+- MeteFields
+- REANALYSIS_hpbl_DailyMax_
+REANALYSIS_shum_2m_DailyMax:
+- MeteFields
+- REANALYSIS_shum.2m_DailyMax_
+REANALYSIS_uwnd_10m_DailyMax:
+- TF
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMax_
+REANALYSIS_vwnd_10m_DailyMax:
+- TF
+- MeteFields
+- REANALYSIS_vwnd.10m_DailyMax_
+REANALYSIS_windspeed_10m_DailyMax:
+- FT
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMax_
+REANALYSIS_prate_DailyMax:
+- MeteFields
+- REANALYSIS_prate_DailyMax_
+REANALYSIS_vis_DailyMax:
+- MeteFields
+- REANALYSIS_vis_DailyMax_
+REANALYSIS_apcp_DailyMean:
+- MeteFields
+- REANALYSIS_apcp_DailyMean_
+REANALYSIS_dlwrf_DailyMean:
+- MeteFields
+- REANALYSIS_dlwrf_DailyMean_
+REANALYSIS_dswrf_DailyMean:
+- MeteFields
+- REANALYSIS_dswrf_DailyMean_
+REANALYSIS_evap_DailyMean:
+- MeteFields
+- REANALYSIS_evap_DailyMean_
+REANALYSIS_hpbl_DailyMean:
+- MeteFields
+- REANALYSIS_hpbl_DailyMean
+REANALYSIS_gflux_DailyMean:
+- MeteFields
+- REANALYSIS_gflux_DailyMean
+REANALYSIS_lhtfl_DailyMean:
+- MeteFields
+- REANALYSIS_lhtfl_DailyMean_
+REANALYSIS_shtfl_DailyMean:
+- MeteFields
+- REANALYSIS_shtfl_DailyMean_
+REANALYSIS_shum_2m_DailyMean:
+- MeteFields
+- REANALYSIS_shum.2m_DailyMean_
+REANALYSIS_snowc_DailyMean:
+- MeteFields
+- REANALYSIS_snowc_DailyMean_
+REANALYSIS_soilm_DailyMean:
+- MeteFields
+- REANALYSIS_soilm_DailyMean_
+REANALYSIS_tcdc_DailyMean:
+- MeteFields
+- REANALYSIS_tcdc_DailyMean_
+REANALYSIS_ulwrf_DailyMean:
+- MeteFields
+- REANALYSIS_ulwrf_DailyMean_
+REANALYSIS_uwnd_10m_DailyMean:
+- TF
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMean_
+REANALYSIS_vwnd_10m_DailyMean:
+- TF
+- MeteFields
+- REANALYSIS_vwnd.10m_DailyMean_
+REANALYSIS_windspeed_10m_DailyMean:
+- FT
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMean_
+REANALYSIS_weasd_DailyMean:
+- MeteFields
+- REANALYSIS_weasd_DailyMean_
+REANALYSIS_prate_DailyMean:
+- MeteFields
+- REANALYSIS_prate_DailyMean_
+REANALYSIS_vis_DailyMean:
+- MeteFields
+- REANALYSIS_vis_DailyMean_
+REANALYSIS_hpbl_DailyMin:
+- MeteFields
+- REANALYSIS_hpbl_DailyMin_
+REANALYSIS_shum_2m_DailyMin:
+- MeteFields
+- REANALYSIS_shum.2m_DailyMin_
+REANALYSIS_uwnd_10m_DailyMin:
+- TF
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMin_
+REANALYSIS_vwnd_10m_DailyMin:
+- TF
+- MeteFields
+- REANALYSIS_vwnd.10m_DailyMin_
+REANALYSIS_windspeed_10m_DailyMin:
+- FT
+- MeteFields
+- REANALYSIS_uwnd.10m_DailyMin_
+REANALYSIS_prate_DailyMin:
+- MeteFields
+- REANALYSIS_prate_DailyMin_
+REANALYSIS_vis_DailyMin:
+- MeteFields
+- REANALYSIS_vis_DailyMin_
+REANALYSIS_hpbl_1Day:
+- MeteFields
+- REANALYSIS_hpbl_1Day_
+REANALYSIS_shum_2m_1Day:
+- MeteFields
+- REANALYSIS_shum.2m_1Day_
+REANALYSIS_uwnd_10m_1Day:
+- TF
+- MeteFields
+- REANALYSIS_uwnd.10m_1Day_
+REANALYSIS_vwnd_10m_1Day:
+- TF
+- MeteFields
+- REANALYSIS_vwnd.10m_1Day_
+REANALYSIS_windspeed_10m_1Day:
+- FT
+- MeteFields
+- REANALYSIS_uwnd.10m_1Day_
+REANALYSIS_prate_1Day:
+- MeteFields
+- REANALYSIS_prate_1Day
+REANALYSIS_vis_1Day:
+- MeteFields
+- REANALYSIS_vis_1Day_
+REANALYSIS_air_sfc_DailyMin:
+- MeteFields
+- REANALYSIS_air.sfc_DailyMin_
+REANALYSIS_air_sfc_DailyMean:
+- MeteFields
+- REANALYSIS_air.sfc_DailyMean_
+REANALYSIS_air_sfc_DailyMax:
+- MeteFields
+- REANALYSIS_air.sfc_DailyMax_
+REANALYSIS_air_sfc_1Day:
+- MeteFields
+- REANALYSIS_air_sfc_1Day_
+MOD04L2_550:
+- MOD04L2
+- MOD04L2_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_
+MOD09A1:
+- MOD09A1
+- MOD09A1_Nearest4_
+MOD11A1_LST_Day_1km_Nearest4:
+- MOD11A1
+- MOD11A1_LST_Day_1km_Nearest4_
+MOD11A1_LST_Night_1km_Nearest4:
+- MOD11A1
+- MOD11A1_LST_Night_1km_Nearest4_
+MOD11A1_Clear_day_cov_Nearest4:
+- MOD11A1
+- MOD11A1_Clear_day_cov_Nearest4_
+MOD11A1_Clear_night_cov_Nearest4:
+- MOD11A1
+- MOD11A1_Clear_night_cov_Nearest4_
+MOD13A2_Nearest4:
+- MOD13A2
+- MOD13A2_Nearest4_
+MonitorData:
+- Monitor
+- MONITOR_
+Nearby_Peak2_NO2:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_NO2_
+Nearby_Peak2_PM25:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_PM25_
+Nearby_Peak2_Ozone:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_Ozone
+Nearby_Peak2Lag1_NO2:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_NO2_
+Nearby_Peak2Lag1_PM25:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_PM25_
+Nearby_Peak2Lag1_Ozone:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_Ozone
+Nearby_Peak2Lag3_NO2:
+- Nearby
+- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_NO2_
+Nearby_Peak2Lag3_PM25:
+- Nearby
+- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_PM25_
+Nearby_Peak2Lag3_Ozone:
+- Nearby
+- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_Ozone
+Nearby_Peak2_MaxTemperature:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MaxTemperature_
+Nearby_Peak2_MeanTemperature:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MeanTemperature_
+Nearby_Peak2_MinTemperature:
+- Nearby
+- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MinTemperature_
+Nearby_Peak2Lag1_MaxTemperature:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MaxTemperature_
+Nearby_Peak2Lag1_MeanTemperature:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MeanTemperature_
+Nearby_Peak2Lag1_MinTemperature:
+- Nearby
+- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MinTemperature_
+Nearby_Peak2Lag3_MaxTemperature:
+- Nearby
+- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_MaxTemperature_
+Nearby_Peak2Lag3_MeanTemperature:
+- Nearby
+- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_MeanTemperature_
+Nearby_Peak2Lag3_MinTemperature:
+- Nearby
+- MONITOR_Peak2Lag3_Thres_MinTemperature_
+OMAEROe_UVAerosolIndex_Mean:
+- OMAEROe
+- OMAEROe_UVAerosolIndex_Mean_
+OMAEROe_VISAerosolIndex_Mean:
+- OMAEROe
+- OMAEROe_VISAerosolIndex_Mean_
+OMAERUVd_UVAerosolIndex_Mean:
+- OMAERUVd
+- OMAERUVd_UVAerosolIndex_Mean_
+OMNO2d_ColumnAmountNO2StratoCloudScreened_Mean:
+- OMNO2d
+- OMNO2d_ColumnAmountNO2StratoCloudScreened_Mean_
+OMO3PR:
+- OMO3PR
+- OMO3PR_Mean_
+OMSO2e_ColumnAmountSO2_PBL_Mean:
+- OMSO2e
+- OMSO2e_ColumnAmountSO2_PBL_Mean_
+OMTO3e_ColumnAmountO3:
+- OMTO3e
+- OMTO3e_ColumnAmountO3_Mean_
+OMUVBd_UVindex_Mean:
+- OMUVBd
+- OMUVBd_UVindex_Mean_
+
