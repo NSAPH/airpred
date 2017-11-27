@@ -139,18 +139,10 @@ REANALYSIS_hpbl_DailyMax:
 REANALYSIS_shum_2m_DailyMax:
 - MeteFields
 - REANALYSIS_shum.2m_DailyMax_
-REANALYSIS_uwnd_10m_DailyMax:
-- TF
-- MeteFields
-- REANALYSIS_uwnd.10m_DailyMax_
-REANALYSIS_vwnd_10m_DailyMax:
-- TF
-- MeteFields
-- REANALYSIS_vwnd.10m_DailyMax_
 REANALYSIS_windspeed_10m_DailyMax:
-- FT
 - MeteFields
 - REANALYSIS_uwnd.10m_DailyMax_
+- REANALYSIS_vwnd.10m_DailyMax_
 REANALYSIS_prate_DailyMax:
 - MeteFields
 - REANALYSIS_prate_DailyMax_
@@ -196,18 +188,10 @@ REANALYSIS_tcdc_DailyMean:
 REANALYSIS_ulwrf_DailyMean:
 - MeteFields
 - REANALYSIS_ulwrf_DailyMean_
-REANALYSIS_uwnd_10m_DailyMean:
-- TF
-- MeteFields
-- REANALYSIS_uwnd.10m_DailyMean_
-REANALYSIS_vwnd_10m_DailyMean:
-- TF
-- MeteFields
-- REANALYSIS_vwnd.10m_DailyMean_
 REANALYSIS_windspeed_10m_DailyMean:
-- FT
 - MeteFields
 - REANALYSIS_uwnd.10m_DailyMean_
+- REANALYSIS_vwnd.10m_DailyMean_
 REANALYSIS_weasd_DailyMean:
 - MeteFields
 - REANALYSIS_weasd_DailyMean_
@@ -223,18 +207,10 @@ REANALYSIS_hpbl_DailyMin:
 REANALYSIS_shum_2m_DailyMin:
 - MeteFields
 - REANALYSIS_shum.2m_DailyMin_
-REANALYSIS_uwnd_10m_DailyMin:
-- TF
-- MeteFields
-- REANALYSIS_uwnd.10m_DailyMin_
-REANALYSIS_vwnd_10m_DailyMin:
-- TF
-- MeteFields
-- REANALYSIS_vwnd.10m_DailyMin_
 REANALYSIS_windspeed_10m_DailyMin:
-- FT
 - MeteFields
 - REANALYSIS_uwnd.10m_DailyMin_
+- REANALYSIS_vwnd.10m_DailyMin_
 REANALYSIS_prate_DailyMin:
 - MeteFields
 - REANALYSIS_prate_DailyMin_
@@ -247,18 +223,11 @@ REANALYSIS_hpbl_1Day:
 REANALYSIS_shum_2m_1Day:
 - MeteFields
 - REANALYSIS_shum.2m_1Day_
-REANALYSIS_uwnd_10m_1Day:
-- TF
-- MeteFields
-- REANALYSIS_uwnd.10m_1Day_
-REANALYSIS_vwnd_10m_1Day:
-- TF
-- MeteFields
-- REANALYSIS_vwnd.10m_1Day_
 REANALYSIS_windspeed_10m_1Day:
 - FT
 - MeteFields
 - REANALYSIS_uwnd.10m_1Day_
+- REANALYSIS_vwnd.10m_1Day_
 REANALYSIS_prate_1Day:
 - MeteFields
 - REANALYSIS_prate_1Day
@@ -303,58 +272,58 @@ MonitorData:
 - MONITOR_
 Nearby_Peak2_NO2:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_NO2_
+- MONITOR_Peak2Lag0_ThresInf_NO2_
 Nearby_Peak2_PM25:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_PM25_
+- MONITOR_Peak2Lag0_ThresInf_PM25_
 Nearby_Peak2_Ozone:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_Ozone
+- MONITOR_Peak2Lag0_ThresInf_Ozone
 Nearby_Peak2Lag1_NO2:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_NO2_
+- MONITOR_Peak2Lag1_ThresInf_NO2_
 Nearby_Peak2Lag1_PM25:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_PM25_
+- MONITOR_Peak2Lag1_ThresInf_PM25_
 Nearby_Peak2Lag1_Ozone:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_Ozone
+- MONITOR_Peak2Lag1_ThresInf_Ozone
 Nearby_Peak2Lag3_NO2:
 - Nearby
-- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_NO2_
+- MONITOR_Peak2Lag3_ThresInf_NO2_
 Nearby_Peak2Lag3_PM25:
 - Nearby
-- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_PM25_
+- MONITOR_Peak2Lag3_ThresInf_PM25_
 Nearby_Peak2Lag3_Ozone:
 - Nearby
-- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_Ozone
+- MONITOR_Peak2Lag3_ThresInf_Ozone
 Nearby_Peak2_MaxTemperature:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MaxTemperature_
+- MONITOR_Peak2Lag0_ThresInf_MaxTemperature_
 Nearby_Peak2_MeanTemperature:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MeanTemperature_
+- MONITOR_Peak2Lag0_ThresInf_MeanTemperature_
 Nearby_Peak2_MinTemperature:
 - Nearby
-- MONITOR_Peak2Lag0_Thres[Inf]*[/n]*_MinTemperature_
+- MONITOR_Peak2Lag0_ThresInf_MinTemperature_
 Nearby_Peak2Lag1_MaxTemperature:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MaxTemperature_
+- MONITOR_Peak2Lag1_ThresInf_MaxTemperature_
 Nearby_Peak2Lag1_MeanTemperature:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MeanTemperature_
+- MONITOR_Peak2Lag1_ThresInf_MeanTemperature_
 Nearby_Peak2Lag1_MinTemperature:
 - Nearby
-- MONITOR_Peak2Lag1_Thres[Inf]*[/n]*_MinTemperature_
+- MONITOR_Peak2Lag1_ThresInf_MinTemperature_
 Nearby_Peak2Lag3_MaxTemperature:
 - Nearby
-- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_MaxTemperature_
+- MONITOR_Peak2Lag3_ThresInf_MaxTemperature_
 Nearby_Peak2Lag3_MeanTemperature:
 - Nearby
-- MONITOR_Peak2Lag3_Thres[Inf]*[/n]*_MeanTemperature_
+- MONITOR_Peak2Lag3_ThresInf_MeanTemperature_
 Nearby_Peak2Lag3_MinTemperature:
 - Nearby
-- MONITOR_Peak2Lag3_Thres_MinTemperature_
+- MONITOR_Peak2Lag3_ThresInf_MinTemperature_
 OMAEROe_UVAerosolIndex_Mean:
 - OMAEROe
 - OMAEROe_UVAerosolIndex_Mean_

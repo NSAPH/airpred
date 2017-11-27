@@ -24,11 +24,11 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
       if (length(files) > 0) {
         listname <- variable
         while (!is.null(file.yaml[[listname]])){
-          listname <- paste0(listname, "butt")
+          listname <- paste0(listname, "bad")
         }
         file.yaml[[listname]] <- files
       } else {
-        file.yaml[[variable]] <- c("butt", directory)
+        file.yaml[[variable]] <- c("bad", directory)
       }
     }
 
