@@ -1,0 +1,4 @@
+Monitor:
+- NO2
+Data_Location:
+- ../predictions/EPANO2
