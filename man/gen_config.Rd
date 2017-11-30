@@ -4,7 +4,7 @@
 \alias{gen_config}
 \title{Generate Config File Skeleton}
 \usage{
-gen_config(path = ".")
+gen_config(default = TRUE, path = ".", in_list = NULL)
 }
 \arguments{
 \item{path}{the directory that the config file should be saved in}
@@ -19,5 +19,7 @@ Generate Config File Skeleton
 \itemize{
   \item{\code{Monitor}} {The pollution type the data will be trained on}
   \item{\code{Data_Location}} {The directory holding the required data files}
+  \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
+                       the run is going to be used to create predictions}
  }
 }

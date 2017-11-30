@@ -20,7 +20,14 @@ Matlab2RDS <- function(path) {
 
 
 
-process_annual <- function(){}
+process_annual <- function(files){
+  out <- list()
+  for (path in files) {
+    if (file_ext(path) == "mat") {
+      mat_result <- readMat(path)
+    }
+  }
+}
 
 process_daily <- function(){}
 
@@ -41,9 +48,9 @@ process_data <- function(path = "../predictions/EPANO2") {
     } else if (length(files[[var]] == 1)) {
       process_location()
     } else if (readMat(files[[var]][1])$Result == 1) {
-      process_annual()
+      process_annual(files[[var]])
     } else {
-      process_daily()
+      process_daily(files[[var]])
     }
   }
 }
@@ -71,14 +78,16 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
 
 
   for (variable in names(varlist)) {
+    directory <- file.path(path,varlist[[variable]][1])
     if (length(varlist[[variable]]) == 2) {
-      directory <- varlist[[variable]][1]
-      files <- file.path(directory,list.files(file.path(path, directory),
+      files <- file.path(directory,list.files(directory,
                                               pattern = varlist[[variable]][2]))
     } else {
-      directory <- varlist[[variable]][2]
-      files <- file.path(directory,list.files(file.path(path, directory),
-                                              pattern = varlist[[variable]][3]))
+      ## windspeed process - ASSUMES THAT ONLY WINDSPEED VARS HAVE >2 LINES
+      files <- file.path(directory,list.files(directory,
+                                              pattern = varlist[[variable]][2]))
+      files <- c(files,file.path(directory,list.files(directory,
+                                              pattern = varlist[[variable]][3])))
     }
     if (length(files) > 0) {
       listname <- variable
@@ -92,4 +101,11 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
   }
 
   return(file.yaml)
+}
+
+get_monitor_ids <- function() {
+    config <- yaml.load_file("config.yml")
+    monitors <- read.csv(file.path(config$Data_Location,"Location",
+                                paste0(config$Monitor,"Site_North_America_Equidistant_Conic.csv")))
+    return(monitors)
 }

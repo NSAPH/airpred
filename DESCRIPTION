@@ -17,7 +17,6 @@ Collate:
     'GenWeights.R'
     'utils.R'
     'Impute.R'
-    'Infrastructure.R'
     'Normalize.R'
     'ReadData.R'
     'Transform.R'

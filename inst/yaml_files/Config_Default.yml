@@ -1,4 +1,6 @@
 Monitor:
-- NO2
+- EPANO2
 Data_Location:
 - ../predictions/EPANO2
+train:
+- TRUE

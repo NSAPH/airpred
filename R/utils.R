@@ -45,11 +45,19 @@ get_formula<- function(path, var="base") {
 #'   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
 #'                        the run is going to be used to create predictions}
 #'  }
-gen_config <- function(path = ".") {
-  out <- list()
-  out$Monitor <- ""
-  out$Data_Location <- ""
-  out$train <- FALSE
+gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
+  if (default) {
+    out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
+                               "Config_Default.yml"))
+  } else if (!is.null(in_list)) {
+    ## Need to validate input here
+    out <- in_list
+  } else {
+    out <- list()
+    out$Monitor <- ""
+    out$Data_Location <- ""
+    out$train <- TRUE
+  }
 
   out.file <- file(file.path(path, "config.yml"))
   write(as.yaml(out), file=out.file)
