@@ -30,30 +30,33 @@ process_data <- function(path = "../predictions/EPANO2") {
   files <- gen_data_paths(path)
   save_path <- get_save_location()
   for (var in names(files)) {
+    t <- Sys.time()
     if (var == "MonitorData") {
       print("Monitor")
       ##process_monitor()
     } else if (substr(var,1,20) == "REANALYSIS_windspeed") {
       print("wind")
-      process_windspeed(files[[var]])
+      df <- process_windspeed(files[[var]])
+      print(var)
+      saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(files[[var]]) == 1) {
       print("loc")
-      process_location(files[[var]])
+      df <- process_location(files[[var]])
+      print(var)
+      saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(readMat(files[[var]][1])$Result[,1]) == 1) {
       print("year")
-      t <- Sys.time()
       df <- process_annual(files[[var]])
       print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
-      print(t - Sys.time())
     } else {
       print("day")
-      t <- Sys.time()
       df <- process_daily(files[[var]])
       print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
-      print(t - Sys.time())
+
     }
+    print(Sys.time() - t)
   }
 }
 
@@ -129,8 +132,13 @@ process_daily <- function(files){
   return(out)
 }
 
-process_location <- function(files){
+process_location <- function(path){
 
+  mat_result <- readMat(path)$Result
+  out <- data.frame(value = mat_result[1,],
+                           site = 1:length(mat_result[1,]))
+
+  return(out)
 }
 
 process_windspeed <- function(files){
@@ -151,10 +159,10 @@ process_windspeed <- function(files){
         data_day <- date_counter
         year.frame <- data.frame(value=numeric(), site = numeric(),
                                  year = numeric(), date = numeric())
-        for (i in 1:length(mat_result[,1])) {
+        for (i in 1:length(umat_result[,1])) {
           ##print(i)
           temp.frame <- data.frame(value = sqrt(umat_result[i,]^2 + umat_result[i,]^2),
-                                   site = 1:length(mat_result[1,]),
+                                   site = 1:length(umat_result[1,]),
                                    date = data_day,
                                    year = year(data_day))
           year.frame <- rbind(year.frame, temp.frame)

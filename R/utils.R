@@ -31,10 +31,16 @@ get_formula<- function(path, var="base") {
 }
 
 get_final_date <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
   return(ymd(yaml.load_file("config.yml")$finalday))
 }
 
 get_save_location <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
   return(yaml.load_file("config.yml")$Data_Save_Location)
 }
 
