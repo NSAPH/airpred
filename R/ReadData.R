@@ -18,42 +18,143 @@ Matlab2RDS <- function(path) {
 
 }
 
-
-
-process_annual <- function(files){
-  out <- list()
-  for (path in files) {
-    if (file_ext(path) == "mat") {
-      mat_result <- readMat(path)
-    }
-  }
-}
-
-process_daily <- function(){}
-
-process_location <- function(){}
-
-process_windspeed <- function(){}
-
-process_monitor <- function(){}
-
+#' Process all data for a given data set
+#'
+#' @param path
+#'
+#' @return
+#' @export
+#'
+#' @examples
 process_data <- function(path = "../predictions/EPANO2") {
   files <- gen_data_paths(path)
-
+  save_path <- get_save_location()
   for (var in names(files)) {
     if (var == "MonitorData") {
-      process_monitor()
+      print("Monitor")
+      ##process_monitor()
     } else if (substr(var,1,20) == "REANALYSIS_windspeed") {
-      process_windspeed()
-    } else if (length(files[[var]] == 1)) {
-      process_location()
-    } else if (readMat(files[[var]][1])$Result == 1) {
-      process_annual(files[[var]])
+      print("wind")
+      process_windspeed(files[[var]])
+    } else if (length(files[[var]]) == 1) {
+      print("loc")
+      process_location(files[[var]])
+    } else if (length(readMat(files[[var]][1])$Result[,1]) == 1) {
+      print("year")
+      t <- Sys.time()
+      df <- process_annual(files[[var]])
+      print(var)
+      saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
+      print(t - Sys.time())
     } else {
-      process_daily(files[[var]])
+      print("day")
+      t <- Sys.time()
+      df <- process_daily(files[[var]])
+      print(var)
+      saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
+      print(t - Sys.time())
     }
   }
 }
+
+#' process annual data
+#'
+#' @param files vector of file paths
+#'
+#' @return a Data Frame containing the value, dates, and site IDs for the given variable
+#'
+#' @importFrom lubridate ymd years year
+#'
+process_annual <- function(files){
+  final <- get_final_date()
+  out <- data.frame(value=numeric(), site = numeric(), year = numeric())
+  date_counter <- ymd(20000101)
+  file_index <- 1
+  while ((file_index <= length(files))&&(date_counter < final)) {
+    path <- files[file_index]
+    if (file_ext(path) == "mat") {
+      ## Extract start date from file name and insure that it matches the date counter
+      ## Done to account for the fact that not all data exists for all years
+      if (date_counter == ymd(substr(path, nchar(path) - 20, nchar(path) - 13))) {
+        mat_result <- readMat(path)$Result
+        temp.frame <- data.frame(value = mat_result[1,],
+                                 site = 1:length(mat_result[1,]),
+                                 year = year(date_counter))
+        out <- rbind(out, temp.frame)
+        date_counter <- date_counter + years()
+        file_index <- file_index + 1
+      } else {
+        date_counter <- date_counter + years()
+      }
+    } else {
+      file_index <- file_index + 1
+    }
+  }
+  return(out)
+}
+
+process_daily <- function(files){
+  final <- get_final_date()
+  out <- data.frame(value=numeric(), site = numeric(), year = numeric(), date = numeric())
+  date_counter <- ymd(20000101)
+  file_index <- 1
+  while ((file_index <= length(files))&&(date_counter < final)) {
+    path <- files[file_index]
+    if (file_ext(path) == "mat") {
+      ## Extract start date from file name and insure that it matches the date counter
+      ## Done to account for the fact that not all data exists for all years
+      if (date_counter == ymd(substr(path, nchar(path) - 20, nchar(path) - 13))) {
+        mat_result <- readMat(path)$Result
+        data_day <- date_counter
+        year.frame <- data.frame(value=numeric(), site = numeric(), year = numeric(), date = numeric())
+        for (i in 1:length(mat_result[,1])) {
+          ##print(i)
+          temp.frame <- data.frame(value = mat_result[i,],
+                                   site = 1:length(mat_result[1,]),
+                                   date = data_day,
+                                   year = year(data_day))
+          year.frame <- rbind(year.frame, temp.frame)
+          data_day <- data_day + days()
+        }
+        out <- rbind(out, year.frame)
+        date_counter <- date_counter + years()
+        file_index <- file_index + 1
+      } else {
+        date_counter <- date_counter + years()
+      }
+    } else {
+      file_index <- file_index + 1
+    }
+  }
+  return(out)
+}
+
+process_location <- function(files){}
+
+process_windspeed <- function(files){}
+
+process_monitor <- function(files){
+  final <- get_final_date()
+  out <- list()
+  date_counter <- ymd(20000101)
+  file_index <- 1
+  while ((file_index <= length(files))&&(date_counter < final)) {
+    if (file_ext(path) == "mat") {
+      ## Extract start date from file name and insure that it matches the date counter
+      ## Done to account for the fact that not all data exists for all years
+      if (date_counter == ymd(substr(path, nchar(path) - 20, nchar(path) - 13))) {
+        mat_result <- readMat(path)$Result
+        date_counter <- date_counter + years()
+        file_index <- file_index + 1
+      } else {
+        date_counter <- date_counter + years()
+      }
+    } else {
+      file_index <- file_index + 1
+    }
+  }
+}
+
 
 #' Generate Data File path
 #'
@@ -65,7 +166,7 @@ process_data <- function(path = "../predictions/EPANO2") {
 #' the Data_Location.yml file.
 #'
 #'
-#'
+#' @export
 #'
 gen_data_paths <- function(path = "../predictions/EPANO2") {
 

@@ -30,6 +30,13 @@ get_formula<- function(path, var="base") {
   return(out)
 }
 
+get_final_date <- function() {
+  return(ymd(yaml.load_file("config.yml")$finalday))
+}
+
+get_save_location <- function() {
+  return(yaml.load_file("config.yml")$Data_Save_Location)
+}
 
 #' Generate Config File Skeleton
 #'
@@ -42,8 +49,11 @@ get_formula<- function(path, var="base") {
 #' \itemize{
 #'   \item{\code{Monitor}} {The pollution type the data will be trained on}
 #'   \item{\code{Data_Location}} {The directory holding the required data files}
+#'   \item{\code{Data_Save_Location}} {The directory processed data files
+#'                                     should be saved in}
 #'   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
 #'                        the run is going to be used to create predictions}
+#'   \item{\code{finalday}} {The date of the last day covered by the data set}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -56,11 +66,22 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out <- list()
     out$Monitor <- ""
     out$Data_Location <- ""
+    out$Data_Save_Location <- ""
     out$train <- TRUE
+    out$finalday <- 20180101
   }
 
   out.file <- file(file.path(path, "config.yml"))
   write(as.yaml(out), file=out.file)
   close(out.file)
 
+}
+
+#' Remove current config file
+#'
+#' @return none
+#' @export
+#'
+clean_up_config <- function() {
+  file.remove("config.yml")
 }
