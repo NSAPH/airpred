@@ -129,9 +129,50 @@ process_daily <- function(files){
   return(out)
 }
 
-process_location <- function(files){}
+process_location <- function(files){
 
-process_windspeed <- function(files){}
+}
+
+process_windspeed <- function(files){
+  final <- get_final_date()
+  out <- data.frame(value=numeric(), site = numeric(),
+                    year = numeric(), date = numeric())
+  date_counter <- ymd(20000101)
+  file_index <- 1
+  while ((file_index <= length(files$vwnd))&&(date_counter < final)) {
+    upath <- files$uwnd[file_index]
+    vpath <- files$vwnd[file_index]
+    if (file_ext(upath) == "mat") {
+      ## Extract start date from file name and insure that it matches the date counter
+      ## Done to account for the fact that not all data exists for all years
+      if (date_counter == ymd(substr(upath, nchar(upath) - 20, nchar(upath) - 13))) {
+        umat_result <- readMat(upath)$Result
+        vmat_result <- readMat(vpath)$Result
+        data_day <- date_counter
+        year.frame <- data.frame(value=numeric(), site = numeric(),
+                                 year = numeric(), date = numeric())
+        for (i in 1:length(mat_result[,1])) {
+          ##print(i)
+          temp.frame <- data.frame(value = sqrt(umat_result[i,]^2 + umat_result[i,]^2),
+                                   site = 1:length(mat_result[1,]),
+                                   date = data_day,
+                                   year = year(data_day))
+          year.frame <- rbind(year.frame, temp.frame)
+          data_day <- data_day + days()
+        }
+        out <- rbind(out, year.frame)
+        date_counter <- date_counter + years()
+        file_index <- file_index + 1
+      } else {
+        date_counter <- date_counter + years()
+      }
+    } else {
+      file_index <- file_index + 1
+    }
+  }
+  return(out)
+}
+
 
 process_monitor <- function(files){
   final <- get_final_date()
@@ -185,10 +226,11 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
                                               pattern = varlist[[variable]][2]))
     } else {
       ## windspeed process - ASSUMES THAT ONLY WINDSPEED VARS HAVE >2 LINES
-      files <- file.path(directory,list.files(directory,
+      files <- list()
+      files$uwnd <- file.path(directory,list.files(directory,
                                               pattern = varlist[[variable]][2]))
-      files <- c(files,file.path(directory,list.files(directory,
-                                              pattern = varlist[[variable]][3])))
+      files$vwnd <- file.path(directory,list.files(directory,
+                                              pattern = varlist[[variable]][3]))
     }
     if (length(files) > 0) {
       listname <- variable
