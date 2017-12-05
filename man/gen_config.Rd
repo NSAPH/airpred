@@ -7,7 +7,14 @@
 gen_config(default = TRUE, path = ".", in_list = NULL)
 }
 \arguments{
+\item{default}{A boolean determining whether or not
+default values should be loaded into the generated config file}
+
 \item{path}{the directory that the config file should be saved in}
+
+\item{in_list}{An optional list that can be passed in to generate values for a config file.
+Currently, the list is not validated, so the config file is not guaranteed to work with
+the structure.}
 }
 \value{
 Null, but saves a yml file with the headers needed to run the prediction model saved

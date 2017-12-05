@@ -7,8 +7,14 @@
 process_data(path = "../predictions/EPANO2")
 }
 \arguments{
-\item{path}{}
+\item{path}{folder where the prediction data resides}
+}
+\value{
+none
 }
 \description{
 Process all data for a given data set
+}
+\details{
+saves RDS files into the folder specified in the config file
 }

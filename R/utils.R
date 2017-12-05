@@ -46,7 +46,12 @@ get_save_location <- function() {
 
 #' Generate Config File Skeleton
 #'
+#' @param default A boolean determining whether or not
+#'        default values should be loaded into the generated config file
 #' @param path the directory that the config file should be saved in
+#' @param in_list An optional list that can be passed in to generate values for a config file.
+#'        Currently, the list is not validated, so the config file is not guaranteed to work with
+#'        the structure.
 #'
 #' @return Null, but saves a yml file with the headers needed to run the prediction model saved
 #' @export

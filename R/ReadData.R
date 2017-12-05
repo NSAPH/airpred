@@ -20,9 +20,12 @@ Matlab2RDS <- function(path) {
 
 #' Process all data for a given data set
 #'
-#' @param path
+#' @param path folder where the prediction data resides
 #'
-#' @return
+#' @return none
+#'
+#' @details
+#' saves RDS files into the folder specified in the config file
 #' @export
 #'
 #'
@@ -101,6 +104,13 @@ process_annual <- function(files){
   return(out)
 }
 
+#' Process Daily Data
+#'
+#' @param files vector of paths to files
+#'
+#' @return data frame
+#' @importFrom lubridate days
+#'
 process_daily <- function(files){
   final <- get_final_date()
   out <- data.frame(value=numeric(), site = numeric(), year = numeric(), date = numeric())
@@ -272,11 +282,4 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
   }
 
   return(file.yaml)
-}
-
-get_monitor_ids <- function() {
-    config <- yaml.load_file("config.yml")
-    monitors <- read.csv(file.path(config$Data_Location,"Location",
-                                paste0(config$Monitor,"Site_North_America_Equidistant_Conic.csv")))
-    return(monitors)
 }
