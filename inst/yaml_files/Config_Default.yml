@@ -1,0 +1,11 @@
+Monitor:
+- EPANO2
+Data_Location:
+- ../predictions/EPANO2
+Data_Save_Location:
+- ../test_data
+train:
+- TRUE
+finalday:
+- 20180101
+

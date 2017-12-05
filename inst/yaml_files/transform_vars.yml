@@ -1,0 +1,6 @@
+base:
+    MeanTemperature
+    MaxTemperature
+    MinTemperature
+    PM25
+    NO2
