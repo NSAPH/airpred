@@ -25,15 +25,18 @@ Matlab2RDS <- function(path) {
 #' @return
 #' @export
 #'
-#' @examples
+#'
 process_data <- function(path = "../predictions/EPANO2") {
+  start <- Sys.time()
   files <- gen_data_paths(path)
   save_path <- get_save_location()
   for (var in names(files)) {
     t <- Sys.time()
     if (var == "MonitorData") {
       print("Monitor")
-      ##process_monitor()
+      df <- process_monitor(files[[var]])
+      print(var)
+      saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (substr(var,1,20) == "REANALYSIS_windspeed") {
       print("wind")
       df <- process_windspeed(files[[var]])
@@ -58,6 +61,8 @@ process_data <- function(path = "../predictions/EPANO2") {
     }
     print(Sys.time() - t)
   }
+  print("Done!")
+  print(Sys.time() - start)
 }
 
 #' process annual data
@@ -181,18 +186,32 @@ process_windspeed <- function(files){
   return(out)
 }
 
-
 process_monitor <- function(files){
   final <- get_final_date()
-  out <- list()
+  out <- data.frame(value=numeric(), site = numeric(), year = numeric(), date = numeric())
   date_counter <- ymd(20000101)
   file_index <- 1
   while ((file_index <= length(files))&&(date_counter < final)) {
-    if (file_ext(path) == "mat") {
+    path <- files[file_index]
+    ## Long condition, insures only year by year data files used
+    if ((file_ext(path) == "mat") &&
+        (substr(path, nchar(path) - 12, nchar(path) - 9) == substr(path, nchar(path) - 7, nchar(path) - 4))) {
       ## Extract start date from file name and insure that it matches the date counter
       ## Done to account for the fact that not all data exists for all years
-      if (date_counter == ymd(substr(path, nchar(path) - 20, nchar(path) - 13))) {
+      if (year(date_counter) == substr(path, nchar(path) - 12, nchar(path) - 9)) {
         mat_result <- readMat(path)$Result
+        data_day <- date_counter
+        year.frame <- data.frame(value=numeric(), site = numeric(), year = numeric(), date = numeric())
+        for (i in 1:length(mat_result[,1])) {
+          ##print(i)
+          temp.frame <- data.frame(value = mat_result[i,],
+                                   site = 1:length(mat_result[1,]),
+                                   date = data_day,
+                                   year = year(data_day))
+          year.frame <- rbind(year.frame, temp.frame)
+          data_day <- data_day + days()
+        }
+        out <- rbind(out, year.frame)
         date_counter <- date_counter + years()
         file_index <- file_index + 1
       } else {
@@ -202,6 +221,7 @@ process_monitor <- function(files){
       file_index <- file_index + 1
     }
   }
+  return(out)
 }
 
 
