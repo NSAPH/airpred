@@ -31,35 +31,35 @@ process_data <- function(path = "../predictions/EPANO2") {
   files <- gen_data_paths(path)
   save_path <- get_save_location()
   for (var in names(files)) {
-    t <- Sys.time()
+    ##t <- Sys.time()
     if (var == "MonitorData") {
-      print("Monitor")
+     ## print("Monitor")
       df <- process_monitor(files[[var]])
-      print(var)
+     ## print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (substr(var,1,20) == "REANALYSIS_windspeed") {
-      print("wind")
+      ##print("wind")
       df <- process_windspeed(files[[var]])
-      print(var)
+      ##print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(files[[var]]) == 1) {
-      print("loc")
+      ##print("loc")
       df <- process_location(files[[var]])
-      print(var)
+     ## print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(readMat(files[[var]][1])$Result[,1]) == 1) {
-      print("year")
+     ## print("year")
       df <- process_annual(files[[var]])
-      print(var)
+    ##  print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else {
-      print("day")
+     ## print("day")
       df <- process_daily(files[[var]])
-      print(var)
+     ## print(var)
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
 
     }
-    print(Sys.time() - t)
+   ## print(Sys.time() - t)
   }
   print("Done!")
   print(Sys.time() - start)
