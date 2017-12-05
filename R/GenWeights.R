@@ -10,7 +10,7 @@
 #' @param term the power that the distance is raised to when the weight matrix
 #'     is generated.
 #'
-#' @import RANN
+#' @importFrom RANN nn2
 #' @export
 gen_weights <- function(orig, query, k=4, threshold, term = 1) {
     neighbors <- nn2(data = orig, query = query, k = k)
