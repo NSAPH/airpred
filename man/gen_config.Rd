@@ -31,5 +31,6 @@ Generate Config File Skeleton
   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
                        the run is going to be used to create predictions}
   \item{\code{finalday}} {The date of the last day covered by the data set}
+  \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
  }
 }

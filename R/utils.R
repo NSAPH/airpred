@@ -44,6 +44,13 @@ get_save_location <- function() {
   return(yaml.load_file("config.yml")$Data_Save_Location)
 }
 
+get_csv_location <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  return(yaml.load_file("config.yml")$csv_path)
+}
+
 #' Generate Config File Skeleton
 #'
 #' @param default A boolean determining whether or not
@@ -65,6 +72,7 @@ get_save_location <- function() {
 #'   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
 #'                        the run is going to be used to create predictions}
 #'   \item{\code{finalday}} {The date of the last day covered by the data set}
+#'   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -80,6 +88,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$Data_Save_Location <- ""
     out$train <- TRUE
     out$finalday <- 20180101
+    out$csv_path <- ""
   }
 
   out.file <- file(file.path(path, "config.yml"))
