@@ -21,8 +21,8 @@ transform_all <- function(info, store = TRUE, load = FALSE) {
         info[[var]] <- sapply(info[[var]], transform, xmin = transform_terms[[var]][2],
                               xmax = transform_terms[[var]][1], xmean = transform_terms[[var]][3],
                               x20 = transform_terms[[var]][4], x80 = transform_terms[[var]][5])
-        message(var)
-        message(class(info[[var]]))
+       ## message(var)
+       ## message(class(info[[var]]))
         break
       }
     }

@@ -48,9 +48,9 @@ MLE_impute <- function(info, var) {
 
   ## Replace Values
   new_vals <- predict(m1.lme)
-  print(all(!is.na(new_vals)))
+  ##print(all(!is.na(new_vals)))
   info[[var]][is.na(info[[var]])] <- new_vals[is.na(info[[var]])]
-  print(all(!is.na(info[[var]])))
+  ##print(all(!is.na(info[[var]])))
 
   return(info)
 
