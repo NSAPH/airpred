@@ -22,6 +22,20 @@ get_csv_location <- function() {
   return(yaml.load_file("config.yml")$csv_path)
 }
 
+get_impute_location <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  return(yaml.load_file("config.yml")$Imputation_Models)
+}
+
+get_mid_process_location <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  return(yaml.load_file("config.yml")$Mid_Process_Data)
+}
+
 #' Generate Config File Skeleton
 #'
 #' @param default A boolean determining whether or not
@@ -44,6 +58,9 @@ get_csv_location <- function() {
 #'                        the run is going to be used to create predictions}
 #'   \item{\code{finalday}} {The date of the last day covered by the data set}
 #'   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
+#'   \item{\code{Imputation_Models}} {The path where the imputation models should be saved.}
+#'   \item{\code{Mid_Process_Data}} {The path where data should be saved between imputation, normalization
+#'                                   and transformation steps}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -60,6 +77,8 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$train <- TRUE
     out$finalday <- 20180101
     out$csv_path <- ""
+    out$Imputation_Models <- ""
+    out$Mid_Process_Data <- ""
   }
 
   out.file <- file(file.path(path, "config.yml"))
