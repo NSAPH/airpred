@@ -23,8 +23,8 @@ gen_norm_vals <- function(info, store = TRUE, load = FALSE) {
     norm.terms <- readRDS("norm_terms.rds")
   } else {
     ## generate and store normalization terms
-    norm.terms <- matrix(nrow = 5, ncol = ncol(info))
-    norm.terms <- data.frame(norm.terms, row.names = c("max", "min", "mean", "20%","80%"))
+    norm.terms <- matrix(nrow = 7, ncol = ncol(info))
+    norm.terms <- data.frame(norm.terms, row.names = c("max", "min", "mean", "20%","80%", "1%","99%"))
     names(norm.terms) <- names(info)
 
     for (var in names(info)) {
@@ -32,7 +32,9 @@ gen_norm_vals <- function(info, store = TRUE, load = FALSE) {
                              min(info[[var]], na.rm = T),
                              mean(info[[var]], na.rm = T),
                              quantile(info[[var]],0.2, na.rm = T),
-                             quantile(info[[var]],0.8, na.rm = T))
+                             quantile(info[[var]],0.8, na.rm = T),
+                             quantile(info[[var]],0.01, na.rm = T),
+                             quantile(info[[var]],0.99, na.rm = T))
     }
 
     if (store) {
@@ -53,6 +55,7 @@ normalize <- function(val, max, min) {
   return((val - min)/(max - min))
 }
 
+#' @export
 normalize_all <- function(info, store = TRUE, load = FALSE) {
   norm.terms <- gen_norm_vals(info, store = store, load = load)
  for (var in names(info)) {

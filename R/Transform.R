@@ -20,9 +20,18 @@ transform_all <- function(info, store = TRUE, load = FALSE) {
   for (var in names(info)) {
     for (term in transform_vars) {
       if (grepl(term, var)) {
-        info[[var]] <- sapply(info[[var]], transform, xmin = transform_terms[[var]][2],
-                              xmax = transform_terms[[var]][1], xmean = transform_terms[[var]][3],
-                              x20 = transform_terms[[var]][4], x80 = transform_terms[[var]][5])
+        ##
+        ## additional term in min and max adds the space between the 99th and 100th percentile
+        ## to the max (equivalent for min) so that there are no infinite terms generated in the
+        ## transformation.
+        ##
+        info[[var]] <- sapply(info[[var]],
+                              transform,
+                              xmin = transform_terms[[var]][2] - (transform_terms[[var]][6] - transform_terms[[var]][2]),
+                              xmax = transform_terms[[var]][1] + (transform_terms[[var]][1] - transform_terms[[var]][7]),
+                              xmean = transform_terms[[var]][3],
+                              x20 = transform_terms[[var]][4],
+                              x80 = transform_terms[[var]][5])
        ## message(var)
        ## message(class(info[[var]]))
         break
@@ -39,10 +48,13 @@ detransform_all <- function(info, store = TRUE, load = FALSE) {
   for (var in names(info)) {
     for (term in transform_vars) {
       if (grepl(term, var)) {
-        info[[var]] <- sapply(info[[var]], detransform, xmin = transform_terms[[var]][2],
-                              xmax = transform_terms[[var]][1], xmean = transform_terms[[var]][3],
-                              x20 = transform_terms[[var]][4], x80 = transform_terms[[var]][5])
-        break
+        info[[var]] <- sapply(info[[var]],
+                              detransform,
+                              xmin = transform_terms[[var]][2] - (transform_terms[[var]][6] - transform_terms[[var]][2]),
+                              xmax = transform_terms[[var]][1] + (transform_terms[[var]][1] - transform_terms[[var]][7]),
+                              xmean = transform_terms[[var]][3],
+                              x20 = transform_terms[[var]][4],
+                              x80 = transform_terms[[var]][5])
       }
     }
   }

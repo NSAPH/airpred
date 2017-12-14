@@ -21,7 +21,6 @@ get_csv_data <- function() {
   saveRDS(data, file.path(save_path,"post_transform.RDS"))
   message("Normalizing Data")
   data <- normalize_all(data)
-
   return(data)
 }
 

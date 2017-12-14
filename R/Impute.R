@@ -22,7 +22,7 @@ get_logit_weights <- function(info, var) {
                      data = info, na.action = na.exclude)
 
   mle_weight <- 1/(1 - predict.glm(logit_model, type = "response"))
-  message("Logit NAs:", sum(is.na(mle_weight)))
+  ##message("Logit NAs:", sum(is.na(mle_weight)))
   mle_weight[is.na(mle_weight)] <- 0
 
   info$logit_var <- NULL
@@ -52,12 +52,13 @@ MLE_impute <- function(info, var) {
 
   ## Replace Values
   new_vals <- predict(m1.lme, newdata = info, na.action = na.gam.replace, allow.new.levels=T)
-  saveRDS(new_vals, file =  paste0(var,"new_vals.RDS"))
-  message("MLE NAs:", sum(is.na(new_vals)))
+  ##message("MLE NAs:", sum(is.na(new_vals)))
   ##print(all(!is.na(new_vals)))
   info[[var]][is.na(info[[var]])] <- new_vals[is.na(info[[var]])]
   ##print(all(!is.na(info[[var]])))
-  message("Output NAs:",sum(is.na(info[[var]])))
+  if (sum(is.na(info[[var]])) != 0) {
+    warning(paste("Error in imputation, missing values still present in", var))
+  }
 
   info$weights <- NULL
   return(info)

@@ -2,9 +2,7 @@ base:
     MeanTemperature
     MaxTemperature
     MinTemperature
-    _PM25
-    _NO2
-    _Ozone
+    MonitorData
     MOD11A1_Clear_night
     MOD11A1_Clear_day
     MOD11A1_LST_Night
