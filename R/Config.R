@@ -36,6 +36,25 @@ get_mid_process_location <- function() {
   return(yaml.load_file("config.yml")$Mid_Process_Data)
 }
 
+#' @export
+get_training_models <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  out <- list()
+  possible <- implemented_models()
+  models <- yaml.load_file("config.yml")$Training_Models
+  for (mod in models) {
+    if (!(mod %in% possible)) {
+      stop(paste0(mod, " is not currently implemented as a training model"))
+    } else {
+      out[[mod]] <- TRUE
+    }
+  }
+
+  return(out)
+}
+
 #' Generate Config File Skeleton
 #'
 #' @param default A boolean determining whether or not
@@ -49,6 +68,10 @@ get_mid_process_location <- function() {
 #' @export
 #'
 #' @details
+#'
+#' The following are the items contained in the config file. All of them must be present in order for
+#' the model to run successfully.
+#'
 #' \itemize{
 #'   \item{\code{Monitor}} {The pollution type the data will be trained on}
 #'   \item{\code{Data_Location}} {The directory holding the required data files}
@@ -61,6 +84,8 @@ get_mid_process_location <- function() {
 #'   \item{\code{Imputation_Models}} {The path where the imputation models should be saved.}
 #'   \item{\code{Mid_Process_Data}} {The path where data should be saved between imputation, normalization
 #'                                   and transformation steps}
+#'   \item{\code{Training_Models}} {A list of the models to be used in training and used for the
+#'                                  ensemble model.}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -79,6 +104,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$csv_path <- ""
     out$Imputation_Models <- ""
     out$Mid_Process_Data <- ""
+    out$Training_Models <- c("nn", "forest", "gradboost")
   }
 
   out.file <- file(file.path(path, "config.yml"))

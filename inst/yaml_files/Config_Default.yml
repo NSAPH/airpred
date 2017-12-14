@@ -14,4 +14,8 @@ Imputation_Models:
 - ../test_data/Imputation_Models
 Mid_Process_Data:
 -  ../test_data/Mid_Process_Data
+Training_Models:
+- nn
+- forest
+- gradboost
 

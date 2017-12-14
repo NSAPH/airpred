@@ -24,5 +24,6 @@ Collate:
     'Interfaces.R'
     'Normalize.R'
     'ReadData.R'
+    'Train.R'
     'Transform.R'
 Suggests: testthat

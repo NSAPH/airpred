@@ -23,6 +23,9 @@ Null, but saves a yml file with the headers needed to run the prediction model s
 Generate Config File Skeleton
 }
 \details{
+The following are the items contained in the config file. All of them must be present in order for
+the model to run successfully.
+
 \itemize{
   \item{\code{Monitor}} {The pollution type the data will be trained on}
   \item{\code{Data_Location}} {The directory holding the required data files}
@@ -35,5 +38,7 @@ Generate Config File Skeleton
   \item{\code{Imputation_Models}} {The path where the imputation models should be saved.}
   \item{\code{Mid_Process_Data}} {The path where data should be saved between imputation, normalization
                                   and transformation steps}
+  \item{\code{Training_Models}} {A list of the models to be used in training and used for the
+                                 ensemble model.}
  }
 }
