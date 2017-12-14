@@ -55,7 +55,15 @@ normalize <- function(val, max, min) {
   return((val - min)/(max - min))
 }
 
+#' Normalize Data
+#'
+#' @param info the data set to be normalized
+#' @param store should the normalization values be stored
+#' @param load should the normalization values be loaded
+#'
+#' @return data frame
 #' @export
+#'
 normalize_all <- function(info, store = TRUE, load = FALSE) {
   norm.terms <- gen_norm_vals(info, store = store, load = load)
  for (var in names(info)) {

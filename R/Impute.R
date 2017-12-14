@@ -8,7 +8,7 @@
 #'
 #'
 #' @import dplyr
-#' @importFrom stats as.formula binomial glm predict.glm
+#' @importFrom stats as.formula binomial glm predict.glm na.exclude
 #' @include utils.R
 #' @export
 get_logit_weights <- function(info, var) {
@@ -39,7 +39,7 @@ get_logit_weights <- function(info, var) {
 #' @export
 #'
 #' @importFrom lme4 lmer
-#' @importFrom stats predict
+#' @importFrom stats predict na.omit
 #' @importFrom gam na.gam.replace
 #'
 #' @examples

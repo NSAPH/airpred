@@ -12,10 +12,19 @@ transform <- function(val, xmin, xmax, xmean, x20, x80) {
   return(output)
 }
 
+
+#' Transform Data
+#'
+#' @param info the data set to be transformed
+#' @param store should the transformation values be stored
+#' @param load should the transformation values be loaded
+#'
+#' @return data frame
 #' @export
+#'
 transform_all <- function(info, store = TRUE, load = FALSE) {
-  transform_terms <- gen_norm_vals(info, store = store, load = load)
-  saveRDS(transform_terms, file = "transform_vals.RDS")
+  transform_terms <- gen_norm_vals(info, store = F, load = load)
+  if (store) saveRDS(transform_terms, file = "transform_vals.RDS")
   transform_vars <- load_yaml(file.path(path.package("airpred"), "yaml_files", "transform_vars.yml"))
   for (var in names(info)) {
     for (term in transform_vars) {
