@@ -25,7 +25,7 @@ process_weights <- function(neighbors, orig_len, query_len, threshold, term = 1)
   out <- matrix( data = 0, nrow = query_len, ncol = orig_len)
 
   for (i in 1:query_len) {
-    for (j in 1:nrow(neighbors$nn.idx)) {
+    for (j in 1:ncol(neighbors$nn.idx)) {
       if (neighbors$nn.dists[i,j] <= threshold && neighbors$nn.dists[i,j] != 0) {
         out[i,neighbors$nn.idx[i,j]] <- 1/(neighbors$nn.dists[i,j]^term)
       }

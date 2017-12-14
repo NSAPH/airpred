@@ -8,7 +8,7 @@
 #'
 #'
 #' @import dplyr
-#' @importFrom stats as.formula binomial glm predict.glm
+#' @importFrom stats as.formula binomial glm predict.glm na.exclude
 #' @include utils.R
 #' @export
 get_logit_weights <- function(info, var) {
@@ -19,11 +19,14 @@ get_logit_weights <- function(info, var) {
   covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/logit_formula.yml"), var)
 
   logit_model <- glm(as.formula(paste0("logit_var~",covars)),family = binomial(link = "logit"),
-                     data = info)
+                     data = info, na.action = na.exclude)
 
   mle_weight <- 1/(1 - predict.glm(logit_model, type = "response"))
+  ##message("Logit NAs:", sum(is.na(mle_weight)))
+  mle_weight[is.na(mle_weight)] <- 0
 
   info$logit_var <- NULL
+
   return(mle_weight)
 }
 
@@ -36,19 +39,28 @@ get_logit_weights <- function(info, var) {
 #' @export
 #'
 #' @importFrom lme4 lmer
-#' @importFrom stats predict
+#' @importFrom stats predict na.omit
+#' @importFrom gam na.gam.replace
+#'
 #' @examples
 MLE_impute <- function(info, var) {
-  weights <- get_logit_weights(info, var)
+  info$weights <- get_logit_weights(info, var)
   covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"), var)
-
   ## Generate Model
-  m1.lme <- lmer(as.formula(paste0(var,"~",covars)),info, weights = info$weights)
+  m1.lme <- lmer(as.formula(paste0(var,"~",covars)),info, weights = info$weights, na.action = na.omit)
+  saveRDS(m1.lme, file = file.path(get_impute_location(), paste0(var, "ImputeModel.RDS")))
 
   ## Replace Values
-  new_vals <- predict(m1.lme)
+  new_vals <- predict(m1.lme, newdata = info, na.action = na.gam.replace, allow.new.levels=T)
+  ##message("MLE NAs:", sum(is.na(new_vals)))
+  ##print(all(!is.na(new_vals)))
   info[[var]][is.na(info[[var]])] <- new_vals[is.na(info[[var]])]
+  ##print(all(!is.na(info[[var]])))
+  if (sum(is.na(info[[var]])) != 0) {
+    warning(paste("Error in imputation, missing values still present in", var))
+  }
 
+  info$weights <- NULL
   return(info)
 
 }
@@ -64,7 +76,9 @@ MLE_impute <- function(info, var) {
 impute_all <- function(info) {
   impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
   for (variable in impute_vars){
+    message(paste("Imputing", variable))
     info <- MLE_impute(info, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
   }
 
   return(info)

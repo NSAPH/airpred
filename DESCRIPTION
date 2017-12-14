@@ -9,15 +9,19 @@ Imports: RANN,
          dplyr,
          lme4,
          R.matlab,
-         lubridate
+         lubridate,
+         data.table,
+         gam
 License: GPL
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Collate: 
+    'Config.R'
     'GenWeights.R'
     'utils.R'
     'Impute.R'
+    'Interfaces.R'
     'Normalize.R'
     'ReadData.R'
     'Transform.R'
