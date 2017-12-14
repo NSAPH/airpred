@@ -15,7 +15,7 @@ test_that("Check normalization, denormalization",{
 
   ## Check Denormalization
   normal.data <- denormalize_all(normal.data)
-  clean_up()
+  clean_up_norm()
   expect_equivalent(normal.data, test.data)
 })
 

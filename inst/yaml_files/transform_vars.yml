@@ -2,5 +2,9 @@ base:
     MeanTemperature
     MaxTemperature
     MinTemperature
-    PM25
-    NO2
+    MonitorData
+    MOD11A1_Clear_night
+    MOD11A1_Clear_day
+    MOD11A1_LST_Night
+    MOD11A1_LST_Day_1km
+    soilm

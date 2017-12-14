@@ -11,3 +11,53 @@ transform <- function(val, xmin, xmax, xmean, x20, x80) {
   output <- xmean + k*atanh(2*(val - (xmin+xmax)/2)/(xmax-xmin))
   return(output)
 }
+
+#' @export
+transform_all <- function(info, store = TRUE, load = FALSE) {
+  transform_terms <- gen_norm_vals(info, store = store, load = load)
+  saveRDS(transform_terms, file = "transform_vals.RDS")
+  transform_vars <- load_yaml(file.path(path.package("airpred"), "yaml_files", "transform_vars.yml"))
+  for (var in names(info)) {
+    for (term in transform_vars) {
+      if (grepl(term, var)) {
+        ##
+        ## additional term in min and max adds the space between the 99th and 100th percentile
+        ## to the max (equivalent for min) so that there are no infinite terms generated in the
+        ## transformation.
+        ##
+        info[[var]] <- sapply(info[[var]],
+                              transform,
+                              xmin = transform_terms[[var]][2] - (transform_terms[[var]][6] - transform_terms[[var]][2]),
+                              xmax = transform_terms[[var]][1] + (transform_terms[[var]][1] - transform_terms[[var]][7]),
+                              xmean = transform_terms[[var]][3],
+                              x20 = transform_terms[[var]][4],
+                              x80 = transform_terms[[var]][5])
+       ## message(var)
+       ## message(class(info[[var]]))
+        break
+      }
+    }
+  }
+
+  return(info)
+}
+
+detransform_all <- function(info, store = TRUE, load = FALSE) {
+  transform_terms <- load_norm_vals()
+  transform_vars <- load_yaml(file.path(path.package("airpred"), "yaml_files", "transform_vars.yml"))
+  for (var in names(info)) {
+    for (term in transform_vars) {
+      if (grepl(term, var)) {
+        info[[var]] <- sapply(info[[var]],
+                              detransform,
+                              xmin = transform_terms[[var]][2] - (transform_terms[[var]][6] - transform_terms[[var]][2]),
+                              xmax = transform_terms[[var]][1] + (transform_terms[[var]][1] - transform_terms[[var]][7]),
+                              xmean = transform_terms[[var]][3],
+                              x20 = transform_terms[[var]][4],
+                              x80 = transform_terms[[var]][5])
+      }
+    }
+  }
+
+  return(info)
+}

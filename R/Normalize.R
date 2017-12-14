@@ -3,20 +3,38 @@
 #
 
 
+#' Generate Data Frame with stored metadata
+#'
+#' @param info A dataframe
+#' @param store should the genreated metadata be stored
+#' @param load SHould the metadata be loaded instead
+#'
+#' @return metadata dataframe
+#' @export
+#'
+#' @importFrom stats quantile
+#'
 gen_norm_vals <- function(info, store = TRUE, load = FALSE) {
-  # set up normalization term data.fram
+  # set up normalization term data.frame
+  # Also generates values for transformation
 
   if (load) {
     ## load previously created normalization terms
     norm.terms <- readRDS("norm_terms.rds")
   } else {
     ## generate and store normalization terms
-    norm.terms <- matrix(nrow = 2, ncol = ncol(info))
-    norm.terms <- data.frame(norm.terms, row.names = c("max", "min"))
+    norm.terms <- matrix(nrow = 7, ncol = ncol(info))
+    norm.terms <- data.frame(norm.terms, row.names = c("max", "min", "mean", "20%","80%", "1%","99%"))
     names(norm.terms) <- names(info)
 
     for (var in names(info)) {
-      norm.terms[[var]] <- c(max(info[[var]]), min(info[[var]]))
+      norm.terms[[var]] <- c(max(info[[var]], na.rm = T),
+                             min(info[[var]], na.rm = T),
+                             mean(info[[var]], na.rm = T),
+                             quantile(info[[var]],0.2, na.rm = T),
+                             quantile(info[[var]],0.8, na.rm = T),
+                             quantile(info[[var]],0.01, na.rm = T),
+                             quantile(info[[var]],0.99, na.rm = T))
     }
 
     if (store) {
@@ -37,10 +55,11 @@ normalize <- function(val, max, min) {
   return((val - min)/(max - min))
 }
 
-normalize_all <- function(info, store = TRUE) {
-  norm.terms <- gen_norm_vals(info, store = store)
+#' @export
+normalize_all <- function(info, store = TRUE, load = FALSE) {
+  norm.terms <- gen_norm_vals(info, store = store, load = load)
  for (var in names(info)) {
-   info[[var]] <- lapply(info[[var]], normalize, max = norm.terms[[var]][1],
+   info[[var]] <- sapply(info[[var]], normalize, max = norm.terms[[var]][1],
                          min = norm.terms[[var]][2])
  }
   return(info)
@@ -59,6 +78,6 @@ denormalize_all <- function(info, store = TRUE) {
   return(info)
 }
 
-clean_up <- function() {
+clean_up_norm <- function() {
   file.remove("norm_terms.rds")
 }
