@@ -64,12 +64,11 @@ train_gradboost <- function(info, train_ind) {
 #' @return
 #' @export
 #'
-#' @importFrom h2o h2o.init as.h2o h2o.shutdown
-#' @importFrom gam gam
+#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict
+#' @importFrom gam gam s
 train <- function() {
   models <- get_training_models()
   trained <- list()
-
   h2o.init()
   ## Load data
   info <- readRDS("../test_data/test_prepped.RDS") ## Change later, config value
@@ -87,11 +86,36 @@ train <- function() {
   if (!is.null(models$gradboost)) {
     trained$gradboost <- train_gradboost(info, train_ind)
   }
-  saveRDS(trained, "trained.RDS")
-  for (model_name in names(trained)) {
+  saveRDS(trained, "initial_trained.RDS")
 
+  ## Initial ensemble
+    ## Assemble ensemble data frame
+  ensemble_data <- data.frame(as.vector(info$MonitorData))
+  names(ensemble_data)[1] <- "MonitorData"
+  for (model_name in names(trained)) {
+    ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
   }
+
+    ## Run Model
+  ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
+  saveRDS(ensemble, "initial_ensemble.RDS")
+
   h2o.shutdown()
 }
 
-
+#' Build formula for ensmeble model
+#'
+#' returns a string with the form "MonitorData ~ s(model1) + s(model2) ...
+#'
+#' @param models a list of trained models
+#'
+#' @return A string with the formula used in the ensemble model
+ensemble_formula <- function(models) {
+  out <- "MonitorData ~ "
+  terms <- character(0)
+  for (model in names(models)) {
+    terms <- c(terms, paste0("s(", model, ")"))
+  }
+  out <- paste0(out, Vector2FormulaString(terms))
+  return(out)
+}
