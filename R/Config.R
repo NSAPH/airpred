@@ -36,7 +36,7 @@ get_mid_process_location <- function() {
   return(yaml.load_file("config.yml")$Mid_Process_Data)
 }
 
-#' @export
+
 get_training_models <- function() {
   if (!file.exists("config.yml")) {
     stop("No config file found, try running gen_config()")

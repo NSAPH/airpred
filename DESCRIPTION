@@ -11,7 +11,8 @@ Imports: RANN,
          R.matlab,
          lubridate,
          data.table,
-         gam
+         gam,
+         h2o
 License: GPL
 Encoding: UTF-8
 LazyData: true

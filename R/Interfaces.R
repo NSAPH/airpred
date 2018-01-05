@@ -13,14 +13,15 @@ get_csv_data <- function() {
   csv_path <- get_csv_location()
   save_path <- get_mid_process_location()
   data <- fread(csv_path)
-  message("Imputing Data")
-  data <- impute_all(data)
-  saveRDS(data, file.path(save_path,"post_impute.RDS"))
   message("Transforming Data")
   data <- transform_all(data)
   saveRDS(data, file.path(save_path,"post_transform.RDS"))
   message("Normalizing Data")
   data <- normalize_all(data)
+  saveRDS(data, file.path(save_path,"post_normal.RDS"))
+  message("Imputing Data")
+  data <- impute_all(data)
+  saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)
 }
 
