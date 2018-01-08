@@ -8,6 +8,13 @@ get_final_date <- function() {
   return(ymd(yaml.load_file("config.yml")$finalday))
 }
 
+get_data_location <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  return(yaml.load_file("config.yml")$Data_Location)
+}
+
 get_save_location <- function() {
   if (!file.exists("config.yml")) {
     stop("No config file found, try running gen_config()")

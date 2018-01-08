@@ -29,8 +29,9 @@ Matlab2RDS <- function(path) {
 #' @export
 #'
 #'
-process_data <- function(path = "../predictions/EPANO2") {
+process_data <- function() {
   start <- Sys.time()
+  path <- get_data_location()
   files <- gen_data_paths(path)
   save_path <- get_save_location()
   for (var in names(files)) {
