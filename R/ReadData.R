@@ -318,23 +318,13 @@ join_data <- function(files = NULL) {
         ## Check if annual, constant, or daily data
         if (length(names(new_data)) == 2) {
           ## Monitor Constant, join on monitor only
-          out <- merge(out,
-                       new_data,
-                       by = c("site"),
-                       all.x = TRUE)
+          out <- new_data[out, on = "site", by = .EACHI]
         } else if (length(names(new_data)) == 3) {
           ## Annual data, join on monitor and year
-          out <-
-            merge(out,
-                  new_data,
-                  by = c("site", "year"),
-                  all.x = TRUE)
+          out <- new_data[out, on = c("site","year"), by = .EACHI]
         } else if (length(names(new_data)) == 4) {
           ## Daily data, join on monitor and date
-          out <- merge(out,
-                       new_data,
-                       by = c("site"),
-                       all.x = TRUE)
+          out <- new_data[out, on = c("site","date"), by = .EACHI]
         }
       }
     }
