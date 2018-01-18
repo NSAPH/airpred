@@ -319,15 +319,18 @@ join_data <- function(files = NULL) {
         ## Check if annual, constant, or daily data
         if (length(names(new_data)) == 2) {
           ## Monitor Constant, join on monitor only
+          print("SITE!")
           setkey(new_data, site)
           out <- merge(out, new_data, all.x = T)
         } else if (length(names(new_data)) == 3) {
           ## Annual data, join on monitor and year
+          print("YEAR!")
           setkey(new_data, site, year)
           out <- merge(out, new_data, all.x = T)
         } else if (length(names(new_data)) == 4) {
           ## Daily data, join on monitor and date
-          setkey(new_data, site, date)
+          print("DAY!")
+          setkey(new_data, site, year, date)
           out <- merge(out, new_data, all.x = T)
         }
       }
