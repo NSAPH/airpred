@@ -308,9 +308,9 @@ join_data <- function(files = NULL) {
   out <- readRDS(file.path(save_path, "MonitorData.RDS"))
   ## Convert to Data.Table
   out <- data.table(out)
-  setkey(out, site, year, date)
   ## For each variable
   for (var in names(files)) {
+    setkey(out, site, year, date)
     if (var != "MonitorData") {
       ## Read in DataFrame
       if (file.exists(file.path(save_path, paste0(var, ".RDS")))) {
