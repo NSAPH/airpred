@@ -308,6 +308,7 @@ join_data <- function(files = NULL) {
   out <- readRDS(file.path(save_path, "MonitorData.RDS"))
   ## Convert to Data.Table
   out <- data.table(out)
+  setkey(out, site, year, date)
   ## For each variable
   for (var in names(files)) {
     if (var != "MonitorData") {
@@ -318,13 +319,16 @@ join_data <- function(files = NULL) {
         ## Check if annual, constant, or daily data
         if (length(names(new_data)) == 2) {
           ## Monitor Constant, join on monitor only
-          out <- new_data[out, on = "site", by = .EACHI]
+          setkey(new_data, site)
+          out <- merge(out, new_data, all.x = T)
         } else if (length(names(new_data)) == 3) {
           ## Annual data, join on monitor and year
-          out <- new_data[out, on = c("site","year"), by = .EACHI]
+          setkey(new_data, site, year)
+          out <- merge(out, new_data, all.x = T)
         } else if (length(names(new_data)) == 4) {
           ## Daily data, join on monitor and date
-          out <- new_data[out, on = c("site","date"), by = .EACHI]
+          setkey(new_data, site, date)
+          out <- merge(out, new_data, all.x = T)
         }
       }
     }
