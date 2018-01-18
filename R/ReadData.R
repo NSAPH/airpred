@@ -298,7 +298,7 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
 #' @return none, but saves the processed data as an RDS file
 #' @export
 #'
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table setkey
 join_data <- function(files = NULL) {
   save_path <- get_save_location()
   if (is.null(files)) {
