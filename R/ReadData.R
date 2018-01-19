@@ -338,5 +338,5 @@ join_data <- function(files = NULL) {
   }
   saveRDS(out, file = file.path(save_path, "assembled_data.RDS"))
 
-  write.CSV(out, file = file.path(save_path, "assembled_data.csv"))
+  write.csv(out, file = file.path(save_path, "assembled_data.csv"))
 }
