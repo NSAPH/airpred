@@ -35,6 +35,7 @@ the model to run successfully.
                        the run is going to be used to create predictions}
   \item{\code{finalday}} {The date of the last day covered by the data set}
   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
+  \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
   \item{\code{Imputation_Models}} {The path where the imputation models should be saved.}
   \item{\code{Mid_Process_Data}} {The path where data should be saved between imputation, normalization
                                   and transformation steps}

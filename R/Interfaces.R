@@ -25,6 +25,12 @@ get_csv_data <- function() {
   return(data)
 }
 
+#' Generate training data from RDS
+#'
+#' Given a rds file in the config file, generates a dataframe from the file ready to use for training
+#'
+#' @return data frame
+#' @export
 get_rds_data <- function() {
   rds_path <- get_rsd_location()
   save_path <- get_mid_process_location()
