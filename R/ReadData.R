@@ -299,6 +299,7 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
 #' @export
 #'
 #' @importFrom data.table data.table setkey
+#' @importFrom utils write.csv
 join_data <- function(files = NULL) {
   save_path <- get_save_location()
   if (is.null(files)) {
@@ -338,5 +339,5 @@ join_data <- function(files = NULL) {
   }
   saveRDS(out, file = file.path(save_path, "assembled_data.RDS"))
 
-  write.csv(out, file = file.path(save_path, "assembled_data.csv"))
+  write.csv(out, file = file.path(save_path, "assembled_data.csv"), row.names = F)
 }

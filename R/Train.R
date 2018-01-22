@@ -10,6 +10,7 @@
 #' @importFrom h2o h2o.deeplearning
 train_nn <- function(info, train_ind) {
  model <- h2o.deeplearning(y = "MonitorData",
+                           x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                            training_frame = info[train_ind,],
                            nfolds=10, fold_assignment="Modulo",seed=271828,
                            keep_cross_validation_predictions = TRUE,
@@ -28,6 +29,7 @@ train_nn <- function(info, train_ind) {
 #' @importFrom h2o h2o.randomForest
 train_forest <- function(info, train_ind) {
   model <- h2o.randomForest(y = "MonitorData",
+                            x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                             training_frame = info[train_ind,],
                             nfolds=10,
                             fold_assignment="Modulo",seed=271828,
@@ -48,6 +50,7 @@ train_forest <- function(info, train_ind) {
 #' @importFrom h2o h2o.gbm
 train_gradboost <- function(info, train_ind) {
   model <- h2o.gbm(y = "MonitorData",
+                   x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                    training_frame = info[train_ind,],
                    nfolds=10,
                    fold_assignment="Modulo", seed=271828,
@@ -95,10 +98,43 @@ train <- function() {
   for (model_name in names(trained)) {
     ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
   }
+  saveRDS(ensemble_data, "ensemble1_data.RDS")
 
     ## Run Model
   ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
   saveRDS(ensemble, "initial_ensemble.RDS")
+  new_vals <- predict(ensemble, ensemble_data)
+
+  ## use weights to generate nearby terms
+
+    ## Assign values to current dataframe
+
+  ## Store data with nearby terms
+
+  saveRDS(info, "nearby_data.RDS")
+
+  ## re run models
+
+  if (!is.null(models$nn)) {
+    trained$nn <- train_nn(info, train_ind)
+  }
+  if (!is.null(models$forest)) {
+    trained$forest <- train_forest(info, train_ind)
+  }
+  if (!is.null(models$gradboost)) {
+    trained$gradboost <- train_gradboost(info, train_ind)
+  }
+  saveRDS(trained, "nearby_trained.RDS")
+
+  ensemble_data <- data.frame(as.vector(info$MonitorData))
+  names(ensemble_data)[1] <- "MonitorData"
+  for (model_name in names(trained)) {
+    ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
+  }
+
+  ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
+  saveRDS(ensemble, "initial_ensemble.RDS")
+  new_vals <- predict(ensemble, ensemble_data)
 
   h2o.shutdown()
 }
@@ -119,3 +155,5 @@ ensemble_formula <- function(models) {
   out <- paste0(out, Vector2FormulaString(terms))
   return(out)
 }
+
+gen_nearby_terms <- function(new_vals) {}
