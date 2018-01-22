@@ -10,6 +10,8 @@ finalday:
 - 20180101
 csv_path:
 - ../data/Impute/Data/MissingData.csv
+rds_path:
+- ../data/Impute/Data/MissingData.rds
 Imputation_Models:
 - ../test_data/Imputation_Models
 Mid_Process_Data:
