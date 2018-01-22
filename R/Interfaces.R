@@ -34,7 +34,7 @@ get_csv_data <- function() {
 get_rds_data <- function() {
   rds_path <- get_rds_location()
   save_path <- get_mid_process_location()
-  data <- readRDS()
+  data <- readRDS(rds_path)
   message("Transforming Data")
   data <- transform_all(data)
   saveRDS(data, file.path(save_path,"post_transform.RDS"))
