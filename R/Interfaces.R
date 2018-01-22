@@ -32,7 +32,7 @@ get_csv_data <- function() {
 #' @return data frame
 #' @export
 get_rds_data <- function() {
-  rds_path <- get_rsd_location()
+  rds_path <- get_rds_location()
   save_path <- get_mid_process_location()
   data <- readRDS()
   message("Transforming Data")
