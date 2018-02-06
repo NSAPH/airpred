@@ -17,7 +17,7 @@ License: GPL
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Collate: 
+Collate:
     'Config.R'
     'GenWeights.R'
     'utils.R'
@@ -27,4 +27,7 @@ Collate:
     'ReadData.R'
     'Train.R'
     'Transform.R'
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
