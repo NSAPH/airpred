@@ -4,7 +4,8 @@
 \alias{gen_weights}
 \title{Generate geographic weighting matrix}
 \usage{
-gen_weights(orig, query, k = 4, threshold, term = 1)
+gen_weights(orig = load_site_list(), query = load_site_list(), k = 4,
+  threshold = 1e+05, term = 1)
 }
 \arguments{
 \item{orig}{the data in which the neighbors are being found}

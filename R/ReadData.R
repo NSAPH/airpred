@@ -337,6 +337,7 @@ join_data <- function(files = NULL) {
       }
     }
   }
+  setorder(out, date)
   saveRDS(out, file = file.path(save_path, "assembled_data.RDS"))
 
   write.csv(out, file = file.path(save_path, "assembled_data.csv"), row.names = F)

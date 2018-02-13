@@ -8,6 +8,13 @@ get_final_date <- function() {
   return(ymd(yaml.load_file("config.yml")$finalday))
 }
 
+get_monitor_list <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+  return(yaml.load_file("config.yml")$monitor_list)
+}
+
 get_data_location <- function() {
   if (!file.exists("config.yml")) {
     stop("No config file found, try running gen_config()")
@@ -101,6 +108,7 @@ get_training_models <- function() {
 #'                                   and transformation steps}
 #'   \item{\code{Training_Models}} {A list of the models to be used in training and used for the
 #'                                  ensemble model.}
+#'   \item{\code{monitor_list}} {The location of the file containing the coordinates of the monitors}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -117,6 +125,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$train <- TRUE
     out$finalday <- 20180101
     out$csv_path <- ""
+    out$monitor_list <- ""
     out$Imputation_Models <- ""
     out$Mid_Process_Data <- ""
     out$Training_Models <- c("nn", "forest", "gradboost")

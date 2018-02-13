@@ -9,13 +9,15 @@ train:
 finalday:
 - 20180101
 csv_path:
-- ../data/Impute/Data/MissingData.csv
+- ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.csv
 rds_path:
-- ../data/Impute/Data/MissingData.rds
+- ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.rds
 Imputation_Models:
-- ../test_data/Imputation_Models
+- ~/shared_space/ci3_d_airpred/assembled_data/imputation_models
 Mid_Process_Data:
--  ../test_data/Mid_Process_Data
+-  ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data
+monitor_list:
+- ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
 Training_Models:
 - nn
 - forest

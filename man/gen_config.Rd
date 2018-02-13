@@ -41,5 +41,6 @@ the model to run successfully.
                                   and transformation steps}
   \item{\code{Training_Models}} {A list of the models to be used in training and used for the
                                  ensemble model.}
+  \item{\code{monitor_list}} {The location of the file containing the coordinates of the monitors}
  }
 }

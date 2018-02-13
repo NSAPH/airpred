@@ -106,7 +106,7 @@ train <- function() {
   new_vals <- predict(ensemble, ensemble_data)
 
   ## use weights to generate nearby terms
-
+  nearby <- gen_nearby_terms(new_vals, max(info$site))
     ## Assign values to current dataframe
 
   ## Store data with nearby terms
@@ -156,4 +156,38 @@ ensemble_formula <- function(models) {
   return(out)
 }
 
-gen_nearby_terms <- function(new_vals) {}
+gen_nearby_terms <- function(new_vals, num_sites) {
+  ## assumes observations are ordered as following
+  ## year > day > monitor
+  out <- data.frame(new_vals)
+  new_val_mat <- matrix(new_vals, nrow = num_sites)
+
+  ## Spatial Terms
+  for (i in 1:3) {
+    site_weights <- gen_weights(term = i)
+    out_vec <- site_weights %*% new_val_mat
+    out[[paste0("Spatial_Lagged_",i)]] <- c(out_vec)
+  }
+
+  ## Temporal Terms
+  for (i in 1:3) {
+    temp_mat <- matrix(nrow = nrow(new_val_mat), ncol = ncol(new_val_mat))
+    for (j in num_sites) {
+      temp_mat[j,] <- as.numeric(filter(new_val_mat[j,], filter_term(i), sides = 2))
+    }
+    out[[paste0("Temporal_Lagged_",i)]] <- c(temp_mat)
+  }
+  out$new_vals <- NULL
+  return(out)
+}
+
+
+## Here to keep the nearby term code cleaner
+## Currently hardcoded, would like to come up with a non-hardcoded weighting function in the future
+filter_term <- function(val) {
+  out <- matrix(nrow = 3, ncol = 5)
+  out[1,] <- rep(1/5, 5)
+  out[2,] <- c(1/9, 2/9, 1/3, 2/9, 1/3)
+  out[3,] <- c(1/16, 3/16, 1/2, 3/16, 1/16)
+  return(out[i,])
+}
