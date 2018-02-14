@@ -10,7 +10,6 @@ base:
     REANALYSIS_shum_2m_DailyMean
     REANALYSIS_snowc_DailyMean
     REANALYSIS_tcdc_DailyMean
-    REANALYSIS_omega_DailyMean
     REANALYSIS_windspeed_10m_DailyMean
     REANALYSIS_weasd_DailyMean
     REANALYSIS_prate_DailyMean
