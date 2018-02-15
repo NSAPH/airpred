@@ -26,7 +26,6 @@ base:
     RoadDensity_roads1000
     USElevation_mea100
     GFEDFireCarbon
-    CMAQ_NO2
     CMAQ_NO2_Vertical
     CMAQ_Ozone
     CMAQ_Ozone_Vertical
