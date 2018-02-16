@@ -63,18 +63,21 @@ train_gradboost <- function(info, train_ind) {
 
 
 #' Train Air Pollution Model
-#'
-#' @return
+#' @param init Boolean for whether or not an h2o cluster should be initiated on call of
+#'        this function.
+#' @param shutdown Boolean for whether or not the h2o cluster should shutdown on termination
+#' @return NULL, but saves the models required to predict.
 #' @export
 #'
 #' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict
 #' @importFrom gam gam s
-train <- function() {
+train <- function(init = T, shutdown = T) {
   models <- get_training_models()
   trained <- list()
-  h2o.init()
+  if (init) {h2o.init()}
   ## Load data
-  info <- readRDS("../test_data/test_prepped.RDS") ## Change later, config value
+  info <- readRDS(get_training_data())
+  train_out_path <- get_training_output()
   train_ind <- sample(seq(nrow(info)), size = round(nrow(info*9)))
   train_ind <- sort(train_ind, decreasing = FALSE)
   ## Convert to h2o
@@ -89,7 +92,7 @@ train <- function() {
   if (!is.null(models$gradboost)) {
     trained$gradboost <- train_gradboost(info, train_ind)
   }
-  saveRDS(trained, "initial_trained.RDS")
+  saveRDS(trained, file.path(train_out_path, "initial_trained.RDS"))
 
   ## Initial ensemble
     ## Assemble ensemble data frame
@@ -98,20 +101,24 @@ train <- function() {
   for (model_name in names(trained)) {
     ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
   }
-  saveRDS(ensemble_data, "ensemble1_data.RDS")
+  saveRDS(ensemble_data, file.path(train_out_path, "ensemble1_data.RDS"))
 
     ## Run Model
   ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
-  saveRDS(ensemble, "initial_ensemble.RDS")
+  saveRDS(ensemble, file.path(train_out_path,"initial_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
 
   ## use weights to generate nearby terms
   nearby <- gen_nearby_terms(new_vals, max(info$site))
+
     ## Assign values to current dataframe
+  for (name in names(nearby)) {
+    info[[name]] <- nearby[[name]]
+  }
 
   ## Store data with nearby terms
 
-  saveRDS(info, "nearby_data.RDS")
+  saveRDS(info, file.path(train_out_path,"nearby_data.RDS"))
 
   ## re run models
 
@@ -124,7 +131,7 @@ train <- function() {
   if (!is.null(models$gradboost)) {
     trained$gradboost <- train_gradboost(info, train_ind)
   }
-  saveRDS(trained, "nearby_trained.RDS")
+  saveRDS(trained, file.path(train_out_path,"nearby_trained.RDS"))
 
   ensemble_data <- data.frame(as.vector(info$MonitorData))
   names(ensemble_data)[1] <- "MonitorData"
@@ -132,11 +139,13 @@ train <- function() {
     ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
   }
 
+  saveRDS(ensemble_data, file.path(train_out_path, "ensemble2_data.RDS"))
+
   ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
-  saveRDS(ensemble, "initial_ensemble.RDS")
+  saveRDS(ensemble, file.path(train_out_path,"nearby_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
 
-  h2o.shutdown()
+  if (shutdown) {h2o.shutdown(prompt = F)}
 }
 
 #' Build formula for ensmeble model
@@ -189,5 +198,5 @@ filter_term <- function(val) {
   out[1,] <- rep(1/5, 5)
   out[2,] <- c(1/9, 2/9, 1/3, 2/9, 1/3)
   out[3,] <- c(1/16, 3/16, 1/2, 3/16, 1/16)
-  return(out[i,])
+  return(out[val,])
 }

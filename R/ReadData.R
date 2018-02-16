@@ -20,7 +20,6 @@ Matlab2RDS <- function(path) {
 
 #' Process all data for a given data set
 #'
-#' @param path folder where the prediction data resides
 #'
 #' @return none
 #'
@@ -298,7 +297,7 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
 #' @return none, but saves the processed data as an RDS file
 #' @export
 #'
-#' @importFrom data.table data.table setkey
+#' @importFrom data.table data.table setkey setorder
 #' @importFrom utils write.csv
 join_data <- function(files = NULL) {
   save_path <- get_save_location()

@@ -6,9 +6,6 @@
 \usage{
 process_data()
 }
-\arguments{
-\item{path}{folder where the prediction data resides}
-}
 \value{
 none
 }

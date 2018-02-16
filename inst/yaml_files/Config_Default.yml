@@ -1,8 +1,8 @@
-Monitor:
+monitor:
 - EPANO2
-Data_Location:
+data_docation:
 - ../predictions/EPANO2
-Data_Save_Location:
+data_save_location:
 - ../test_data/process_data
 train:
 - TRUE
@@ -12,13 +12,17 @@ csv_path:
 - ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.csv
 rds_path:
 - ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.rds
-Imputation_Models:
+imputation_models:
 - ~/shared_space/ci3_d_airpred/assembled_data/imputation_models
-Mid_Process_Data:
--  ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data
+mid_process_data:
+- ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data
+training_data:
+- ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data/prepped.RDS
+training_output:
+- ~/shared_space/ci3_p_airpred/training_output
 monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
-Training_Models:
+training_models:
 - nn
 - forest
 - gradboost
