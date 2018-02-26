@@ -1,7 +1,13 @@
 monitor:
 - EPANO2
-data_docation:
+data_location:
 - ../predictions/EPANO2
+use_default_vars:
+- TRUE
+add_custom_vars:
+- FALSE
+custom_var_list:
+- IF add_custom_vars is True, put the file name here.
 data_save_location:
 - ../test_data/process_data
 train:
