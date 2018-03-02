@@ -49,9 +49,6 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
     out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
                                     "Config_Default.yml"))
-  } else if (!is.null(in_list)) {
-    ## Need to validate input here
-    out <- in_list
   } else {
     out <- list()
     out$monitor <- ""
@@ -69,6 +66,13 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$training_data <- ""
     out$training_output <- ""
     out$training_models <- c("nn", "forest", "gradboost")
+  }
+
+  if (!is.null(in_list)) {
+    ## Need to validate input here
+    for (item in names(in_list)) {
+      out[[item]] <- in_list[[item]]
+    }
   }
 
   out.file <- file(file.path(path, "config.yml"))
