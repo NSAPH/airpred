@@ -43,7 +43,7 @@ This should contain the last day covered by the dataset in the format YYYYMMDD.
 
 The default config file looks like this:
 
-```{yaml}
+```{yaml, eval=FALSE}
 monitor:
 - AQRVPM25
 data_location:
@@ -95,7 +95,7 @@ The current systen for assembling the datasets assumes the following general str
 The default location of the standard variables within the folder indicated in the config field `data_location` is specified in a yaml file included in the package. Additional or custom variables can also be included using a custom yaml file mirroring the structure of the included one.
 
 The following block is representative of the structure of that is used to indicate the files containing their respective variables: 
-```{yaml}
+```{yaml, eval=FALSE}
 MOD04L2_550:
 - MOD04L2
 - MOD04L2_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_

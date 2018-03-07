@@ -115,3 +115,11 @@ impute_all_parallel <- function(info) {
 
 
 }
+
+
+#' List all varibles imputed in the process
+#' @export
+list_imputed_variables <- function() {
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  print(impute_vars)
+}
