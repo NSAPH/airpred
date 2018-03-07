@@ -1,7 +1,7 @@
 monitor:
-- EPANO2
+- AQRVPM25
 data_location:
-- ../predictions/EPANO2
+- ~/shared_space/ci3_d_airpred/processed_data/AQRVPM25
 use_default_vars:
 - TRUE
 add_custom_vars:
