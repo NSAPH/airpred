@@ -35,6 +35,10 @@ $$
 x_{out} = \bar{x} + k\text{ arctanh}(2(x_i - 0.5(x_{min-} + x_{max+})/(x_{max+} - x_{min-}))
 $$
 
+$x_{max+}$ and $x_{min-}$ are used instead of $x_{max}$ and $x_{min}$ because the true minimums and maximums result in undefined values, preventing further analysis. Additionally, as the change of the distribution rather than the actual output is the objective of this transformation, we don't feel that the actual inputs differing strongly from the true maximums impacts the output.
+
 ## Normalization
+
+The output of the transformation process is used as input fot the normalization process. All of the notation here refers to the values generated from transformation. The normalization step scales all variables 
 
 ## Imputation
