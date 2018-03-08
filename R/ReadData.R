@@ -20,7 +20,6 @@ Matlab2RDS <- function(path) {
 
 #' Process all data for a given data set
 #'
-#' @param path folder where the prediction data resides
 #'
 #' @return none
 #'
@@ -29,38 +28,44 @@ Matlab2RDS <- function(path) {
 #' @export
 #'
 #'
-process_data <- function(path = "../predictions/EPANO2") {
+process_data <- function() {
   start <- Sys.time()
+  path <- get_data_location()
   files <- gen_data_paths(path)
   save_path <- get_save_location()
   for (var in names(files)) {
     ##t <- Sys.time()
+    ##print(file.path(save_path, paste0(var, ".RDS")))
     if (var == "MonitorData") {
      ## print("Monitor")
       df <- process_monitor(files[[var]])
      ## print(var)
+      names(df)[1] <- var
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (substr(var,1,20) == "REANALYSIS_windspeed") {
       ##print("wind")
       df <- process_windspeed(files[[var]])
       ##print(var)
+      names(df)[1] <- var
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(files[[var]]) == 1) {
       ##print("loc")
       df <- process_location(files[[var]])
      ## print(var)
+      names(df)[1] <- var
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else if (length(readMat(files[[var]][1])$Result[,1]) == 1) {
      ## print("year")
       df <- process_annual(files[[var]])
     ##  print(var)
+      names(df)[1] <- var
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
     } else {
      ## print("day")
       df <- process_daily(files[[var]])
      ## print(var)
+      names(df)[1] <- var
       saveRDS(df, file = file.path(save_path, paste0(var,".RDS")))
-
     }
    ## print(Sys.time() - t)
   }
@@ -255,6 +260,12 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
   # get names of variables in dataset
   varlist <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
                                       "Data_Location.yml"))
+  if (get_add_custom_vars()) {
+    custom_list <- yaml.load_file(get_custom_vars())
+    for (variable in names(custom_list)) {
+      varlist[[variable]] <- custom_list[[variable]]
+    }
+  }
 
 
   for (variable in names(varlist)) {
@@ -282,4 +293,57 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
   }
 
   return(file.yaml)
+}
+
+#' Join processed variables into a single data.table
+#'
+#' @param files used when being called from process data, should not be used when called
+#' from the console. Passes in the list of variables
+#'
+#' @return none, but saves the processed data as an RDS file
+#' @export
+#'
+#' @importFrom data.table data.table setkey setorder
+#' @importFrom utils write.csv
+join_data <- function(files = NULL) {
+  save_path <- get_save_location()
+  if (is.null(files)) {
+    files <- gen_data_paths(get_data_location())
+  }
+  ## Load Monitor Data as initial data frame
+  out <- readRDS(file.path(save_path, "MonitorData.RDS"))
+  ## Convert to Data.Table
+  out <- data.table(out)
+  ## For each variable
+  for (var in names(files)) {
+    setkey(out, site, year, date)
+    if (var != "MonitorData") {
+      ## Read in DataFrame
+      if (file.exists(file.path(save_path, paste0(var, ".RDS")))) {
+        new_data <-
+          data.table(readRDS(file.path(save_path, paste0(var, ".RDS"))))
+        ## Check if annual, constant, or daily data
+        if (length(names(new_data)) == 2) {
+          ## Monitor Constant, join on monitor only
+          print("SITE!")
+          setkey(new_data, site)
+          out <- merge(out, new_data, all.x = T)
+        } else if (length(names(new_data)) == 3) {
+          ## Annual data, join on monitor and year
+          print("YEAR!")
+          setkey(new_data, site, year)
+          out <- merge(out, new_data, all.x = T)
+        } else if (length(names(new_data)) == 4) {
+          ## Daily data, join on monitor and date
+          print("DAY!")
+          setkey(new_data, site, year, date)
+          out <- merge(out, new_data, all.x = T)
+        }
+      }
+    }
+  }
+  setorder(out, date)
+  saveRDS(out, file = file.path(save_path, "assembled_data.RDS"))
+
+  write.csv(out, file = file.path(save_path, "assembled_data.csv"), row.names = F)
 }

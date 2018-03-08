@@ -13,17 +13,38 @@ get_csv_data <- function() {
   csv_path <- get_csv_location()
   save_path <- get_mid_process_location()
   data <- fread(csv_path)
-  message("Imputing Data")
-  data <- impute_all(data)
-  saveRDS(data, file.path(save_path,"post_impute.RDS"))
   message("Transforming Data")
   data <- transform_all(data)
   saveRDS(data, file.path(save_path,"post_transform.RDS"))
   message("Normalizing Data")
   data <- normalize_all(data)
+  saveRDS(data, file.path(save_path,"post_normal.RDS"))
+  message("Imputing Data")
+  data <- impute_all(data)
+  saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)
 }
 
-
+#' Generate training data from RDS
+#'
+#' Given a rds file in the config file, generates a dataframe from the file ready to use for training
+#'
+#' @return data frame
+#' @export
+get_rds_data <- function() {
+  rds_path <- get_rds_location()
+  save_path <- get_mid_process_location()
+  data <- readRDS(rds_path)
+  print("Transforming Data")
+  data <- transform_all(data)
+  saveRDS(data, file.path(save_path,"post_transform.RDS"))
+  print("Normalizing Data")
+  data <- normalize_all(data)
+  saveRDS(data, file.path(save_path,"post_normal.RDS"))
+  print("Imputing Data")
+  data <- impute_all(data)
+  saveRDS(data, file.path(save_path,"prepped.RDS"))
+  return(data)
+}
 
 ## Transform + Normalize Data

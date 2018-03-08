@@ -12,7 +12,7 @@
 #'
 #' @importFrom RANN nn2
 #' @export
-gen_weights <- function(orig, query, k=4, threshold, term = 1) {
+gen_weights <- function(orig = load_site_list(), query = load_site_list(), k=4, threshold = 100000, term = 1) {
     neighbors <- nn2(data = orig, query = query, k = k)
 
     weight_matrix <- process_weights(neighbors, nrow(orig), nrow(query), threshold, term)
@@ -33,4 +33,28 @@ process_weights <- function(neighbors, orig_len, query_len, threshold, term = 1)
   }
 
   return(out)
+}
+
+load_site_list <- function() {
+  site_list <- get_monitor_list()
+  if (file_ext(site_list) == "mat") {
+    out <- read_mat_sitelist(site_list)
+  } else if (file_ext(site_list) == "csv") {
+    out <- read_csv_sitelist(site_list)
+  } else {
+    stop('The site list provided is not of a supported format.')
+  }
+
+  return(out)
+}
+
+read_mat_sitelist <- function(filename) {
+   sites <- readMat(filename)$Result
+   return(sites)
+}
+
+read_csv_sitelist <- function(filename) {
+  sites <- fread(filename)
+  sites$SiteCode <- NULL
+  return(sites)
 }

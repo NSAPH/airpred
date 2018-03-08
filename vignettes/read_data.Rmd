@@ -1,0 +1,157 @@
+---
+title: "Reading Data with Airpred"
+author: "Ben Sabath"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Settings
+
+Reading data within airpred is controlled by the config file. To generate the config file call:
+```{r, eval=FALSE}
+gen_config()
+```
+which will place a formatted config file with the default settings in your current directory.
+
+The fields in the config file you will potentially want to change are `Data_Location`, `Data_Save_Location`, and `finalday`.
+
+### `Data_Location`
+
+This field should contain the path (absolute or relative) to the folder holding the interpolated data
+for each monitor. The data should be constructed as one file per year, each file containing a matrix where each column is a monitor and each row represents a day.
+
+### `Data_Save_Location`
+
+The folder where the processed data files should be saved. THis will contain both the long data files for each variable and the final joined dataset.
+
+### `finalday`
+
+This should contain the last day covered by the dataset in the format YYYYMMDD.
+
+### An Example
+
+The default config file looks like this:
+
+```{yaml, eval=FALSE}
+monitor:
+- AQRVPM25
+data_location:
+- ~/shared_space/ci3_d_airpred/processed_data/AQRVPM25
+use_default_vars:
+- TRUE
+add_custom_vars:
+- FALSE
+custom_var_list:
+- IF add_custom_vars is True, put the file name here.
+data_save_location:
+- ../test_data/process_data
+train:
+- TRUE
+finalday:
+- 20180101
+...
+```
+
+
+This config file indicates the following: The data being read corresponds to the values for the PM2.5 Monitors. The directory containing the subfile directories is "~/shared_space/ci3_d_airpred/processed_data/AQRVPM25" 
+
+
+## Data Structure
+
+### File System
+
+The current systen for assembling the datasets assumes the following general structure:
+```
++-- AQRVPM25 (Or other overarching name, typically corresponding to point set)
+|  +-- Source1
+|  |  +--Var1Year1.mat
+|  |  +--Var1Year2.mat
+|  |  ...
+|  |  +--Var1YearLast.mat
+|  |  +--Var2Year1.mat
+|  |  ...
+|  |  +--Var8YearLast.mat     The 8 is an example, variables per source is not set.
+|  +-- Source2
+|  |  +--Var9Year1.mat
+|  |  ...
+| ...
+|  +-- SourceLast
+|  |  +--Var112Year1.mat     The numbers here are also examples
+|  |  ...
+|  |  +--VarLastYearLast.mat
+```
+
+The default location of the standard variables within the folder indicated in the config field `data_location` is specified in a yaml file included in the package. Additional or custom variables can also be included using a custom yaml file mirroring the structure of the included one.
+
+The following block is representative of the structure of that is used to indicate the files containing their respective variables: 
+```{yaml, eval=FALSE}
+MOD04L2_550:
+- MOD04L2
+- MOD04L2_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_
+MOD09A1:
+- MOD09A1
+- MOD09A1_Nearest4_
+MOD11A1_LST_Day_1km_Nearest4:
+- MOD11A1
+- MOD11A1_LST_Day_1km_Nearest4_
+```
+The key is the name of the variable. The first element is the name of the directory containing all of the files from each source, while the second element is a portion of the file names unique to all files containing the variable in question.
+
+
+### Individual Files
+
+#### File Names
+
+The data reading code assumes that files have the following naming convention, as used by Qian Di in his original implementation. The following is an example file name:
+
+```
+REANALYSIS_soilm_DailyMean_AQRVPM25_20050101_20051231.mat
+```
+
+There are a few key parts to understanding these file names. First is the section "REANALYSIS_soilm_DailyMean." This portion of the file name corresponds to the specific variable contained within the file. The secion "AQRVPM25" indicates that this data is linked to the PM2.5 monitors. Finally the "20050101_20051231" indicates that the data contained in this file runs from January 1st 2005 to December 31st 2005.
+
+#### Matrix Structure
+
+The data stored in each .mat file is assumed to contain a single matrix, where each column represents a site. There matrices typically have 1, 365, or 366 rows. In the event that there is only one row, the data is assumed to represent an entire year, while if there are multiple rows, each row is assumed to represent one day's worth of data.
+
+A trivial example would be the following.
+
+```
+1 2 3 4
+2 3 4 5
+...
+365 366 367 368
+```
+
+A matrix with that structure would have data for 4 sites, with values for a year.
+
+## Running the Code
+
+A short R script to assemnble the data would look like the following:
+
+```{R, eval=FALSE}
+library(airpred)
+process_data()
+join_data()
+```
+
+The `process data` step takes the separate matrices for each year of a variable and combines them into a single RDS file for each variable. The process goes as follows: First, a list of files containing information for each variable is generated based on the information provided in `data_location` as well as both the custom varible list (if included) and the default list of variables. If a variable is indicated on these lists but not present in the indicated directory, the process will move ahead. However, no error is currently thrown and the only means to confirm that all exected variables are in the assembled dataset is to either check the files produced by `process_data` or to check the column names in the final dataset produced by `join_data`.
+
+Each variable is then processed in the following way. If there is only one file for each variable, the data is assumed to be location based rather than temporal and is only given a site ID. If the matrices in each data file are only one row then the data is assumed to be annual and is assigned a site ID and a year based on the file name. Finally, if the data is multi row, is is assumed to be daily data, and is assigned a site ID, a year based on the file name, and a date based on iterating over days until the end of the file.
+
+The output from each variable is a long data frame where one column is the value, and the other columns are the various IDs based on the type of data.
+
+The `join_data` step takes each of these files and combines them into a single dataset ordered in a way so that the data could be visualized in a tree structure with each year as the highest level, followed by each day, followed by each monitor. They are joined on the basis of the generated IDs using a left outer join begining from the list of all Monitors. This data is then saved to the location specified by `data_save_location` with the name "assumbled_data.csv" and "assembled_data.RDS". This data is then ready for the imputation, transformation, and normalization steps.
+
+

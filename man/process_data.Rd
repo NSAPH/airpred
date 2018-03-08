@@ -4,10 +4,7 @@
 \alias{process_data}
 \title{Process all data for a given data set}
 \usage{
-process_data(path = "../predictions/EPANO2")
-}
-\arguments{
-\item{path}{folder where the prediction data resides}
+process_data()
 }
 \value{
 none

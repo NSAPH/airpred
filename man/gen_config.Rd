@@ -23,17 +23,34 @@ Null, but saves a yml file with the headers needed to run the prediction model s
 Generate Config File Skeleton
 }
 \details{
+The following are the items contained in the config file. All of them must be present in order for
+the model to run successfully.
+
 \itemize{
-  \item{\code{Monitor}} {The pollution type the data will be trained on}
-  \item{\code{Data_Location}} {The directory holding the required data files}
-  \item{\code{Data_Save_Location}} {The directory processed data files
+  \item{\code{monitor}} {The pollution type the data will be trained on}
+  \item{\code{data_location}} {The directory holding the required data files}
+  \item{\code{data_save_location}} {The directory processed data files
                                     should be saved in}
+  \item{\code{use_default_vars}} {Should the default list of files and its file structure be used
+                                  when reading the .mat files}
+  \item{\code{add_custom_vars}} {Should a custom list of .mat files be looked for. If this is TRUE
+                                and \code{use_default_vars} is FALSE, then only the custom variables
+                                will be used.}
+  \item{\code{custom_var_list}} {The location of the .yml file specifying the file structure of
+                                the custom variable files.}
   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
                        the run is going to be used to create predictions}
   \item{\code{finalday}} {The date of the last day covered by the data set}
   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
-  \item{\code{Imputation_Models}} {The path where the imputation models should be saved.}
-  \item{\code{Mid_Process_Data}} {The path where data should be saved between imputation, normalization
+  \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
+  \item{\code{imputation_models}} {The path where the imputation models should be saved.}
+  \item{\code{mid_process_data}} {The path where data should be saved between imputation, normalization
                                   and transformation steps}
+  \item{\code{training_models}} {A list of the models to be used in training and used for the
+                                 ensemble model.}
+  \item{\code{monitor_list}} {The location of the file containing the coordinates of the monitors}
+  \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
+                                Currently must be an RDS file.}
+  \item{\code{training_output}} {The directory to be used for storing the output of the training models}
  }
 }

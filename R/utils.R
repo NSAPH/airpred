@@ -30,3 +30,25 @@ get_formula<- function(path, var="base") {
   return(out)
 }
 
+
+#' List Implemented training models
+#'
+#' @return vector of implemented models
+#' @export
+#'
+#' @details
+#' This function returns the acceptable strings to be included in the Training_Models
+#' field in the config file. A string included in that section not currently in this list
+#' will result in an error.
+#'
+#' The currently implemented models are as follows
+#' \itemize{
+#'   \item{\code{nn}} {A neural network algorithm}
+#'   \item{\code{forest}} {A random forest algorithm}
+#'   \item{\code{gradboost}} {A gradient boost algorithm}
+#' }
+#'
+implemented_models <- function() {
+  out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files","implemented_models.yml"))
+  return(out$base)
+}
