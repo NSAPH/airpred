@@ -260,6 +260,12 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
   # get names of variables in dataset
   varlist <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
                                       "Data_Location.yml"))
+  if (get_add_custom_vars()) {
+    custom_list <- yaml.load_file(get_custom_vars())
+    for (variable in names(custom_list)) {
+      varlist[[variable]] <- custom_list[[variable]]
+    }
+  }
 
 
   for (variable in names(varlist)) {

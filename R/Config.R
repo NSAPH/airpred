@@ -185,7 +185,6 @@ get_add_custom_vars <- function() {
   return(yaml.load_file("config.yml")$add_custom_vars)
 }
 
-#' @export
 get_custom_vars <- function() {
   if (!file.exists("config.yml")) {
     stop("No config file found, try running gen_config()")
