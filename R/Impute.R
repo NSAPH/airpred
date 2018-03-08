@@ -123,3 +123,17 @@ list_imputed_variables <- function() {
   impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
   print(impute_vars)
 }
+
+#' List inputs to logit used in imputation
+#' @export
+print_logit_inputs <- function() {
+  logit_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/logit_formula.yml"))
+  print(logit_vars)
+}
+
+#' List inputs to mle used in imputation
+#' @export
+print_MLE_inputs <- function() {
+  lme_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"))
+  print(lme_vars)
+}
