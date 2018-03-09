@@ -1,4 +1,4 @@
-## Config.R
+## config.R
 ## Functions related to handling the config file
 
 #' Generate Config File Skeleton

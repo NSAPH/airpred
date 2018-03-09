@@ -1,3 +1,5 @@
+# gen_weights.R
+
 #' Generate geographic weighting matrix
 #'
 #' Given two sets of points, generate a matrix of weights for the k nearest neighbors
