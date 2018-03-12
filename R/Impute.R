@@ -118,6 +118,14 @@ impute_all_parallel <- function(info) {
 }
 
 
+random_forest_impute <- function(info, variable) {
+  ## Assumes h2o instance already running
+  model <- h2o.randomForest(y = variable,
+                            x = load_yaml(paste(path.package("airpred"),"/yaml_files/lme_formula.yml"), var)
+  )
+}
+
+
 #' List all varibles imputed in the process
 #' @export
 list_imputed_variables <- function() {
