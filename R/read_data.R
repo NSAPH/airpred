@@ -257,6 +257,7 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
 
   # Initialize List
   file.yaml <- list()
+  file_type <- get_input_file_type()
 
   # get names of variables in dataset
   varlist <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
@@ -282,6 +283,10 @@ gen_data_paths <- function(path = "../predictions/EPANO2") {
       files$vwnd <- file.path(directory,list.files(directory,
                                               pattern = varlist[[variable]][3]))
     }
+
+    ## Clear out non data files
+    files <- files[file_ext(files) == file_type]
+
     if (length(files) > 0) {
       listname <- variable
       # while (!is.null(file.yaml[[listname]])){
@@ -347,4 +352,19 @@ join_data <- function(files = NULL) {
   saveRDS(out, file = file.path(save_path, "assembled_data.RDS"))
 
   write.csv(out, file = file.path(save_path, "assembled_data.csv"), row.names = F)
+}
+
+get_mat <- function(path) {
+  if (file_ext(path) == "mat") {
+    out <- readMat(path)$Result
+
+  } else if (file_ext(path) == "csv") {
+    out <- fread(path)
+    out <- data.matrix(out)
+
+  } else {
+    stop(paste0("A file type of .",file_ext(path)," is not a valid input file"))
+  }
+
+  return(out)
 }

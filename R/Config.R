@@ -21,6 +21,7 @@
 #' \itemize{
 #'   \item{\code{monitor}} {The pollution type the data will be trained on}
 #'   \item{\code{data_location}} {The directory holding the required data files}
+#'   \item{\code{input_file_type}} {The extension of the files holding the data matrices}
 #'   \item{\code{data_save_location}} {The directory processed data files
 #'                                     should be saved in}
 #'   \item{\code{use_default_vars}} {Should the default list of files and its file structure be used
@@ -53,6 +54,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out <- list()
     out$monitor <- ""
     out$data_location <- ""
+    out$input_file_type <- ""
     out$data_save_location <- ""
     out$use_default_vars <- TRUE
     out$use_custom_vars <- FALSE
@@ -202,7 +204,13 @@ get_custom_vars <- function() {
   return(out)
 }
 
+get_input_file_type <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
 
+  return(yaml.load_file("config.yml")$input_file_type)
+}
 
 #' Remove current config file
 #'
