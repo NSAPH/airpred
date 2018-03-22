@@ -15,3 +15,9 @@ data.table with replaced missing values
 \description{
 Impute full dataset
 }
+\details{
+As a side effect of this function, all of the models used to impute the values
+are saved in the directory specified in the configuration file. Ensure that there
+is enough space available in that folder to store the generated models. These models
+will later be used when data is being prepared for prediction.
+}
