@@ -26,6 +26,7 @@ Collate:
     'Train.R'
     'Transform.R'
     'gen_weights.R'
+    'model_params.R'
     'predict.R'
     'read_data.R'
 Suggests: testthat,
