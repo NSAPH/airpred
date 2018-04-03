@@ -79,7 +79,7 @@ train <- function(init = T, shutdown = T) {
   ## Load data
   info <- readRDS(get_training_data())
   train_out_path <- get_training_output()
-  train_ind <- sample(seq(nrow(info)), size = round(nrow(info)*9))
+  train_ind <- sample(seq(nrow(info)), size = round(nrow(info)*0.9))
   train_ind <- sort(train_ind, decreasing = FALSE)
   ## Convert to h2o
   info <- as.h2o(info)
