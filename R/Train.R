@@ -183,7 +183,7 @@ gen_nearby_terms <- function(new_vals, num_sites) {
   for (i in 1:3) {
     temp_mat <- matrix(nrow = nrow(new_val_mat), ncol = ncol(new_val_mat))
     for (j in num_sites) {
-      temp_mat[j,] <- as.numeric(filter(new_val_mat[j,], filter_term(i), sides = 2))
+      temp_mat[j,] <- as.numeric(filter(ts(new_val_mat[j,]), filter_term(i), sides = 2))
     }
     out[[paste0("Temporal_Lagged_",i)]] <- c(temp_mat)
   }
