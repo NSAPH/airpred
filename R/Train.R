@@ -72,7 +72,7 @@ train_gradboost <- function(info, train_ind) {
 #'
 #' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict
 #' @importFrom gam gam s
-train <- function(init = T, shutdown = T) {
+train <- function(init = T, shutdown = F) {
   models <- get_training_models()
   trained <- list()
   if (init) {h2o.init(max_mem_size = "100g")}
