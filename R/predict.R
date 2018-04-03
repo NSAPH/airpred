@@ -29,14 +29,14 @@ airpred.predict <- function() {
     info[[name]] <- nearby[[name]]
   }
 
+
+
   nearby_models <- readRDS(file.path(training_output_dir, "nearby_trained.RDS"))
 
   for (model in names(nearby_models)) {
     preensemble[[model]] <- predict(nearby_models[[model]], newdata = info)
   }
-
   nearby_ensemble <- readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
-
   predictions <- predict(nearby_ensemble, newdata = preensemble)
 
   ## TODO
@@ -47,6 +47,8 @@ airpred.predict <- function() {
 
 }
 
+load_predict_data <- function() {
 
+}
 
 

@@ -1,0 +1,21 @@
+nfolds:
+- 10
+fold_assignment:
+- Modulo
+seed:
+- 271828
+keep_cross_validation_predictions:
+- TRUE
+activation:
+- Rectifier
+hidden:
+- 200
+- 200
+epochs:
+- 50
+epsilon:
+- 1e08
+l1:
+- 1e05
+distribution:
+- AUTO
