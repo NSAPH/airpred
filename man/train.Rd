@@ -4,7 +4,7 @@
 \alias{train}
 \title{Train Air Pollution Model}
 \usage{
-train(init = T, shutdown = T)
+train(init = T, shutdown = F)
 }
 \arguments{
 \item{init}{Boolean for whether or not an h2o cluster should be initiated on call of
