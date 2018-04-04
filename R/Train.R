@@ -71,7 +71,8 @@ train_gradboost <- function(info, train_ind) {
 #' @export
 #'
 #' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict
-#' @importFrom gam gam s
+#' @importFrom mgcv bam s
+#' @importFrom parallel detectCores
 train <- function(init = T, shutdown = F) {
   models <- get_training_models()
   trained <- list()
@@ -105,7 +106,8 @@ train <- function(init = T, shutdown = F) {
   saveRDS(ensemble_data, file.path(train_out_path, "ensemble1_data.RDS"))
 
     ## Run Model
-  ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
+  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,],
+                  nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"initial_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
 
