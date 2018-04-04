@@ -111,7 +111,7 @@ train <- function(init = T, shutdown = F) {
 
   ## use weights to generate nearby terms
   nearby <- gen_nearby_terms(new_vals, max(info$site))
-
+  nearby <- as.h2o(nearby)
     ## Assign values to current dataframe
   for (name in names(nearby)) {
     info[[name]] <- nearby[[name]]
@@ -123,7 +123,6 @@ train <- function(init = T, shutdown = F) {
 
   ## re run models
 
-  info <- as.h2o(info)
 
   if (!is.null(models$nn)) {
     trained$nn <- train_nn(info, train_ind)
