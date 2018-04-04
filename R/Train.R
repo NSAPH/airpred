@@ -123,6 +123,8 @@ train <- function(init = T, shutdown = F) {
 
   ## re run models
 
+  info <- as.h2o(info)
+
   if (!is.null(models$nn)) {
     trained$nn <- train_nn(info, train_ind)
   }
