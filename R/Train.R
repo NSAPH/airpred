@@ -70,7 +70,7 @@ train_gradboost <- function(info, train_ind) {
 #' @return NULL, but saves the models required to predict.
 #' @export
 #'
-#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict
+#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind
 #' @importFrom mgcv bam s
 #' @importFrom parallel detectCores
 train <- function(init = T, shutdown = F) {
