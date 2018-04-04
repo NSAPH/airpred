@@ -75,7 +75,7 @@ train_gradboost <- function(info, train_ind) {
 train <- function(init = T, shutdown = F) {
   models <- get_training_models()
   trained <- list()
-  if (init) {h2o.init(max_mem_size = "100g")}
+  if (init) {h2o.init()}
   ## Load data
   info <- readRDS(get_training_data())
   train_out_path <- get_training_output()
