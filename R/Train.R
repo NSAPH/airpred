@@ -113,9 +113,7 @@ train <- function(init = T, shutdown = F) {
   nearby <- gen_nearby_terms(new_vals, max(info$site))
   nearby <- as.h2o(nearby)
     ## Assign values to current dataframe
-  for (name in names(nearby)) {
-    info[[name]] <- nearby[[name]]
-  }
+  info <- h2o.cbind(info, nearby)
 
   ## Store data with nearby terms
 
