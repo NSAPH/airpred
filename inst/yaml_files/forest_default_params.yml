@@ -1,0 +1,20 @@
+nfolds:
+- 10
+fold_assignment:
+- "modulo"
+seed:
+- 271828
+keep_cross_validation_predictions:
+- TRUE
+ntrees:
+- 5
+max_depth:
+- 9
+nbins:
+- 20
+nbins_cats:
+- 449
+mtries:
+- 4
+sample_rate:
+- 0.41536

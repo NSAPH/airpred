@@ -18,3 +18,8 @@ NULL, but saves the models required to predict.
 \description{
 Train Air Pollution Model
 }
+\seealso{
+\code{\link{train_generic}} \code{\link{train_gradboost}}
+
+\code{\link{train_forest}} \code{\link{train_nn}}
+}

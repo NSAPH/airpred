@@ -2,9 +2,12 @@
 % Please edit documentation in R/model_params.R
 \name{gen_model_config}
 \alias{gen_model_config}
+\alias{default_model_config}
 \title{Generate a config file for a given function}
 \usage{
 gen_model_config(func, path = ".")
+
+default_model_config(model, path = ".")
 }
 \arguments{
 \item{func}{the function for which a config file is being generated}
@@ -24,3 +27,8 @@ values.
 NOTE: The function MUST be the first argument passed, otherwise the yaml file will not
 be appropriately named, and may end up in an unintended location.
 }
+\section{Functions}{
+\itemize{
+\item \code{default_model_config}: generates config file for specifically implemented models
+}}
+

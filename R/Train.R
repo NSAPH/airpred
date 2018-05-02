@@ -62,6 +62,15 @@ train_gradboost <- function(info, train_ind) {
   return(model)
 }
 
+#' Train an h2o model using the generic architecture
+#'
+#' @param model the name of the function to run
+#' @param info the data for use with the model
+#' @param train_ind vector with randomly selected indicies for use as the training set
+#'
+train_generic <- function(model, info, train_ind) {
+
+}
 
 #' Train Air Pollution Model
 #' @param init Boolean for whether or not an h2o cluster should be initiated on call of
@@ -73,6 +82,9 @@ train_gradboost <- function(info, train_ind) {
 #' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind
 #' @importFrom mgcv bam s
 #' @importFrom parallel detectCores
+#'
+#' @seealso \code{\link{train_generic}} \code{\link{train_gradboost}}
+#' @seealso \code{\link{train_forest}} \code{\link{train_nn}}
 train <- function(init = T, shutdown = F) {
   models <- get_training_models()
   trained <- list()
@@ -143,7 +155,8 @@ train <- function(init = T, shutdown = F) {
 
   saveRDS(ensemble_data, file.path(train_out_path, "ensemble2_data.RDS"))
 
-  ensemble <- gam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,])
+  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,],
+                 nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"nearby_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
 

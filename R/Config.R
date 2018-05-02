@@ -45,6 +45,10 @@
 #'   \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
 #'                                 Currently must be an RDS file.}
 #'   \item{\code{training_output}} {The directory to be used for storing the output of the training models}
+#'   \item{\code{predict_data}} {The input data for a given round of prediction}
+#'   \item{\code{predict_mid_process}} {The directory that holds all saved files
+#'                                      generated in the prediction process.}
+#'   \item{\code{predict_output}} {The directory that holds the generated predictions}
 #'  }
 gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   if (default) {
@@ -162,10 +166,11 @@ get_training_models <- function() {
   models <- yaml.load_file("config.yml")$training_models
   for (mod in models) {
     if (!(mod %in% possible)) {
-      stop(paste0(mod, " is not currently implemented as a training model"))
-    } else {
-      out[[mod]] <- TRUE
+      message(paste0(mod, " is not currently implemented as a training model"))
+      message("A custom parameter file will be generated and the generic function
+              will be attempted. No promises though.")
     }
+    out[[mod]] <- TRUE
   }
 
   return(out)
@@ -210,6 +215,30 @@ get_input_file_type <- function() {
   }
 
   return(yaml.load_file("config.yml")$input_file_type)
+}
+
+get_predict_data <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$predict_data)
+}
+
+get_predict_mid_process <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$predict_mid_process)
+}
+
+get_predict_output <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$predict_output)
 }
 
 #' Remove current config file

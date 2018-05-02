@@ -96,7 +96,7 @@ process_annual <- function(files){
         mat_result <- readMat(path)$Result
         temp.frame <- data.frame(value = mat_result[1,],
                                  site = 1:length(mat_result[1,]),
-                                 year = year(date_counter))
+                                 year = lubridate::year(date_counter))
         out <- rbind(out, temp.frame)
         date_counter <- date_counter + years()
         file_index <- file_index + 1
@@ -136,7 +136,7 @@ process_daily <- function(files){
           temp.frame <- data.frame(value = mat_result[i,],
                                    site = 1:length(mat_result[1,]),
                                    date = data_day,
-                                   year = year(data_day))
+                                   year = lubridate::year(data_day))
           year.frame <- rbind(year.frame, temp.frame)
           data_day <- data_day + days()
         }

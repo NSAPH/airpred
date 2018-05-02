@@ -19,7 +19,13 @@
 #'
 #' @export
 gen_model_config <- function(func, path = ".") {
-  func_name <- as.character(sys.call())[2] ## Assumes that the function is always the first argument
+  ## handle functions passed as strings
+  if (is.character(func)) {
+    func_name <- func
+    func <- eval(as.name(func))
+  } else {
+    func_name <- as.character(sys.call())[2] ## Assumes that the function is always the first argument
+  }
   model_args <- formals(func)
   out <- list()
   for (val in names(model_args)) {
@@ -38,5 +44,38 @@ gen_model_config <- function(func, path = ".") {
   write(as.yaml(out), file=out.file)
   close(out.file)
 
+}
+
+#' Generate config files for all training models
+#'
+#' @param path the directory that will store the generated config files
+#'
+#' @export
+#' @seealso gen_model_config
+edit_params <- function(path = ".") {
+  models <- get_training_models()
+  for (model in names(models)) {
+    if (model %in% implemented_models()) {
+      default_model_config(model, path)
+    } else {
+      gen_model_config(model, path)
+    }
+  }
+}
+
+#' @describeIn gen_model_config generates config file for specifically implemented models
+#' @export
+default_model_config <- function(model, path = ".") {
+  out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
+                                  paste0(model,"_default_params.yml")))
+
+  out.file <- file(file.path(path, paste0(model,"_params.yml")))
+  write(as.yaml(out), file=out.file)
+  close(out.file)
+
+}
+
+get_model_param <- function(model, param, path = ".") {
+  return(yaml.load_file(file.path(path, paste0(model,"_params.yml")))[[param]])
 }
 

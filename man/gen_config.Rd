@@ -53,5 +53,9 @@ the model to run successfully.
   \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
                                 Currently must be an RDS file.}
   \item{\code{training_output}} {The directory to be used for storing the output of the training models}
+  \item{\code{predict_data}} {The input data for a given round of prediction}
+  \item{\code{predict_mid_process}} {The directory that holds all saved files
+                                     generated in the prediction process.}
+  \item{\code{predict_output}} {The directory that holds the generated predictions}
  }
 }
