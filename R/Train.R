@@ -13,10 +13,15 @@ train_nn <- function(info, train_ind) {
  model <- h2o.deeplearning(y = "MonitorData",
                            x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                            training_frame = info[train_ind,],
-                           nfolds=10, fold_assignment="Modulo",seed=271828,
-                           keep_cross_validation_predictions = TRUE,
-                           activation="Rectifier",hidden=c(200,200),epochs=50,
-                           epsilon = 1e-08,l1=1e-05,distribution="AUTO")
+                           nfolds=get_model_param("nn", "nfolds"),
+                           fold_assignment=get_model_param("nn", "fold_assignment"),
+                           seed=get_model_param("nn", "seed"),
+                           keep_cross_validation_predictions = get_model_param("nn", "keep_cross_validation_predictions"),
+                           activation=get_model_param("nn", "activation"),hidden=get_model_param("nn", "hidden"),
+                           epochs=get_model_param("nn", "epochs"),
+                           epsilon = get_model_param("nn", "epsilon"),
+                           l1=get_model_param("nn", "l1"),
+                           distribution=get_model_param("nn", "distribution"))
  return(model)
 }
 
@@ -32,11 +37,16 @@ train_forest <- function(info, train_ind) {
   model <- h2o.randomForest(y = "MonitorData",
                             x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                             training_frame = info[train_ind,],
-                            nfolds=10,
-                            fold_assignment="Modulo",seed=271828,
-                            keep_cross_validation_predictions = TRUE,
-                            ntrees=5,max_depth = 9,nbins = 20,nbins_cats = 449,
-                            mtries = 4,sample_rate = 0.41536)
+                            nfolds=get_model_param("forest","nfolds"),
+                            fold_assignment=get_model_param("forest","fold_assignment"),
+                            seed=get_model_param("forest","seed"),
+                            keep_cross_validation_predictions = get_model_param("forest","keep_cross_validation_predictions"),
+                            ntrees=get_model_param("forest","ntrees"),
+                            max_depth = get_model_param("forest","max_depth"),
+                            nbins = get_model_param("forest","bins"),
+                            nbins_cats = get_model_param("forest","nbins_cats"),
+                            mtries = get_model_param("forest","mtries"),
+                            sample_rate = get_model_param("forest","sample_rate"))
 
   return(model)
 }
@@ -53,11 +63,15 @@ train_gradboost <- function(info, train_ind) {
   model <- h2o.gbm(y = "MonitorData",
                    x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                    training_frame = info[train_ind,],
-                   nfolds=10,
-                   fold_assignment="Modulo", seed=271828,
-                   keep_cross_validation_predictions = TRUE,
-                   ntrees=100,learn_rate = 0.1,max_depth = 5,
-                   sample_rate = 1,col_sample_rate = 0.5)
+                   nfolds=get_model_param("gradboost","nfolds"),
+                   fold_assignment=get_model_param("gradboost","fold_assignment"),
+                   seed=get_model_param("gradboost","seed"),
+                   keep_cross_validation_predictions = get_model_param("gradboost","keep_cross_validation_predictions"),
+                   ntrees=get_model_param("gradboost","ntrees"),
+                   learn_rate = get_model_param("gradboost","learn_rate"),
+                   max_depth = get_model_param("gradboost","max_depth"),
+                   sample_rate = get_model_param("gradboost","sample_rate"),
+                   col_sample_rate = get_model_param("gradboost","col_sample_rate"))
 
   return(model)
 }
@@ -97,6 +111,11 @@ train <- function(init = T, shutdown = F) {
   ## Convert to h2o
   info <- as.h2o(info)
   ## run + save models
+
+  if (!param_config_check()) {
+    edit_params()
+  }
+
   if (!is.null(models$nn)) {
     trained$nn <- train_nn(info, train_ind)
   }

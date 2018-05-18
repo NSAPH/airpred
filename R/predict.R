@@ -1,10 +1,14 @@
 ## predict.R
 ## Code to handle reading in trained models and generate predictions using them.
 
-airpred.predict <- function() {
+airpred.predict <- function(prepped = T) {
 
-  ## Place Holder, need to figure out best way to get the data here
-  info <- load_predict_data()
+  if (prepped) {
+    info <- load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
+  } else {
+    info <- load_predict_data()
+  }
+
   info <- as.h2o(info)
 
   training_output_dir <- get_training_output()

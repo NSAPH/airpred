@@ -75,7 +75,22 @@ default_model_config <- function(model, path = ".") {
 
 }
 
+#'@export
 get_model_param <- function(model, param, path = ".") {
   return(yaml.load_file(file.path(path, paste0(model,"_params.yml")))[[param]])
+}
+
+#' Check to see if model config files are in use
+#'
+#' @return boolean
+param_config_check <- function(path = ".") {
+  models <- get_training_models()
+  for (name in models) {
+    if (!file.exists(file.path(path, paste0(name,"_params.yml")))) {
+      return(FALSE)
+    }
+  }
+
+  return(TRUE)
 }
 

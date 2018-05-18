@@ -14,8 +14,8 @@ hidden:
 epochs:
 - 50
 epsilon:
-- 1e08
+- 0.00000001
 l1:
-- 1e05
+- 0.00001
 distribution:
 - AUTO

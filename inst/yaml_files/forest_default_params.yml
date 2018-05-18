@@ -1,7 +1,7 @@
 nfolds:
 - 10
 fold_assignment:
-- "modulo"
+- Modulo
 seed:
 - 271828
 keep_cross_validation_predictions:
