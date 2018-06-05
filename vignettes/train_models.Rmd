@@ -1,0 +1,39 @@
+---
+title: "Training Your Models"
+author: "Ben Sabath"
+date: "6/5/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Workflow Summary
+
+
+
+# Preparing the Config file
+
+```{r package_setup}
+library(airpred)
+gen_config()
+```
+The default file generated here is the following:
+
+```{r display_config, echo=FALSE}
+cat(readLines("config.yml"), sep = "\n")
+```
+
+There are a number of ways available
+
+# Kicking Off the Process
+
+# What is happening
+
+# Files Produced
+
+
+```{r cleanup, echo=FALSE, results='hide'}
+clean_up_config()
+```

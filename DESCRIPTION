@@ -1,7 +1,7 @@
 Package: airpred
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
-Authors@R: person("Ben", "Sabath", email = "bsabath1@gmail.com", role = c("aut", "cre"))
+Authors@R: person("M. Benjamin", "Sabath", email = "bsabath1@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.4.0)
 Imports: RANN,
@@ -26,6 +26,7 @@ Collate:
     'Normalize.R'
     'Train.R'
     'Transform.R'
+    'data.r'
     'gen_weights.R'
     'model_params.R'
     'predict.R'

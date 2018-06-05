@@ -246,6 +246,17 @@ get_predict_output <- function() {
 #' @return none
 #' @export
 #'
-clean_up_config <- function() {
-  file.remove("config.yml")
+clean_up_config <- function(path = "config.yml") {
+  file.remove(path)
 }
+
+
+#' Print a config file's contents to the console
+#'
+#' @param path the path to the config file you want to print.
+#'
+#' @export
+display_config <- function(path = "config.yml") {
+  print(cat(readLines(path), sep = "\n"))
+}
+
