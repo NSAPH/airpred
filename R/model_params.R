@@ -18,8 +18,14 @@
 #' be appropriately named, and may end up in an unintended location.
 #'
 #' @export
-gen_model_config <- function(func, path = ".") {
+gen_model_config <- function(func, path = ".", in_list = NULL) {
   ## handle functions passed as strings
+
+  if (func %in% implemented_models()) {
+    default_model_config(model = func, path = path, in_list = in_list)
+    return()
+  }
+
   if (is.character(func)) {
     func_name <- func
     func <- eval(as.name(func))
@@ -40,6 +46,12 @@ gen_model_config <- function(func, path = ".") {
     }
   }
 
+  if (!is.null(in_list)) {
+    for (val in names(in_list)) {
+      out[[val]] <- in_list[[val]]
+    }
+  }
+
   out.file <- file(file.path(path, paste0(func_name,"_params.yml")))
   write(as.yaml(out), file=out.file)
   close(out.file)
@@ -55,19 +67,27 @@ gen_model_config <- function(func, path = ".") {
 edit_params <- function(path = ".") {
   models <- get_training_models()
   for (model in names(models)) {
-    if (model %in% implemented_models()) {
-      default_model_config(model, path)
-    } else {
-      gen_model_config(model, path)
+    if (!file.exists(file.path(path, paste0(model, "_params.yml")))) {
+      if (model %in% implemented_models()) {
+        default_model_config(model, path)
+      } else {
+        gen_model_config(model, path)
+      }
     }
   }
 }
 
 #' @describeIn gen_model_config generates config file for specifically implemented models
 #' @export
-default_model_config <- function(model, path = ".") {
+default_model_config <- function(model, path = ".", in_list = NULL) {
   out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files",
                                   paste0(model,"_default_params.yml")))
+
+  if (!is.null(in_list)) {
+    for (val in names(in_list)) {
+      out[[val]] <- in_list[[val]]
+    }
+  }
 
   out.file <- file(file.path(path, paste0(model,"_params.yml")))
   write(as.yaml(out), file=out.file)
@@ -85,7 +105,7 @@ get_model_param <- function(model, param, path = ".") {
 #' @return boolean
 param_config_check <- function(path = ".") {
   models <- get_training_models()
-  for (name in models) {
+  for (name in names(models)) {
     if (!file.exists(file.path(path, paste0(name,"_params.yml")))) {
       return(FALSE)
     }
@@ -94,3 +114,13 @@ param_config_check <- function(path = ".") {
   return(TRUE)
 }
 
+#' Remove model config file from current directory
+#'
+#' @export
+clean_model_configs <- function() {
+  models <- get_training_models()
+  for (model in names(models)) {
+    file.remove(paste0(model, "_params.yml"))
+  }
+
+}

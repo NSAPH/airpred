@@ -5,9 +5,9 @@
 \alias{default_model_config}
 \title{Generate a config file for a given function}
 \usage{
-gen_model_config(func, path = ".")
+gen_model_config(func, path = ".", in_list = NULL)
 
-default_model_config(model, path = ".")
+default_model_config(model, path = ".", in_list = NULL)
 }
 \arguments{
 \item{func}{the function for which a config file is being generated}

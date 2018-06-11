@@ -1,8 +1,12 @@
 ---
 title: "Using The Configuration File"
 author: "Ben Sabath"
-date: "6/5/2018"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using The Configuration File}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## The Purpose of the Configuration File

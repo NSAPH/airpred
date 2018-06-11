@@ -1,8 +1,12 @@
 ---
 title: "Preparation of Data for Training"
 author: "Ben Sabath"
-date: "3/7/2018"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Preparation of Data for Training}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

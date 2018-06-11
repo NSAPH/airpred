@@ -1,6 +1,14 @@
 ## predict.R
 ## Code to handle reading in trained models and generate predictions using them.
 
+
+#' Generate predictions from a previously trained model
+#'
+#'
+#'
+#'
+#' @import h2o.loadModel
+#' @export
 airpred.predict <- function(prepped = T) {
 
   if (prepped) {
@@ -12,7 +20,13 @@ airpred.predict <- function(prepped = T) {
   info <- as.h2o(info)
 
   training_output_dir <- get_training_output()
-  initial_models <- readRDS(file.path(training_output_dir, "initial_trained.RDS"))
+  selected_models <- get_training_models()
+  initial_models <- list()
+  for (model in selected_models) {
+    model_dir <- file.path(training_output_dir, paste0("initial_", model))
+    initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
+  }
+
 
   preensemble <- data.table(start = rep_len(0, nrow(info)))
   for (model in names(initial_models)) {
@@ -26,22 +40,33 @@ airpred.predict <- function(prepped = T) {
 
 
   ## Should be functionalized longterm, currently done this way to avoid duplicating the dataset in memory
-  nearby <- gen_nearby_terms(new_vals, max(info$site))
+  nearby <- gen_nearby_terms(initial_prediction, max(info$site))
 
+  nearby <- as.h2o(nearby)
   ## Assign values to current dataframe
-  for (name in names(nearby)) {
-    info[[name]] <- nearby[[name]]
+  info <- h2o.cbind(info, nearby)
+
+
+
+  nearby_models <- list()
+  for (model in selected_models) {
+    model_dir <- file.path(training_output_dir, paste0("nearby_", model))
+    nearby_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
 
-
-
-  nearby_models <- readRDS(file.path(training_output_dir, "nearby_trained.RDS"))
-
   for (model in names(nearby_models)) {
-    preensemble[[model]] <- predict(nearby_models[[model]], newdata = info)
+    preensemble[[model]] <- as.vector(h2o.predict(nearby_models[[model]], newdata = info)$predict)
   }
   nearby_ensemble <- readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
   predictions <- predict(nearby_ensemble, newdata = preensemble)
+  predictions <- data.frame(as.vector(info$site), as.vector(info$date), predictions)
+
+  names(predictions) <- c("site", "date", "MonitorData")
+  predictions <- denormalize_all(predictions)
+  predictions <- detransform_all(predictions)
+  saveRDS(predictions, file = "predictions.RDS")
+
+
 
   ## TODO
   ## Figure out best way to assign location to predictions

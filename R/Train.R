@@ -93,7 +93,7 @@ train_generic <- function(model, info, train_ind) {
 #' @return NULL, but saves the models required to predict.
 #' @export
 #'
-#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind
+#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind h2o.saveModel
 #' @importFrom mgcv bam s
 #' @importFrom parallel detectCores
 #'
@@ -125,7 +125,10 @@ train <- function(init = T, shutdown = F) {
   if (!is.null(models$gradboost)) {
     trained$gradboost <- train_gradboost(info, train_ind)
   }
-  saveRDS(trained, file.path(train_out_path, "initial_trained.RDS"))
+
+  for (model in names(trained)) {
+    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)))
+  }
 
   ## Initial ensemble
     ## Assemble ensemble data frame
@@ -164,7 +167,9 @@ train <- function(init = T, shutdown = F) {
   if (!is.null(models$gradboost)) {
     trained$gradboost <- train_gradboost(info, train_ind)
   }
-  saveRDS(trained, file.path(train_out_path,"nearby_trained.RDS"))
+  for (model in names(trained)) {
+    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
+  }
 
   ensemble_data <- data.frame(as.vector(info$MonitorData))
   names(ensemble_data)[1] <- "MonitorData"
