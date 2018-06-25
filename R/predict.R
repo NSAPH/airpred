@@ -7,7 +7,7 @@
 #'
 #'
 #'
-#' @import h2o.loadModel
+#' @importFrom h2o h2o.loadModel
 #' @export
 airpred.predict <- function(prepped = T) {
 
@@ -22,7 +22,7 @@ airpred.predict <- function(prepped = T) {
   training_output_dir <- get_training_output()
   selected_models <- get_training_models()
   initial_models <- list()
-  for (model in selected_models) {
+  for (model in names(selected_models)) {
     model_dir <- file.path(training_output_dir, paste0("initial_", model))
     initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
@@ -30,7 +30,7 @@ airpred.predict <- function(prepped = T) {
 
   preensemble <- data.table(start = rep_len(0, nrow(info)))
   for (model in names(initial_models)) {
-    preensemble[[model]] <- as.vector(h2o.predict(trained[[model]], info)$predict)
+    preensemble[[model]] <- as.vector(h2o.predict(initial_models[[model]], info)$predict)
   }
   preensemble$start <- NULL
 
@@ -49,7 +49,7 @@ airpred.predict <- function(prepped = T) {
 
 
   nearby_models <- list()
-  for (model in selected_models) {
+  for (model in names(selected_models)) {
     model_dir <- file.path(training_output_dir, paste0("nearby_", model))
     nearby_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
@@ -64,7 +64,7 @@ airpred.predict <- function(prepped = T) {
   names(predictions) <- c("site", "date", "MonitorData")
   predictions <- denormalize_all(predictions)
   predictions <- detransform_all(predictions)
-  saveRDS(predictions, file = "predictions.RDS")
+  saveRDS(predictions, file = file.path(get_predict_output(), "predictions.RDS"))
 
 
 
