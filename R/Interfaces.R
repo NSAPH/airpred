@@ -1,3 +1,4 @@
+## interfaces.R
 ## Interface functions between currently built systems
 
 #' Generate training data from CSV
@@ -47,4 +48,6 @@ get_rds_data <- function() {
   return(data)
 }
 
-## Transform + Normalize Data
+airpred <- function() {
+
+}

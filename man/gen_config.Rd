@@ -29,6 +29,7 @@ the model to run successfully.
 \itemize{
   \item{\code{monitor}} {The pollution type the data will be trained on}
   \item{\code{data_location}} {The directory holding the required data files}
+  \item{\code{input_file_type}} {The extension of the files holding the data matrices}
   \item{\code{data_save_location}} {The directory processed data files
                                     should be saved in}
   \item{\code{use_default_vars}} {Should the default list of files and its file structure be used
@@ -52,5 +53,9 @@ the model to run successfully.
   \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
                                 Currently must be an RDS file.}
   \item{\code{training_output}} {The directory to be used for storing the output of the training models}
+  \item{\code{predict_data}} {The input data for a given round of prediction}
+  \item{\code{predict_mid_process}} {The directory that holds all saved files
+                                     generated in the prediction process.}
+  \item{\code{predict_output}} {The directory that holds the generated predictions}
  }
 }

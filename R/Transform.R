@@ -1,3 +1,4 @@
+# transform.R
 ## Transformation code
 
 detransform <- function(val, xmin, xmax, xmean, x20, x80) {
@@ -23,9 +24,16 @@ transform <- function(val, xmin, xmax, xmean, x20, x80) {
 #' @export
 #'
 transform_all <- function(info, store = TRUE, load = FALSE) {
-  transform_terms <- gen_norm_vals(info, store = F, load = load)
+  if (load) {
+    transform_terms <- readRDS("transform_vals.RDS")
+  } else{
+    transform_terms <- gen_norm_vals(info, store = F, load = load)
+  }
+
   if (store) saveRDS(transform_terms, file = "transform_vals.RDS")
-  transform_vars <- load_yaml(file.path(path.package("airpred"), "yaml_files", "transform_vars.yml"))
+  transform_vars <- load_yaml(file.path(path.package("airpred"), "yaml_files",
+                                        "transform_vars.yml"))
+
   for (var in names(info)) {
     for (term in transform_vars) {
       if (grepl(term, var)) {

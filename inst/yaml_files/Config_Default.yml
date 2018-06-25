@@ -2,6 +2,8 @@ monitor:
 - AQRVPM25
 data_location:
 - ~/shared_space/ci3_d_airpred/processed_data/AQRVPM25
+input_file_type:
+- mat
 use_default_vars:
 - TRUE
 add_custom_vars:
@@ -32,4 +34,10 @@ training_models:
 - nn
 - forest
 - gradboost
+predict_data:
+- predictions/predict_input.csv
+predict_mid_process:
+- predictions/mid_process
+predict_output:
+- predictions/output
 

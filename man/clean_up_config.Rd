@@ -4,7 +4,7 @@
 \alias{clean_up_config}
 \title{Remove current config file}
 \usage{
-clean_up_config()
+clean_up_config(path = "config.yml")
 }
 \value{
 none

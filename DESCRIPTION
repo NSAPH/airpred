@@ -1,8 +1,9 @@
 Package: airpred
-Title: What the Package Does (one line, title case)
+Title: A Framework For Building Air Pollution Estimation Models
 Version: 0.0.0.9000
-Authors@R: person("Ben", "Sabath", email = "bsabath1@gmail.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("M. Benjamin", "Sabath", email = "bsabath1@gmail.com", role = c("aut", "cre"))
+Description: This package implements a framework that is designed to solve machine learning
+problems similar to those addressed by Qian Di et al. 
 Depends: R (>= 3.4.0)
 Imports: RANN,
          yaml,
@@ -12,22 +13,23 @@ Imports: RANN,
          lubridate,
          data.table,
          gam,
-         h2o
+         h2o,
+         mgcv
 License: GPL
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Collate:
+Collate: 
     'Config.R'
-    'GenWeights.R'
     'utils.R'
     'Impute.R'
     'Interfaces.R'
     'Normalize.R'
-    'ReadData.R'
     'Train.R'
     'Transform.R'
-Suggests: testthat,
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
+    'data.r'
+    'gen_weights.R'
+    'model_params.R'
+    'predict.R'
+    'read_data.R'
+Suggests: testthat

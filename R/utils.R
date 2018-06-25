@@ -52,3 +52,25 @@ implemented_models <- function() {
   out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files","implemented_models.yml"))
   return(out$base)
 }
+
+#' Load csv or RDS data
+#'
+#' @param path the path of the data beint loaded
+#'
+#' Load a data.frame like object stored as a csv or rds file. Passing any other
+#' data type will return an error.
+#'
+#' @export
+load_data <- function(path) {
+  if (file_ext(path) == "csv") {
+    return(fread(path))
+  } else if (file_ext(path) == "rds" | file_ext(path) == "RDS") {
+    out <- readRDS(path)
+    if (!(any(class(out) %in% "data.frame"))) {
+      stop("error, ",path," is not a data.frame like object")
+    }
+    return(out)
+  } else {
+    stop(path, " is not a supported file type")
+  }
+}
