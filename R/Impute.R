@@ -73,12 +73,51 @@ MLE_impute <- function(info, var) {
 #' @return data.table with replaced missing values
 #' @export
 #'
-#' @examples
+#' @details
+#' As a side effect of this function, all of the models used to impute the values
+#' are saved in the directory specified in the configuration file. Ensure that there
+#' is enough space available in that folder to store the generated models. These models
+#' will later be used when data is being prepared for prediction.
 impute_all <- function(info) {
   impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
   for (variable in impute_vars){
     message(paste("Imputing", variable))
     info <- MLE_impute(info, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
+  }
+
+  return(info)
+}
+
+predict_impute <- function(info, var) {
+
+  impute_model <- readRDS(file.path(get_impute_location(), paste0(var, "ImputeModel.RDS")))
+  new_vals <- predict(impute_model, newdata = info, na.action = na.gam.replace, allow.new.levels=T)
+  info[[var]][is.na(info[[var]])] <- new_vals[is.na(info[[var]])]
+
+  if (sum(is.na(info[[var]])) != 0) {
+    warning(paste("Error in imputation, missing values still present in", var))
+  }
+
+  return(info)
+}
+
+#' Impute full dataset
+#'
+#' @param info the dataset being imputed
+#'
+#' @return data.table with replaced missing values
+#' @export
+#'
+#' @details
+#' This function relies on all variables having previously been imputed. If these models do not exist
+#' or the directory in the configuration file is misspecified an error reporting that the file cannor be found
+#' will be generated.
+predict_impute_all <- function(info) {
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  for (variable in impute_vars){
+    message(paste("Imputing", variable))
+    info <- predict_impute(info, variable)
     if (all(!is.na(info[[variable]]))) message("Impute Success")
   }
 
@@ -138,3 +177,5 @@ print_MLE_inputs <- function() {
   lme_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"))
   print(lme_vars)
 }
+
+

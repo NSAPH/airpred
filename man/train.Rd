@@ -4,7 +4,7 @@
 \alias{train}
 \title{Train Air Pollution Model}
 \usage{
-train(init = T, shutdown = T)
+train(init = T, shutdown = F)
 }
 \arguments{
 \item{init}{Boolean for whether or not an h2o cluster should be initiated on call of
@@ -17,4 +17,9 @@ NULL, but saves the models required to predict.
 }
 \description{
 Train Air Pollution Model
+}
+\seealso{
+\code{\link{train_generic}} \code{\link{train_gradboost}}
+
+\code{\link{train_forest}} \code{\link{train_nn}}
 }
