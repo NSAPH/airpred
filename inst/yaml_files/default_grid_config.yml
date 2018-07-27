@@ -1,0 +1,15 @@
+deeplearning:
+   epochs:
+     - 40
+     - 50
+   hidden:
+     -
+       - 20
+       - 20
+     -
+       - 30
+       - 30
+
+randomForest:
+   ntrees: 69
+   max_depth: 420
