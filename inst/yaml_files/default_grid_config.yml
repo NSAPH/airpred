@@ -20,5 +20,8 @@ deeplearning:
      - Rectifier
 
 randomForest:
-   ntrees: 100:1000
+   ntrees:
+     - 100
+     - 200
+     - 300
    max_depth: 420
