@@ -15,7 +15,7 @@ grid_search <- function() {
   grids <- list()
 
   for (model in names(models)) {
-    grids[[model]] <- do_grid(model, info)
+    grids[[model]] <- do_grid(models[[model]], info)
   }
 
   return(grids)
@@ -24,6 +24,7 @@ grid_search <- function() {
 
 do_grid <- function(model, info) {
   hypers <- load_grid_config(model)
+  print(model)
   return(h2o.grid(model, y = "MonitorData",
                   x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
                   training_frame = info,
@@ -47,5 +48,32 @@ gen_grid_config <- function(default = T, path = ".") {
 }
 
 load_grid_config <- function(model) {
-  return(yaml.load_file("grid_config.yml")$model)
+  return(yaml.load_file("grid_config.yml")[[model]])
+}
+
+#' Generate Model configs from grid search results
+#'
+#'
+#' @export
+grid_to_config <- function(grid_out, path = ".") {
+  for (model in names(grid_out)) {
+    params <- list()
+    for (hyper in grid_out[[model]]@hyper_names) {
+      params[[hyper]] <- grid_out[[model]]@summary_table[[hyper]][1]
+      if (hyper == "hidden") {
+        params[[hyper]] <- clean_hidden(params[[hyper]])
+      } else if (!is.na(suppressWarnings(as.numeric(params[[hyper]])))) {
+        params[[hyper]] <- as.numeric(params[[hyper]])
+      }
+    }
+    gen_model_config(model, in_list = params)
+  }
+}
+
+#' convert hidden layer representation to vector
+#'
+clean_hidden <- function(num) {
+  num <- substr(num, 2, nchar(num) - 1)
+  num <- as.numeric(strsplit(num, ",")[[1]])
+  return(num)
 }

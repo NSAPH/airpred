@@ -50,7 +50,7 @@ get_formula<- function(path, var="base") {
 #'
 implemented_models <- function() {
   out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files","implemented_models.yml"))
-  return(out$base)
+  return(out)
 }
 
 #' Load csv or RDS data

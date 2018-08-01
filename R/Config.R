@@ -174,12 +174,13 @@ get_training_models <- function() {
   possible <- implemented_models()
   models <- yaml.load_file("config.yml")$training_models
   for (mod in models) {
-    if (!(mod %in% possible)) {
+    if (!(mod %in% names(possible))) {
       message(paste0(mod, " is not currently implemented as a training model"))
       message("A custom parameter file will be generated and the generic function
               will be attempted. No promises though.")
+      possible[[mod]] <- mod
     }
-    out[[mod]] <- TRUE
+    out[[mod]] <- possible[[mod]]
   }
 
   return(out)
