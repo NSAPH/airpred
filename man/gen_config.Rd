@@ -57,5 +57,9 @@ the model to run successfully.
   \item{\code{predict_mid_process}} {The directory that holds all saved files
                                      generated in the prediction process.}
   \item{\code{predict_output}} {The directory that holds the generated predictions}
+  \item{\code{pre_generated_weights}} {A boolean determining whether or not the spatial weights
+                                      are stored on disk or need to be generated on the fly from
+                                      the list of monitors}
+   \item{\code{weight_matrix_path}} {The path to where pregenerated weights are stored}
  }
 }

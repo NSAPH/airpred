@@ -11,6 +11,8 @@
 #' @export
 airpred.predict <- function(prepped = T) {
 
+  h2o.init()
+
   if (prepped) {
     info <- load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
   } else {

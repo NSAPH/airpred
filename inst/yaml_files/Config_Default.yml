@@ -30,6 +30,11 @@ training_output:
 - ~/shared_space/ci3_p_airpred/training_output
 monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
+pre_generated_weights: FALSE
+weight_matrix_paths:
+- path_1
+- path_2
+- path_3
 training_models:
 - nn
 - forest

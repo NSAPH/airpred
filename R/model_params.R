@@ -21,7 +21,7 @@
 gen_model_config <- function(func, path = ".", in_list = NULL) {
   ## handle functions passed as strings
 
-  if (func %in% implemented_models()) {
+  if (func %in% names(implemented_models())) {
     default_model_config(model = func, path = path, in_list = in_list)
     return()
   }
@@ -97,7 +97,12 @@ default_model_config <- function(model, path = ".", in_list = NULL) {
 
 #'@export
 get_model_param <- function(model, param, path = ".") {
-  return(yaml.load_file(file.path(path, paste0(model,"_params.yml")))[[param]])
+  out <- yaml.load_file(file.path(path, paste0(model,"_params.yml")))[[param]]
+  if (!is.na(suppressWarnings(as.numeric(out)))) {
+    out <- as.numeric(out)
+  }
+
+  return(out)
 }
 
 #' Check to see if model config files are in use
