@@ -1,4 +1,6 @@
 deeplearning:
+   nfolds:
+     - 10
    epochs:
      - 40
      - 50
@@ -20,6 +22,8 @@ deeplearning:
      - Rectifier
 
 randomForest:
+   nfolds:
+     - 10
    ntrees:
      - 100
      - 200
@@ -43,6 +47,8 @@ randomForest:
      - 14
      - 15
 gbm:
+  nfolds:
+    - 10
   ntrees:
     - 50
     - 100
