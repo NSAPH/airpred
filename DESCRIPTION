@@ -2,8 +2,7 @@ Package: airpred
 Title: A Framework For Building Air Pollution Estimation Models
 Version: 0.0.0.9000
 Authors@R: person("M. Benjamin", "Sabath", email = "bsabath1@gmail.com", role = c("aut", "cre"))
-Description: This package implements a framework that is designed to solve machine learning
-problems similar to those addressed by Qian Di et al. 
+Description: This package implements a framework that is designed to solve machine learning problems similar to those addressed by Qian Di et al. 
 Depends: R (>= 3.4.0)
 Imports: RANN,
          yaml,
@@ -29,6 +28,7 @@ Collate:
     'Transform.R'
     'data.r'
     'gen_weights.R'
+    'grid_search.R'
     'model_params.R'
     'predict.R'
     'read_data.R'

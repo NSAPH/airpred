@@ -50,7 +50,7 @@ get_formula<- function(path, var="base") {
 #'
 implemented_models <- function() {
   out <- yaml.load_file(file.path(path.package("airpred"),"yaml_files","implemented_models.yml"))
-  return(out$base)
+  return(out)
 }
 
 #' Load csv or RDS data
@@ -72,5 +72,49 @@ load_data <- function(path) {
     return(out)
   } else {
     stop(path, " is not a supported file type")
+  }
+}
+
+
+#' get a boolean value from the user
+#'
+#' @param prompt the question to be asked
+#'
+#' @return
+#' @export
+#'
+#' @importFrom stringr str_wrap
+yes <- function(prompt) {
+  done <- F
+  while (!done) {
+    x <- readline(str_wrap(paste(prompt, "(y/n):  ")))
+    if (!(x %in% c("y", "n"))) {
+      message("invalid input")
+    } else {
+      done <- T
+    }
+  }
+
+  return(x == "y")
+}
+
+get_input <- function(prompt) {
+  x <- readline(str_wrap(paste(prompt, "Enter a value or 'x' to skip:  ")))
+  if (x == "x") {
+    return(NULL)
+  } else {
+    return(x)
+  }
+}
+
+multi_input <- function(prompt) {
+  out <- NULL
+  while (TRUE) {
+    x <- readline(str_wrap(paste(prompt, "Enter a value or 'x' to finish:  ")))
+    if (x == "x") {
+      return(out)
+    } else {
+      out <- c(out, x)
+    }
   }
 }

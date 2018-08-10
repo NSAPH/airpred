@@ -1,4 +1,3 @@
-base:
-  - nn
-  - forest
-  - gradboost
+nn: deeplearning
+forest: randomForest
+gradboost: gbm
