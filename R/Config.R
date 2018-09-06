@@ -33,6 +33,12 @@
 #'                                 the custom variable files.}
 #'   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
 #'                        the run is going to be used to create predictions}
+#'   \item{\code{impute}} {A boolean. If TRUE, airpred will generate imputations for
+#'                         specified variables}
+#'   \item{\code{transform}} {A boolean. If TRUE, airpred will perform transformations on
+#'                         specified variables}
+#'   \item{\code{normalize}} {{A boolean. If TRUE, airpred will perform normalizations
+#'                         on all variables}}
 #'   \item{\code{finalday}} {The date of the last day covered by the data set}
 #'   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
 #'   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
@@ -41,6 +47,7 @@
 #'                                   and transformation steps}
 #'   \item{\code{training_models}} {A list of the models to be used in training and used for the
 #'                                  ensemble model.}
+#'   \item{\code{two_stage}} {Should the two stage modeling process be implemented?}
 #'   \item{\code{monitor_list}} {The location of the file containing the coordinates of the monitors}
 #'   \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
 #'                                 Currently must be an RDS file.}
@@ -67,6 +74,9 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$use_default_vars <- TRUE
     out$use_custom_vars <- FALSE
     out$custom_var_list <- ""
+    out$impute <- TRUE
+    out$transform <- TRUE
+    out$normalize <- TRUE
     out$train <- TRUE
     out$finalday <- 20180101
     out$csv_path <- ""
@@ -78,6 +88,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$training_data <- ""
     out$training_output <- ""
     out$training_models <- c("nn", "forest", "gradboost")
+    out$two_stage <- TRUE
     out$predict_data <- ""
     out$predict_mid_process <- ""
     out$predict_output <- ""
@@ -249,6 +260,38 @@ get_predict_output <- function() {
   }
 
   return(yaml.load_file("config.yml")$predict_output)
+}
+
+get_two_stage <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$two_stage)
+}
+
+get_impute <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$impute)
+}
+
+get_transform <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$transform)
+}
+
+get_normalize <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$normalize)
 }
 
 #' Remove current config file
