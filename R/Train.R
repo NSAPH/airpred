@@ -143,6 +143,8 @@ train <- function(init = T, shutdown = F) {
   ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,],
                   nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"initial_ensemble.RDS"))
+
+  if (get_two_stage()) {
   new_vals <- predict(ensemble, ensemble_data)
 
   ## use weights to generate nearby terms
@@ -183,7 +185,7 @@ train <- function(init = T, shutdown = F) {
                  nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"nearby_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
-
+  }
   if (shutdown) {h2o.shutdown(prompt = F)}
 }
 

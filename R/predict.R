@@ -40,7 +40,7 @@ airpred.predict <- function(prepped = T) {
 
   initial_prediction <- predict(initial_ensemble, newdata = preensemble)
 
-
+  if(get_two_stage()) {
   ## Should be functionalized longterm, currently done this way to avoid duplicating the dataset in memory
   nearby <- gen_nearby_terms(initial_prediction, max(info$site))
 
@@ -61,11 +61,19 @@ airpred.predict <- function(prepped = T) {
   }
   nearby_ensemble <- readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
   predictions <- predict(nearby_ensemble, newdata = preensemble)
+  } else {
+    predictions <- initial_prediction
+  }
+
   predictions <- data.frame(as.vector(info$site), as.vector(info$date), predictions)
 
   names(predictions) <- c("site", "date", "MonitorData")
+  if (get_normalize()) {
   predictions <- denormalize_all(predictions)
+  }
+  if (get_transform()) {
   predictions <- detransform_all(predictions)
+  }
   saveRDS(predictions, file = file.path(get_predict_output(), "predictions.RDS"))
 
 
@@ -91,16 +99,22 @@ load_predict_data <- function() {
   data_path <- get_predict_data()
   info <- load_data(data_path)
 
+  if (get_transform()) {
   message("Transforming Data")
   info <- transform_all(info, store = F, load = T)
   saveRDS(info, file = file.path(mid_process_path, "predict_post_transform.rds"))
+  }
 
+  if (get_normalize()) {
   message("Normalizing Data")
   info <- normalize_all(info, store = F, load = T)
   saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
+  }
 
+  if (get_impute()) {
   message("Imputing Data")
   info <- predict_impute_all(info)
+  }
   saveRDS(info, file = file.path(mid_process_path, "predict_prepped.rds"))
 
   return(info)
