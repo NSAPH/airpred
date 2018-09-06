@@ -30,6 +30,9 @@ training_output:
 - ~/shared_space/ci3_p_airpred/training_output
 monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
+impute: TRUE
+normalize: TRUE
+transform: TRUE
 pre_generated_weights: FALSE
 weight_matrix_paths:
 - path_1
@@ -39,6 +42,7 @@ training_models:
 - nn
 - forest
 - gradboost
+two_stage: TRUE
 predict_data:
 - predictions/predict_input.csv
 predict_mid_process:
