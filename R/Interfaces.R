@@ -44,14 +44,20 @@ get_rds_data <- function() {
   rds_path <- get_rds_location()
   save_path <- get_mid_process_location()
   data <- readRDS(rds_path)
+  if (get_transform()) {
   print("Transforming Data")
   data <- transform_all(data)
   saveRDS(data, file.path(save_path,"post_transform.RDS"))
+  }
+  if (get_normalize()) {
   print("Normalizing Data")
   data <- normalize_all(data)
   saveRDS(data, file.path(save_path,"post_normal.RDS"))
+  }
+  if (get_impute()) {
   print("Imputing Data")
   data <- impute_all(data)
+  }
   saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)
 }

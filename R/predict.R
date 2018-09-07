@@ -106,7 +106,8 @@ load_predict_data <- function() {
   }
 
   if (get_normalize()) {
-  message("Normalizing Data")
+
+    message("Normalizing Data")
   info <- normalize_all(info, store = F, load = T)
   saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
   }
