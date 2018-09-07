@@ -29,7 +29,7 @@ gen_norm_vals <- function(info, store = TRUE, load = FALSE) {
     names(norm.terms) <- names(info)
 
     for (var in names(info)) {
-      if (!(var %in% c("site","year","date"))) {
+      if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
       norm.terms[[var]] <- c(max(info[[var]], na.rm = T),
                              min(info[[var]], na.rm = T),
                              mean(info[[var]], na.rm = T),
@@ -69,7 +69,7 @@ normalize <- function(val, max, min) {
 normalize_all <- function(info, store = TRUE, load = FALSE) {
   norm.terms <- gen_norm_vals(info, store = store, load = load)
  for (var in names(info)) {
-   if (!(var %in% c("site","year","date"))) {
+   if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
    info[[var]] <- sapply(info[[var]], normalize, max = norm.terms[[var]][1],
                          min = norm.terms[[var]][2])
  }}
@@ -83,7 +83,7 @@ denormalize <- function(val, max, min) {
 denormalize_all <- function(info, store = TRUE) {
   norm.terms <- load_norm_vals()
   for (var in names(info)) {
-    if (!(var %in% c("site","year","date"))) {
+    if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
     info[[var]] <- lapply(info[[var]], denormalize, max = norm.terms[[var]][1],
                           min = norm.terms[[var]][2])
   }}
