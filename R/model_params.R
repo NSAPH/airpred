@@ -98,6 +98,9 @@ default_model_config <- function(model, path = ".", in_list = NULL) {
 #'@export
 get_model_param <- function(model, param, path = ".") {
   out <- yaml.load_file(file.path(path, paste0(model,"_params.yml")))[[param]]
+  if (is.logical(out)) {
+    return(out)
+  }
   if (!is.na(suppressWarnings(as.numeric(out)))) {
     out <- as.numeric(out)
   }
