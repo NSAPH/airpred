@@ -65,7 +65,7 @@ airpred.predict <- function(prepped = T) {
     predictions <- initial_prediction
   }
 
-  predictions <- data.frame(as.vector(info$site), as.vector(info$date), predictions)
+  predictions <- data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
 
   names(predictions) <- c("site", "date", "MonitorData")
   if (get_normalize()) {
