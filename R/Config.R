@@ -42,6 +42,8 @@
 #'   \item{\code{finalday}} {The date of the last day covered by the data set}
 #'   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
 #'   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
+#'   \item{\code{date_var}} {The name of the variable containing date identification}
+#'   \item{\code{site_var}} {the name of the variable containing site identification}
 #'   \item{\code{imputation_models}} {The path where the imputation models should be saved.}
 #'   \item{\code{mid_process_data}} {The path where data should be saved between imputation, normalization
 #'                                   and transformation steps}
@@ -92,6 +94,8 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$predict_data <- ""
     out$predict_mid_process <- ""
     out$predict_output <- ""
+    out$date_var <- ""
+    out$site_var <- ""
   }
 
   if (!is.null(in_list)) {
@@ -292,6 +296,22 @@ get_normalize <- function() {
   }
 
   return(yaml.load_file("config.yml")$normalize)
+}
+
+get_date_var <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$date_var)
+}
+
+get_site_var <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$site_var)
 }
 
 #' Remove current config file
