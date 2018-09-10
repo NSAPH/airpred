@@ -28,17 +28,22 @@ airpred.predict <- function(prepped = T) {
     model_dir <- file.path(training_output_dir, paste0("initial_", model))
     initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
-
+  message("Models Loaded")
 
   preensemble <- data.table(start = rep_len(0, nrow(info)))
   for (model in names(initial_models)) {
     preensemble[[model]] <- as.vector(h2o.predict(initial_models[[model]], info)$predict)
   }
+
+  message("Predictions Generated")
+
   preensemble$start <- NULL
 
   initial_ensemble <- readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
 
   initial_prediction <- predict(initial_ensemble, newdata = preensemble)
+
+  message("Ensemble Completed")
 
   if(get_two_stage()) {
   ## Should be functionalized longterm, currently done this way to avoid duplicating the dataset in memory
@@ -64,7 +69,7 @@ airpred.predict <- function(prepped = T) {
   } else {
     predictions <- initial_prediction
   }
-  message("Here!")
+  message("Writing Predictions!")
   predictions <- data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
 
   names(predictions) <- c("site", "date", "MonitorData")
