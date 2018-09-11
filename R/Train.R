@@ -11,7 +11,7 @@
 #' @importFrom h2o h2o.deeplearning
 train_nn <- function(info, train_ind) {
  model <- h2o.deeplearning(y = "MonitorData",
-                           x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
+                           x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
                            training_frame = info[train_ind,],
                            nfolds=get_model_param("nn", "nfolds"),
                            fold_assignment=get_model_param("nn", "fold_assignment"),
@@ -35,7 +35,7 @@ train_nn <- function(info, train_ind) {
 #' @importFrom h2o h2o.randomForest
 train_forest <- function(info, train_ind) {
   model <- h2o.randomForest(y = "MonitorData",
-                            x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
+                            x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
                             training_frame = info[train_ind,],
                             nfolds=get_model_param("forest","nfolds"),
                             fold_assignment=get_model_param("forest","fold_assignment"),
@@ -61,7 +61,7 @@ train_forest <- function(info, train_ind) {
 #' @importFrom h2o h2o.gbm
 train_gradboost <- function(info, train_ind) {
   model <- h2o.gbm(y = "MonitorData",
-                   x = setdiff(names(info), c("MonitorData", "site", "date", "year")),
+                   x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
                    training_frame = info[train_ind,],
                    nfolds=get_model_param("gradboost","nfolds"),
                    fold_assignment=get_model_param("gradboost","fold_assignment"),
