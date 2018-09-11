@@ -18,13 +18,14 @@ airpred.predict <- function(prepped = T) {
   } else {
     info <- load_predict_data()
   }
-
+  message("Data Loaded")
   info <- as.h2o(info)
 
   training_output_dir <- get_training_output()
   selected_models <- get_training_models()
   initial_models <- list()
   for (model in names(selected_models)) {
+    message(model)
     model_dir <- file.path(training_output_dir, paste0("initial_", model))
     initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
