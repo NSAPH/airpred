@@ -69,11 +69,12 @@ normalize <- function(val, max, min) {
 normalize_all <- function(info, store = TRUE, load = FALSE) {
   norm.terms <- gen_norm_vals(info, store = store, load = load)
  for (var in names(info)) {
-   if (is.null(norm.terms[[var]])) {
-     info[[var]] <- NULL
-   } else if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
-   info[[var]] <- sapply(info[[var]], normalize, max = norm.terms[[var]][1],
-                         min = norm.terms[[var]][2])
+   if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
+     info[[var]] <- sapply(info[[var]], normalize, max = norm.terms[[var]][1],
+                           min = norm.terms[[var]][2])
+     if (is.null(norm.terms[[var]])) {
+       info[[var]] <- NULL
+     }
    }
   }
   return(info)
