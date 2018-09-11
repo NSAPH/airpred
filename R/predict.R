@@ -19,7 +19,9 @@ airpred.predict <- function(prepped = T) {
     info <- load_predict_data()
   }
   message("Data Loaded")
+  message(class(info))
   info <- as.h2o(info)
+  message("here")
 
   training_output_dir <- get_training_output()
   selected_models <- get_training_models()
