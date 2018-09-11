@@ -27,6 +27,7 @@ airpred.predict <- function(prepped = T) {
   for (model in names(selected_models)) {
     message(model)
     model_dir <- file.path(training_output_dir, paste0("initial_", model))
+    print(model_dir)
     initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
   message("Models Loaded")
