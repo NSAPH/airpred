@@ -73,6 +73,8 @@ airpred.predict <- function(prepped = T) {
   } else {
     predictions <- initial_prediction
   }
+  message(class(predictions))
+
   message("Writing Predictions!")
   predictions <- data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
 
