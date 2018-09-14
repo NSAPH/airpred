@@ -88,7 +88,7 @@ denormalize_all <- function(info, store = TRUE) {
   norm.terms <- load_norm_vals()
   for (var in names(info)) {
     if (!(var %in% c("site","year","date")) && is.numeric(info[[var]][1])) {
-    info[[var]] <- lapply(info[[var]], denormalize, max = norm.terms[[var]][1],
+    info[[var]] <- sapply(info[[var]], denormalize, max = norm.terms[[var]][1],
                           min = norm.terms[[var]][2])
   }}
   return(info)
