@@ -79,6 +79,10 @@ airpred.predict <- function(prepped = T) {
   predictions <- data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
 
   names(predictions) <- c("site", "date", "MonitorData")
+
+  message(class(predictions[["MonitorData"]]))
+  saveRDS(predictions, file=file.path(get_predict_data(), "debug.rds"))
+
   if (get_normalize()) {
   predictions <- denormalize_all(predictions)
   }
