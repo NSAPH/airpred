@@ -45,7 +45,7 @@ airpred.predict <- function(prepped = T) {
 
   initial_ensemble <- readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
 
-  initial_prediction <- predict(initial_ensemble, newdata = preensemble)
+  initial_prediction <- as.vector(predict(initial_ensemble, newdata = preensemble))
 
   message("Ensemble Completed")
 
