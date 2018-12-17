@@ -4,15 +4,14 @@
 #' Train Neural Net
 #'
 #' @param info data frame with model data
-#' @param train_ind vector with randomly selected indicies for use as the training set
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.deeplearning
-train_nn <- function(info, train_ind) {
+train_nn <- function(info) {
  model <- h2o.deeplearning(y = "MonitorData",
                            x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                           training_frame = info[train_ind,],
+                           training_frame = info,
                            nfolds=get_model_param("nn", "nfolds"),
                            fold_assignment=get_model_param("nn", "fold_assignment"),
                            seed=get_model_param("nn", "seed"),
@@ -21,22 +20,22 @@ train_nn <- function(info, train_ind) {
                            epochs=get_model_param("nn", "epochs"),
                            epsilon = get_model_param("nn", "epsilon"),
                            l1=get_model_param("nn", "l1"),
-                           distribution=get_model_param("nn", "distribution"))
+                           distribution=get_model_param("nn", "distribution"),
+                           reproducible=get_model_param("nn", "reproducible"))
  return(model)
 }
 
 #' Train Random Forest
 #'
 #' @param info data frame with model data
-#' @param train_ind vector with randomly selected indicies for use as the training set
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.randomForest
-train_forest <- function(info, train_ind) {
+train_forest <- function(info) {
   model <- h2o.randomForest(y = "MonitorData",
                             x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                            training_frame = info[train_ind,],
+                            training_frame = info,
                             nfolds=get_model_param("forest","nfolds"),
                             fold_assignment=get_model_param("forest","fold_assignment"),
                             seed=get_model_param("forest","seed"),
@@ -54,15 +53,14 @@ train_forest <- function(info, train_ind) {
 #' Train Gradient Boost
 #'
 #' @param info data frame with model data
-#' @param train_ind vector with randomly selected indicies for use as the training set
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.gbm
-train_gradboost <- function(info, train_ind) {
+train_gradboost <- function(info) {
   model <- h2o.gbm(y = "MonitorData",
                    x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                   training_frame = info[train_ind,],
+                   training_frame = info,
                    nfolds=get_model_param("gradboost","nfolds"),
                    fold_assignment=get_model_param("gradboost","fold_assignment"),
                    seed=get_model_param("gradboost","seed"),
@@ -80,9 +78,8 @@ train_gradboost <- function(info, train_ind) {
 #'
 #' @param model the name of the function to run
 #' @param info the data for use with the model
-#' @param train_ind vector with randomly selected indicies for use as the training set
 #'
-train_generic <- function(model, info, train_ind) {
+train_generic <- function(model, info) {
 
 }
 
@@ -106,8 +103,6 @@ train <- function(init = T, shutdown = F) {
   ## Load data
   info <- readRDS(get_training_data())
   train_out_path <- get_training_output()
-  train_ind <- sample(seq(nrow(info)), size = round(nrow(info)*0.9))
-  train_ind <- sort(train_ind, decreasing = FALSE)
   ## Convert to h2o
   info <- as.h2o(info)
   ## run + save models
@@ -117,13 +112,13 @@ train <- function(init = T, shutdown = F) {
   }
 
   if (!is.null(models$nn)) {
-    trained$nn <- train_nn(info, train_ind)
+    trained$nn <- train_nn(info)
   }
   if (!is.null(models$forest)) {
-    trained$forest <- train_forest(info, train_ind)
+    trained$forest <- train_forest(info)
   }
   if (!is.null(models$gradboost)) {
-    trained$gradboost <- train_gradboost(info, train_ind)
+    trained$gradboost <- train_gradboost(info)
   }
 
   for (model in names(trained)) {
@@ -140,7 +135,7 @@ train <- function(init = T, shutdown = F) {
   saveRDS(ensemble_data, file.path(train_out_path, "ensemble1_data.RDS"))
 
     ## Run Model
-  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,],
+  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data,
                   nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"initial_ensemble.RDS"))
 
@@ -161,13 +156,13 @@ train <- function(init = T, shutdown = F) {
 
 
   if (!is.null(models$nn)) {
-    trained$nn <- train_nn(info, train_ind)
+    trained$nn <- train_nn(info)
   }
   if (!is.null(models$forest)) {
-    trained$forest <- train_forest(info, train_ind)
+    trained$forest <- train_forest(info)
   }
   if (!is.null(models$gradboost)) {
-    trained$gradboost <- train_gradboost(info, train_ind)
+    trained$gradboost <- train_gradboost(info)
   }
   for (model in names(trained)) {
     h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
@@ -181,7 +176,7 @@ train <- function(init = T, shutdown = F) {
 
   saveRDS(ensemble_data, file.path(train_out_path, "ensemble2_data.RDS"))
 
-  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data[train_ind,],
+  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data,
                  nthreads = detectCores())
   saveRDS(ensemble, file.path(train_out_path,"nearby_ensemble.RDS"))
   new_vals <- predict(ensemble, ensemble_data)
