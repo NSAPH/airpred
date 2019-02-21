@@ -41,14 +41,23 @@ the model to run successfully.
                                 the custom variable files.}
   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
                        the run is going to be used to create predictions}
+  \item{\code{impute}} {A boolean. If TRUE, airpred will generate imputations for
+                        specified variables}
+  \item{\code{transform}} {A boolean. If TRUE, airpred will perform transformations on
+                        specified variables}
+  \item{\code{normalize}} {{A boolean. If TRUE, airpred will perform normalizations
+                        on all variables}}
   \item{\code{finalday}} {The date of the last day covered by the data set}
   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
+  \item{\code{date_var}} {The name of the variable containing date identification}
+  \item{\code{site_var}} {the name of the variable containing site identification}
   \item{\code{imputation_models}} {The path where the imputation models should be saved.}
   \item{\code{mid_process_data}} {The path where data should be saved between imputation, normalization
                                   and transformation steps}
   \item{\code{training_models}} {A list of the models to be used in training and used for the
                                  ensemble model.}
+  \item{\code{two_stage}} {Should the two stage modeling process be implemented?}
   \item{\code{monitor_list}} {The location of the file containing the coordinates of the monitors}
   \item{\code{training_data}} {The file containing transformed and imputed code to be used for training.
                                 Currently must be an RDS file.}
