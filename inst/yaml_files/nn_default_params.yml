@@ -21,3 +21,5 @@ distribution:
 - AUTO
 reproducible:
 - FALSE
+standardize:
+- TRUE

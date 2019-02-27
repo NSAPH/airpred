@@ -21,7 +21,9 @@ train_nn <- function(info) {
                            epsilon = get_model_param("nn", "epsilon"),
                            l1=get_model_param("nn", "l1"),
                            distribution=get_model_param("nn", "distribution"),
-                           reproducible=get_model_param("nn", "reproducible"))
+                           reproducible=get_model_param("nn", "reproducible"),
+                           standardize=get_model_param("nn", "standardize"))
+
  return(model)
 }
 
