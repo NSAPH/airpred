@@ -9,22 +9,28 @@
 #'
 #' @importFrom h2o h2o.deeplearning
 train_nn <- function(info) {
- model <- h2o.deeplearning(y = "MonitorData",
-                           x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                           training_frame = info,
-                           nfolds=get_model_param("nn", "nfolds"),
-                           fold_assignment=get_model_param("nn", "fold_assignment"),
-                           seed=get_model_param("nn", "seed"),
-                           keep_cross_validation_predictions = get_model_param("nn", "keep_cross_validation_predictions"),
-                           activation=get_model_param("nn", "activation"),hidden=get_model_param("nn", "hidden"),
-                           epochs=get_model_param("nn", "epochs"),
-                           epsilon = get_model_param("nn", "epsilon"),
-                           l1=get_model_param("nn", "l1"),
-                           distribution=get_model_param("nn", "distribution"),
-                           reproducible=get_model_param("nn", "reproducible"),
-                           standardize=get_model_param("nn", "standardize"))
+  model <- h2o.deeplearning(
+    y = "MonitorData",
+    x = setdiff(
+      names(info),
+      c("MonitorData", get_site_var(), get_date_var(), "year")
+    ),
+    training_frame = info,
+    nfolds = get_model_param("nn", "nfolds"),
+    fold_assignment = get_model_param("nn", "fold_assignment"),
+    seed = get_model_param("nn", "seed"),
+    keep_cross_validation_predictions = get_model_param("nn", "keep_cross_validation_predictions"),
+    activation = get_model_param("nn", "activation"),
+    hidden = get_model_param("nn", "hidden"),
+    epochs = get_model_param("nn", "epochs"),
+    epsilon = get_model_param("nn", "epsilon"),
+    l1 = get_model_param("nn", "l1"),
+    distribution = get_model_param("nn", "distribution"),
+    reproducible = get_model_param("nn", "reproducible"),
+    standardize = get_model_param("nn", "standardize")
+  )
 
- return(model)
+  return(model)
 }
 
 #' Train Random Forest
@@ -35,19 +41,24 @@ train_nn <- function(info) {
 #'
 #' @importFrom h2o h2o.randomForest
 train_forest <- function(info) {
-  model <- h2o.randomForest(y = "MonitorData",
-                            x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                            training_frame = info,
-                            nfolds=get_model_param("forest","nfolds"),
-                            fold_assignment=get_model_param("forest","fold_assignment"),
-                            seed=get_model_param("forest","seed"),
-                            keep_cross_validation_predictions = get_model_param("forest","keep_cross_validation_predictions"),
-                            ntrees=get_model_param("forest","ntrees"),
-                            max_depth = get_model_param("forest","max_depth"),
-                            nbins = get_model_param("forest","bins"),
-                            nbins_cats = get_model_param("forest","nbins_cats"),
-                            mtries = get_model_param("forest","mtries"),
-                            sample_rate = get_model_param("forest","sample_rate"))
+  model <- h2o.randomForest(
+    y = "MonitorData",
+    x = setdiff(
+      names(info),
+      c("MonitorData", get_site_var(), get_date_var(), "year")
+    ),
+    training_frame = info,
+    nfolds = get_model_param("forest", "nfolds"),
+    fold_assignment = get_model_param("forest", "fold_assignment"),
+    seed = get_model_param("forest", "seed"),
+    keep_cross_validation_predictions = get_model_param("forest", "keep_cross_validation_predictions"),
+    ntrees = get_model_param("forest", "ntrees"),
+    max_depth = get_model_param("forest", "max_depth"),
+    nbins = get_model_param("forest", "bins"),
+    nbins_cats = get_model_param("forest", "nbins_cats"),
+    mtries = get_model_param("forest", "mtries"),
+    sample_rate = get_model_param("forest", "sample_rate")
+  )
 
   return(model)
 }
@@ -60,23 +71,30 @@ train_forest <- function(info) {
 #'
 #' @importFrom h2o h2o.gbm
 train_gradboost <- function(info) {
-  model <- h2o.gbm(y = "MonitorData",
-                   x = setdiff(names(info), c("MonitorData", get_site_var(), get_date_var(), "year")),
-                   training_frame = info,
-                   nfolds=get_model_param("gradboost","nfolds"),
-                   fold_assignment=get_model_param("gradboost","fold_assignment"),
-                   seed=get_model_param("gradboost","seed"),
-                   keep_cross_validation_predictions = get_model_param("gradboost","keep_cross_validation_predictions"),
-                   ntrees=get_model_param("gradboost","ntrees"),
-                   learn_rate = get_model_param("gradboost","learn_rate"),
-                   max_depth = get_model_param("gradboost","max_depth"),
-                   sample_rate = get_model_param("gradboost","sample_rate"),
-                   col_sample_rate = get_model_param("gradboost","col_sample_rate"))
+  model <- h2o.gbm(
+    y = "MonitorData",
+    x = setdiff(
+      names(info),
+      c("MonitorData", get_site_var(), get_date_var(), "year")
+    ),
+    training_frame = info,
+    nfolds = get_model_param("gradboost", "nfolds"),
+    fold_assignment = get_model_param("gradboost", "fold_assignment"),
+    seed = get_model_param("gradboost", "seed"),
+    keep_cross_validation_predictions = get_model_param("gradboost", "keep_cross_validation_predictions"),
+    ntrees = get_model_param("gradboost", "ntrees"),
+    learn_rate = get_model_param("gradboost", "learn_rate"),
+    max_depth = get_model_param("gradboost", "max_depth"),
+    sample_rate = get_model_param("gradboost", "sample_rate"),
+    col_sample_rate = get_model_param("gradboost", "col_sample_rate")
+  )
 
   return(model)
 }
 
 #' Train an h2o model using the generic architecture
+#'
+#' Not currently developed
 #'
 #' @param model the name of the function to run
 #' @param info the data for use with the model
@@ -101,7 +119,9 @@ train_generic <- function(model, info) {
 train <- function(init = T, shutdown = F) {
   models <- get_training_models()
   trained <- list()
-  if (init) {h2o.init()}
+  if (init) {
+    h2o.init()
+  }
   ## Load data
   info <- readRDS(get_training_data())
   train_out_path <- get_training_output()
@@ -127,63 +147,84 @@ train <- function(init = T, shutdown = F) {
     h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)))
   }
 
-  ## Initial ensemble
+  if (length(names(models)) > 1) {
+    ## Initial ensemble
     ## Assemble ensemble data frame
-  ensemble_data <- data.frame(as.vector(info$MonitorData))
-  names(ensemble_data)[1] <- "MonitorData"
-  for (model_name in names(trained)) {
-    ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
-  }
-  saveRDS(ensemble_data, file.path(train_out_path, "ensemble1_data.RDS"))
+    ensemble_data <- data.frame(as.vector(info$MonitorData))
+    names(ensemble_data)[1] <- "MonitorData"
+    for (model_name in names(trained)) {
+      ensemble_data[[model_name]] <-
+        as.vector(h2o.predict(trained[[model_name]], info)$predict)
+    }
+    saveRDS(ensemble_data,
+            file.path(train_out_path, "ensemble1_data.RDS"))
 
     ## Run Model
-  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data,
-                  nthreads = detectCores())
-  saveRDS(ensemble, file.path(train_out_path,"initial_ensemble.RDS"))
+    ensemble <-
+      bam(as.formula(ensemble_formula(trained)),
+          data = ensemble_data,
+          nthreads = detectCores())
+    saveRDS(ensemble,
+            file.path(train_out_path, "initial_ensemble.RDS"))
+  }
 
   if (get_two_stage()) {
-  new_vals <- predict(ensemble, ensemble_data)
+    if (length(names(models)) == 1) {
+      new_vals <- as.vector(h2o.predict(trained[[1]], info)$predict)
+    } else{
+      new_vals <- predict(ensemble, ensemble_data)
+    }
 
-  ## use weights to generate nearby terms
-  nearby <- gen_nearby_terms(new_vals, max(info$site))
-  nearby <- as.h2o(nearby)
+    ## use weights to generate nearby terms
+    nearby <- gen_nearby_terms(new_vals, max(info$site))
+    nearby <- as.h2o(nearby)
     ## Assign values to current dataframe
-  info <- h2o.cbind(info, nearby)
+    info <- h2o.cbind(info, nearby)
 
-  ## Store data with nearby terms
+    ## Store data with nearby terms
 
-  saveRDS(info, file.path(train_out_path,"nearby_data.RDS"))
+    saveRDS(info, file.path(train_out_path, "nearby_data.RDS"))
 
-  ## re run models
+    ## re run models
 
 
-  if (!is.null(models$nn)) {
-    trained$nn <- train_nn(info)
+    if (!is.null(models$nn)) {
+      trained$nn <- train_nn(info)
+    }
+    if (!is.null(models$forest)) {
+      trained$forest <- train_forest(info)
+    }
+    if (!is.null(models$gradboost)) {
+      trained$gradboost <- train_gradboost(info)
+    }
+    for (model in names(trained)) {
+      h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
+    }
+
+
+    if (length(names(models)) > 1) {
+      ensemble_data <- data.frame(as.vector(info$MonitorData))
+      names(ensemble_data)[1] <- "MonitorData"
+      for (model_name in names(trained)) {
+        ensemble_data[[model_name]] <-
+          as.vector(h2o.predict(trained[[model_name]], info)$predict)
+      }
+
+      saveRDS(ensemble_data,
+              file.path(train_out_path, "ensemble2_data.RDS"))
+
+      ensemble <-
+        bam(as.formula(ensemble_formula(trained)),
+            data = ensemble_data,
+            nthreads = detectCores())
+      saveRDS(ensemble,
+              file.path(train_out_path, "nearby_ensemble.RDS"))
+      new_vals <- predict(ensemble, ensemble_data)
+    }
   }
-  if (!is.null(models$forest)) {
-    trained$forest <- train_forest(info)
+  if (shutdown) {
+    h2o.shutdown(prompt = F)
   }
-  if (!is.null(models$gradboost)) {
-    trained$gradboost <- train_gradboost(info)
-  }
-  for (model in names(trained)) {
-    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
-  }
-
-  ensemble_data <- data.frame(as.vector(info$MonitorData))
-  names(ensemble_data)[1] <- "MonitorData"
-  for (model_name in names(trained)) {
-    ensemble_data[[model_name]] <- as.vector(h2o.predict(trained[[model_name]], info)$predict)
-  }
-
-  saveRDS(ensemble_data, file.path(train_out_path, "ensemble2_data.RDS"))
-
-  ensemble <- bam(as.formula(ensemble_formula(trained)), data = ensemble_data,
-                 nthreads = detectCores())
-  saveRDS(ensemble, file.path(train_out_path,"nearby_ensemble.RDS"))
-  new_vals <- predict(ensemble, ensemble_data)
-  }
-  if (shutdown) {h2o.shutdown(prompt = F)}
 }
 
 #' Build formula for ensmeble model
@@ -214,16 +255,19 @@ gen_nearby_terms <- function(new_vals, num_sites) {
   for (i in 1:3) {
     site_weights <- gen_weights(term = i)
     out_vec <- site_weights %*% new_val_mat
-    out[[paste0("Spatial_Lagged_",i)]] <- c(out_vec)
+    out[[paste0("Spatial_Lagged_", i)]] <- c(out_vec)
   }
 
   ## Temporal Terms
   for (i in 1:3) {
-    temp_mat <- matrix(nrow = nrow(new_val_mat), ncol = ncol(new_val_mat))
+    temp_mat <-
+      matrix(nrow = nrow(new_val_mat),
+             ncol = ncol(new_val_mat))
     for (j in num_sites) {
-      temp_mat[j,] <- as.numeric(stats::filter(new_val_mat[j,], filter_term(i), sides = 2))
+      temp_mat[j,] <-
+        as.numeric(stats::filter(new_val_mat[j,], filter_term(i), sides = 2))
     }
-    out[[paste0("Temporal_Lagged_",i)]] <- c(temp_mat)
+    out[[paste0("Temporal_Lagged_", i)]] <- c(temp_mat)
   }
   out$new_vals <- NULL
   return(out)
@@ -234,8 +278,8 @@ gen_nearby_terms <- function(new_vals, num_sites) {
 ## Currently hardcoded, would like to come up with a non-hardcoded weighting function in the future
 filter_term <- function(val) {
   out <- matrix(nrow = 3, ncol = 5)
-  out[1,] <- rep(1/5, 5)
-  out[2,] <- c(1/9, 2/9, 1/3, 2/9, 1/3)
-  out[3,] <- c(1/16, 3/16, 1/2, 3/16, 1/16)
+  out[1,] <- rep(1 / 5, 5)
+  out[2,] <- c(1 / 9, 2 / 9, 1 / 3, 2 / 9, 1 / 3)
+  out[3,] <- c(1 / 16, 3 / 16, 1 / 2, 3 / 16, 1 / 16)
   return(out[val,])
 }
