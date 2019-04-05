@@ -12,6 +12,7 @@ load_yaml <- function(path, var="base") {
 }
 
 Vector2FormulaString <- function(strvec) {
+  ## Not used with h2o imputation
   if (length(strvec)==1) {
     return(strvec)
   }
@@ -26,7 +27,6 @@ Vector2FormulaString <- function(strvec) {
 
 get_formula<- function(path, var="base") {
   out <- load_yaml(path, var)
-  out <- Vector2FormulaString(out)
   return(out)
 }
 

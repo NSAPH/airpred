@@ -31,6 +31,18 @@ get_logit_weights <- function(info, var) {
   return(mle_weight)
 }
 
+h2o_impute <- function(info, var) {
+  ### assumes that h2o has been initialized and that
+  ### data has been loaded in to cluster
+
+  covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/logit_formula.yml"), var)
+  impute_model <- h2o.randomForest(y = var,
+                                   x = covars,
+                                   training_frame = info,
+                                   model_id = paste0(var, "_impute"))
+  h2o.saveModel(impute_model,path = file.path(get_impute_location(), var))
+}
+
 #' Impute varibles using mixed linear models
 #'
 #' @param info data set
