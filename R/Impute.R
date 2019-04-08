@@ -57,6 +57,40 @@ h2o_impute <- function(info, var) {
   return(as.vector(h2o.predict(impute_model, info)))
 }
 
+#' Impute all specified variables
+#'
+#' @param info dataframe containing all variables for training
+#' @param init should the h2o instance be initialized?
+#' Only set as F if the h2o instance has already been initialized.
+#' @param shutdown Should the h2o instance be shutdown after imputation, defaults to T.
+#'
+#' @return a data frame
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' h2o.init()
+#' info <- h2o_impute_all(info, init = F)
+#' }
+h2o_impute_all <- function(info, init = T, shutdown = T) {
+  if (init) {
+    h2o.init()
+  }
+  info_h2o <- as.h2o(info)
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  for (variable in impute_vars){
+    message(paste("Imputing", variable))
+    info[[variable]] <- h2o_impute(info_h2o, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
+  }
+
+  if (shutdown) {
+    h2o.shutdown(prompt = F)
+  }
+
+  return(info)
+}
+
 #' Impute varibles using mixed linear models
 #'
 #' @param info data set
