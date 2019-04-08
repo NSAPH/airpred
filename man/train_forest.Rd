@@ -4,12 +4,10 @@
 \alias{train_forest}
 \title{Train Random Forest}
 \usage{
-train_forest(info, train_ind)
+train_forest(info)
 }
 \arguments{
 \item{info}{data frame with model data}
-
-\item{train_ind}{vector with randomly selected indicies for use as the training set}
 }
 \value{
 h2o model
