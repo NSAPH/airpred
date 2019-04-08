@@ -154,7 +154,7 @@ load_predict_data <- function() {
 
   if (get_impute()) {
     message("Imputing Data")
-    info <- predict_impute_all(info)
+    info <- h2o_predict_impute_all(info)
   }
   saveRDS(info, file = file.path(mid_process_path, "predict_prepped.rds"))
 
