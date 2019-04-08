@@ -44,6 +44,7 @@
 #'   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
 #'   \item{\code{date_var}} {The name of the variable containing date identification}
 #'   \item{\code{site_var}} {the name of the variable containing site identification}
+#'   \item{\code{output_var}} {The name of the variable that the model is trying to predict}
 #'   \item{\code{imputation_models}} {The path where the imputation models should be saved.}
 #'   \item{\code{mid_process_data}} {The path where data should be saved between imputation, normalization
 #'                                   and transformation steps}
@@ -96,6 +97,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$predict_output <- ""
     out$date_var <- ""
     out$site_var <- ""
+    out$output_var <- "MonitorData"
   }
 
   if (!is.null(in_list)) {
@@ -312,6 +314,14 @@ get_site_var <- function() {
   }
 
   return(yaml.load_file("config.yml")$site_var)
+}
+
+get_output_var <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$output_var)
 }
 
 #' Remove current config file
