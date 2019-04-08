@@ -37,7 +37,7 @@ get_logit_weights <- function(info, var) {
 #' @param info h2o data frame
 #' @param var String containing the name of the variable to be imputed
 #'
-#' @details This function assumes taht the h2o cluster has already been initialized
+#' @details This function assumes that the h2o cluster has already been initialized
 #' and that the data has already been loaded to the h2o cluster. To protect against
 #' errors it is not exported.
 #'
@@ -57,7 +57,7 @@ h2o_impute <- function(info, var) {
   return(as.vector(h2o.predict(impute_model, info)))
 }
 
-#' Impute all specified variables
+#' Impute all specified variables using h2o
 #'
 #' @param info dataframe containing all variables for training
 #' @param init should the h2o instance be initialized?
@@ -147,6 +147,60 @@ impute_all <- function(info) {
   }
 
   return(info)
+}
+
+#' Impute missing values using a previously trained H2O Random Forest model
+#'
+#' @param info h2o data frame
+#' @param var String containing the name of the variable to be imputed
+#'
+#' @details This function assumes that the h2o cluster has already been initialized
+#' and that the data has already been loaded to the h2o cluster. To protect against
+#' errors it is not exported.
+#'
+#' H2O's Random Forests interpret missingness in the input as containing information
+#' and therefore the output will have values for all inputs, regardless of the missingness
+#' of the input.
+#'
+#'
+h2o_predict_impute <- function(info, var) {
+  impute_model <- h2o.loadModel(file.path(get_impute_location(),
+                                          var,
+                                          paste0(var, "_impute")))
+  return(as.vector(h2o.predict(impute_model, info)))
+}
+
+#' Impute all specified variables using h2o with previously trained models
+#'
+#' @param info dataframe containing all variables for training
+#' @param init should the h2o instance be initialized?
+#' Only set as F if the h2o instance has already been initialized.
+#' @param shutdown Should the h2o instance be shutdown after imputation, defaults to T.
+#'
+#' @return a data frame
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' h2o.init()
+#' info <- h2o_predict_impute_all(info, init = F)
+#' }
+h2o_predict_impute_all <- function(info, init = T, shutdown = T) {
+  if (init) {
+    h2o.init()
+  }
+
+  info_h2o <- as.h2o(info)
+  impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  for (variable in impute_vars){
+    message(paste("Imputing", variable))
+    info[[variable]] <- h2o_predict_impute(info_h2o, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
+  }
+
+  if (shutdown) {
+    h2o.shutdown(prompt = F)
+  }
 }
 
 predict_impute <- function(info, var) {
