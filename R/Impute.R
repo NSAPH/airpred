@@ -31,9 +31,22 @@ get_logit_weights <- function(info, var) {
   return(mle_weight)
 }
 
+
+#' Impute missing values using a H2O Random Forest model
+#'
+#' @param info h2o data frame
+#' @param var String containing the name of the variable to be imputed
+#'
+#' @details This function assumes taht the h2o cluster has already been initialized
+#' and that the data has already been loaded to the h2o cluster. To protect against
+#' errors it is not exported.
+#'
+#' H2O's Random Forests interpret missingness in the input as containing information
+#' and therefore the output will have values for all inputs, regardless of the missingness
+#' of the input.
+#'
+#'
 h2o_impute <- function(info, var) {
-  ### assumes that h2o has been initialized and that
-  ### data has been loaded in to cluster
 
   covars <- get_formula(paste0(path.package("airpred"),"/yaml_files/logit_formula.yml"), var)
   impute_model <- h2o.randomForest(y = var,
@@ -41,6 +54,7 @@ h2o_impute <- function(info, var) {
                                    training_frame = info,
                                    model_id = paste0(var, "_impute"))
   h2o.saveModel(impute_model,path = file.path(get_impute_location(), var))
+  return(as.vector(h2o.predict(impute_model, info)))
 }
 
 #' Impute varibles using mixed linear models
