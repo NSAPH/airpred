@@ -34,6 +34,8 @@ date_var: date
 site_var: site
 output_var: MonitorData
 impute: TRUE
+impute_vars: default
+impute_formula: default
 normalize: TRUE
 transform: TRUE
 pre_generated_weights: FALSE
