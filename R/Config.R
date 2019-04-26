@@ -35,6 +35,14 @@
 #'                        the run is going to be used to create predictions}
 #'   \item{\code{impute}} {A boolean. If TRUE, airpred will generate imputations for
 #'                         specified variables}
+#'   \item{\code{impute_vars}} {Either "default" or a path to a yaml file listing the variables to be
+#'                              imputed. If a custom file is being used, the top level of the
+#'                              yaml file should be "base" with the elements of "base" being the
+#'                              names of the variables being imputed.}
+#'   \item{\code{impute_formula}} {Either "default" or a path to a yaml file listing the variables to be
+#'                              used as inputs to the imputation model. If a custom file is being used, the top level of the
+#'                              yaml file should be "base" or the name of a variable being imputed with the elements being the
+#'                              names of the variables being used for imputation.}
 #'   \item{\code{transform}} {A boolean. If TRUE, airpred will perform transformations on
 #'                         specified variables}
 #'   \item{\code{normalize}} {{A boolean. If TRUE, airpred will perform normalizations
@@ -44,6 +52,7 @@
 #'   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
 #'   \item{\code{date_var}} {The name of the variable containing date identification}
 #'   \item{\code{site_var}} {the name of the variable containing site identification}
+#'   \item{\code{output_var}} {The name of the variable that the model is trying to predict}
 #'   \item{\code{imputation_models}} {The path where the imputation models should be saved.}
 #'   \item{\code{mid_process_data}} {The path where data should be saved between imputation, normalization
 #'                                   and transformation steps}
@@ -96,6 +105,8 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
     out$predict_output <- ""
     out$date_var <- ""
     out$site_var <- ""
+    out$output_var <- "MonitorData"
+    out$impute_vars <- "default"
   }
 
   if (!is.null(in_list)) {
@@ -312,6 +323,30 @@ get_site_var <- function() {
   }
 
   return(yaml.load_file("config.yml")$site_var)
+}
+
+get_output_var <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$output_var)
+}
+
+get_impute_var_path <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$impute_vars)
+}
+
+get_impute_formula_path <- function() {
+  if (!file.exists("config.yml")) {
+    stop("No config file found, try running gen_config()")
+  }
+
+  return(yaml.load_file("config.yml")$impute_formula)
 }
 
 #' Remove current config file

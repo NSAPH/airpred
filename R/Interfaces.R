@@ -28,7 +28,7 @@ get_csv_data <- function() {
 
   if (get_impute()) {
   message("Imputing Data")
-  data <- impute_all(data)
+  data <- h2o_impute_all(data)
   }
   saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)
@@ -56,7 +56,7 @@ get_rds_data <- function() {
   }
   if (get_impute()) {
   print("Imputing Data")
-  data <- impute_all(data)
+  data <- h2o_impute_all(data)
   }
   saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)

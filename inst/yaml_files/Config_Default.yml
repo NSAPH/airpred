@@ -32,7 +32,10 @@ monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
 date_var: date
 site_var: site
+output_var: MonitorData
 impute: TRUE
+impute_vars: default
+impute_formula: default
 normalize: TRUE
 transform: TRUE
 pre_generated_weights: FALSE

@@ -10,10 +10,10 @@
 #' @importFrom h2o h2o.deeplearning
 train_nn <- function(info) {
   model <- h2o.deeplearning(
-    y = "MonitorData",
+    y = get_output_var(),
     x = setdiff(
       names(info),
-      c("MonitorData", get_site_var(), get_date_var(), "year")
+      c(get_output_var(), get_site_var(), get_date_var(), "year")
     ),
     training_frame = info,
     nfolds = get_model_param("nn", "nfolds"),
@@ -42,10 +42,10 @@ train_nn <- function(info) {
 #' @importFrom h2o h2o.randomForest
 train_forest <- function(info) {
   model <- h2o.randomForest(
-    y = "MonitorData",
+    y = get_output_var(),
     x = setdiff(
       names(info),
-      c("MonitorData", get_site_var(), get_date_var(), "year")
+      c(get_output_var(), get_site_var(), get_date_var(), "year")
     ),
     training_frame = info,
     nfolds = get_model_param("forest", "nfolds"),
@@ -72,10 +72,10 @@ train_forest <- function(info) {
 #' @importFrom h2o h2o.gbm
 train_gradboost <- function(info) {
   model <- h2o.gbm(
-    y = "MonitorData",
+    y = get_output_var(),
     x = setdiff(
       names(info),
-      c("MonitorData", get_site_var(), get_date_var(), "year")
+      c(get_output_var(), get_site_var(), get_date_var(), "year")
     ),
     training_frame = info,
     nfolds = get_model_param("gradboost", "nfolds"),
@@ -151,7 +151,7 @@ train <- function(init = T, shutdown = F) {
     ## Initial ensemble
     ## Assemble ensemble data frame
     ensemble_data <- data.frame(as.vector(info$MonitorData))
-    names(ensemble_data)[1] <- "MonitorData"
+    names(ensemble_data)[1] <- get_output_var()
     for (model_name in names(trained)) {
       ensemble_data[[model_name]] <-
         as.vector(h2o.predict(trained[[model_name]], info)$predict)
@@ -204,7 +204,7 @@ train <- function(init = T, shutdown = F) {
 
     if (length(names(models)) > 1) {
       ensemble_data <- data.frame(as.vector(info$MonitorData))
-      names(ensemble_data)[1] <- "MonitorData"
+      names(ensemble_data)[1] <- get_output_var()
       for (model_name in names(trained)) {
         ensemble_data[[model_name]] <-
           as.vector(h2o.predict(trained[[model_name]], info)$predict)
@@ -235,7 +235,7 @@ train <- function(init = T, shutdown = F) {
 #'
 #' @return A string with the formula used in the ensemble model
 ensemble_formula <- function(models) {
-  out <- "MonitorData ~ "
+  out <- paste(get_output_var(), "~")
   terms <- character(0)
   for (model in names(models)) {
     terms <- c(terms, paste0("s(", model, ")"))
