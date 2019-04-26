@@ -4,11 +4,12 @@
 #' Train Neural Net
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.deeplearning
-train_nn <- function(info) {
+train_nn <- function(info, model_name) {
   model <- h2o.deeplearning(
     y = get_output_var(),
     x = setdiff(
@@ -27,7 +28,8 @@ train_nn <- function(info) {
     l1 = get_model_param("nn", "l1"),
     distribution = get_model_param("nn", "distribution"),
     reproducible = get_model_param("nn", "reproducible"),
-    standardize = get_model_param("nn", "standardize")
+    standardize = get_model_param("nn", "standardize"),
+    model_id = model_name
   )
 
   return(model)
@@ -36,11 +38,12 @@ train_nn <- function(info) {
 #' Train Random Forest
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.randomForest
-train_forest <- function(info) {
+train_forest <- function(info, model_name) {
   model <- h2o.randomForest(
     y = get_output_var(),
     x = setdiff(
@@ -57,7 +60,8 @@ train_forest <- function(info) {
     nbins = get_model_param("forest", "bins"),
     nbins_cats = get_model_param("forest", "nbins_cats"),
     mtries = get_model_param("forest", "mtries"),
-    sample_rate = get_model_param("forest", "sample_rate")
+    sample_rate = get_model_param("forest", "sample_rate"),
+    model_id = model_name
   )
 
   return(model)
@@ -66,11 +70,12 @@ train_forest <- function(info) {
 #' Train Gradient Boost
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.gbm
-train_gradboost <- function(info) {
+train_gradboost <- function(info, model_name) {
   model <- h2o.gbm(
     y = get_output_var(),
     x = setdiff(
@@ -86,7 +91,8 @@ train_gradboost <- function(info) {
     learn_rate = get_model_param("gradboost", "learn_rate"),
     max_depth = get_model_param("gradboost", "max_depth"),
     sample_rate = get_model_param("gradboost", "sample_rate"),
-    col_sample_rate = get_model_param("gradboost", "col_sample_rate")
+    col_sample_rate = get_model_param("gradboost", "col_sample_rate"),
+    model_id = model_name
   )
 
   return(model)
@@ -133,14 +139,16 @@ train <- function(init = T, shutdown = F) {
     edit_params()
   }
 
+  ensemble_config_check() ## Check if model parameters will work with the ensemble
+
   if (!is.null(models$nn)) {
-    trained$nn <- train_nn(info)
+    trained$nn <- train_nn(info, model_name = "initial_nn")
   }
   if (!is.null(models$forest)) {
-    trained$forest <- train_forest(info)
+    trained$forest <- train_forest(info, model_name = "initial_random_forest")
   }
   if (!is.null(models$gradboost)) {
-    trained$gradboost <- train_gradboost(info)
+    trained$gradboost <- train_gradboost(info, model_name = "initial_gradient_boost")
   }
 
   for (model in names(trained)) {
@@ -189,13 +197,13 @@ train <- function(init = T, shutdown = F) {
 
 
     if (!is.null(models$nn)) {
-      trained$nn <- train_nn(info)
+      trained$nn <- train_nn(info, model_name = "nearby_nn")
     }
     if (!is.null(models$forest)) {
-      trained$forest <- train_forest(info)
+      trained$forest <- train_forest(info, model_name = "nearby_random_forest")
     }
     if (!is.null(models$gradboost)) {
-      trained$gradboost <- train_gradboost(info)
+      trained$gradboost <- train_gradboost(info, model_name = "nearby_gradient_boost")
     }
     for (model in names(trained)) {
       h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
