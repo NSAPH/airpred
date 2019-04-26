@@ -17,17 +17,17 @@ train:
 finalday:
 - 20180101
 csv_path:
-- ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.csv
+- training_input/input.csv
 rds_path:
-- ~/shared_space/ci3_d_airpred/assembled_data/assembled_data.rds
+- training_input/input.rds
 imputation_models:
-- ~/shared_space/ci3_d_airpred/assembled_data/imputation_models
+- mid_process_data/imputation_models
 mid_process_data:
-- ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data
+- mid_process_data
 training_data:
-- ~/shared_space/ci3_d_airpred/assembled_data/mid_process_data/prepped.RDS
+- mid_process_data/prepped.RDS
 training_output:
-- ~/shared_space/ci3_p_airpred/training_output
+- training_output
 monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
 date_var: date
@@ -49,7 +49,7 @@ training_models:
 - gradboost
 two_stage: TRUE
 predict_data:
-- predictions/predict_input.csv
+- predictions/input/predict_input.csv
 predict_mid_process:
 - predictions/mid_process
 predict_output:
