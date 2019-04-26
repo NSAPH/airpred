@@ -4,12 +4,10 @@
 \alias{train_nn}
 \title{Train Neural Net}
 \usage{
-train_nn(info, train_ind)
+train_nn(info)
 }
 \arguments{
 \item{info}{data frame with model data}
-
-\item{train_ind}{vector with randomly selected indicies for use as the training set}
 }
 \value{
 h2o model

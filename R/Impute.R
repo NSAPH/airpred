@@ -31,6 +31,66 @@ get_logit_weights <- function(info, var) {
   return(mle_weight)
 }
 
+
+#' Impute missing values using a H2O Random Forest model
+#'
+#' @param info h2o data frame
+#' @param var String containing the name of the variable to be imputed
+#'
+#' @details This function assumes that the h2o cluster has already been initialized
+#' and that the data has already been loaded to the h2o cluster. To protect against
+#' errors it is not exported.
+#'
+#' H2O's Random Forests interpret missingness in the input as containing information
+#' and therefore the output will have values for all inputs, regardless of the missingness
+#' of the input.
+#'
+#'
+h2o_impute <- function(info, var) {
+
+  covars <- get_impute_formula()
+  impute_model <- h2o.randomForest(y = var,
+                                   x = covars,
+                                   training_frame = info,
+                                   model_id = paste0(var, "_impute"))
+  h2o.saveModel(impute_model,path = file.path(get_impute_location(), var))
+  return(as.vector(h2o.predict(impute_model, info)))
+}
+
+#' Impute all specified variables using h2o
+#'
+#' @param info dataframe containing all variables for training
+#' @param init should the h2o instance be initialized?
+#' Only set as F if the h2o instance has already been initialized.
+#' @param shutdown Should the h2o instance be shutdown after imputation, defaults to T.
+#'
+#' @return a data frame
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' h2o.init()
+#' info <- h2o_impute_all(info, init = F)
+#' }
+h2o_impute_all <- function(info, init = T, shutdown = T) {
+  if (init) {
+    h2o.init()
+  }
+  info_h2o <- as.h2o(info)
+  impute_vars <- get_impute_vars()
+  for (variable in impute_vars){
+    message(paste("Imputing", variable))
+    info[[variable]] <- h2o_impute(info_h2o, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
+  }
+
+  if (shutdown) {
+    h2o.shutdown(prompt = F)
+  }
+
+  return(info)
+}
+
 #' Impute varibles using mixed linear models
 #'
 #' @param info data set
@@ -87,6 +147,60 @@ impute_all <- function(info) {
   }
 
   return(info)
+}
+
+#' Impute missing values using a previously trained H2O Random Forest model
+#'
+#' @param info h2o data frame
+#' @param var String containing the name of the variable to be imputed
+#'
+#' @details This function assumes that the h2o cluster has already been initialized
+#' and that the data has already been loaded to the h2o cluster. To protect against
+#' errors it is not exported.
+#'
+#' H2O's Random Forests interpret missingness in the input as containing information
+#' and therefore the output will have values for all inputs, regardless of the missingness
+#' of the input.
+#'
+#'
+h2o_predict_impute <- function(info, var) {
+  impute_model <- h2o.loadModel(file.path(get_impute_location(),
+                                          var,
+                                          paste0(var, "_impute")))
+  return(as.vector(h2o.predict(impute_model, info)))
+}
+
+#' Impute all specified variables using h2o with previously trained models
+#'
+#' @param info dataframe containing all variables for training
+#' @param init should the h2o instance be initialized?
+#' Only set as F if the h2o instance has already been initialized.
+#' @param shutdown Should the h2o instance be shutdown after imputation, defaults to T.
+#'
+#' @return a data frame
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' h2o.init()
+#' info <- h2o_predict_impute_all(info, init = F)
+#' }
+h2o_predict_impute_all <- function(info, init = T, shutdown = T) {
+  if (init) {
+    h2o.init()
+  }
+
+  info_h2o <- as.h2o(info)
+  impute_vars <- get_impute_vars()
+  for (variable in impute_vars){
+    message(paste("Imputing", variable))
+    info[[variable]] <- h2o_predict_impute(info_h2o, variable)
+    if (all(!is.na(info[[variable]]))) message("Impute Success")
+  }
+
+  if (shutdown) {
+    h2o.shutdown(prompt = F)
+  }
 }
 
 predict_impute <- function(info, var) {
@@ -176,6 +290,23 @@ print_logit_inputs <- function() {
 print_MLE_inputs <- function() {
   lme_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"))
   print(lme_vars)
+}
+
+get_impute_vars <- function() {
+  if (get_impute_var_path() == "default") {
+    impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/impute_vars.yml"))
+  } else {
+    impute_vars <- load_yaml(get_impute_var_path())
+  }
+  return(impute_vars)
+}
+
+get_impute_formula <- function() {
+  if (get_impute_formula_path() == "default") {
+    impute_vars <- load_yaml(paste0(path.package("airpred"),"/yaml_files/lme_formula.yml"))
+  } else {
+    impute_vars <- load_yaml(get_impute_formula_path())
+  }
 }
 
 

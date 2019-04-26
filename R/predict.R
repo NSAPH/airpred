@@ -10,11 +10,11 @@
 #' @importFrom h2o h2o.loadModel
 #' @export
 airpred.predict <- function(prepped = T) {
-
   h2o.init()
 
   if (prepped) {
-    info <- load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
+    info <-
+      load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
   } else {
     info <- load_predict_data()
   }
@@ -28,66 +28,89 @@ airpred.predict <- function(prepped = T) {
   initial_models <- list()
   for (model in names(selected_models)) {
     message(model)
-    model_dir <- file.path(training_output_dir, paste0("initial_", model))
+    model_dir <-
+      file.path(training_output_dir, paste0("initial_", model))
     print(model_dir)
-    initial_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
+    initial_models[[model]] <-
+      h2o.loadModel(file.path(model_dir, list.files(model_dir)))
   }
   message("Models Loaded")
 
-  preensemble <- data.table(start = rep_len(0, nrow(info)))
-  for (model in names(initial_models)) {
-    preensemble[[model]] <- as.vector(h2o.predict(initial_models[[model]], info)$predict)
+  if (length(names(initial_models)) > 1) {
+    preensemble <- data.table(start = rep_len(0, nrow(info)))
+    for (model in names(initial_models)) {
+      preensemble[[model]] <-
+        as.vector(h2o.predict(initial_models[[model]], info)$predict)
+    }
+
+    message("Predictions Generated")
+
+
+    preensemble$start <- NULL
+
+    initial_ensemble <-
+      readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
+
+    initial_prediction <-
+      as.vector(predict(initial_ensemble, newdata = preensemble))
+
+    message("Ensemble Completed")
+  } else {
+    message("Single model, no ensemble")
+    initial_prediction <-
+      as.vector(h2o.predict(initial_models[[1]], info)$predict)
+    message("Predictions Generated")
   }
 
-  message("Predictions Generated")
+  if (get_two_stage()) {
+    ## Should be functionalized longterm, currently done this way to avoid duplicating the dataset in memory
+    nearby <- gen_nearby_terms(initial_prediction, max(info$site))
 
-  preensemble$start <- NULL
-
-  initial_ensemble <- readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
-
-  initial_prediction <- as.vector(predict(initial_ensemble, newdata = preensemble))
-
-  message("Ensemble Completed")
-
-  if(get_two_stage()) {
-  ## Should be functionalized longterm, currently done this way to avoid duplicating the dataset in memory
-  nearby <- gen_nearby_terms(initial_prediction, max(info$site))
-
-  nearby <- as.h2o(nearby)
-  ## Assign values to current dataframe
-  info <- h2o.cbind(info, nearby)
+    nearby <- as.h2o(nearby)
+    ## Assign values to current dataframe
+    info <- h2o.cbind(info, nearby)
 
 
 
-  nearby_models <- list()
-  for (model in names(selected_models)) {
-    model_dir <- file.path(training_output_dir, paste0("nearby_", model))
-    nearby_models[[model]] <- h2o.loadModel(file.path(model_dir, list.files(model_dir)))
-  }
+    nearby_models <- list()
+    for (model in names(selected_models)) {
+      model_dir <-
+        file.path(training_output_dir, paste0("nearby_", model))
+      nearby_models[[model]] <-
+        h2o.loadModel(file.path(model_dir, list.files(model_dir)))
+    }
 
-  for (model in names(nearby_models)) {
-    preensemble[[model]] <- as.vector(h2o.predict(nearby_models[[model]], newdata = info)$predict)
-  }
-  nearby_ensemble <- readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
-  predictions <- predict(nearby_ensemble, newdata = preensemble)
+    if (length(names(nearby_models)) > 1) {
+      for (model in names(nearby_models)) {
+        preensemble[[model]] <-
+          as.vector(h2o.predict(nearby_models[[model]], newdata = info)$predict)
+      }
+      nearby_ensemble <-
+        readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
+      predictions <- predict(nearby_ensemble, newdata = preensemble)
+    } else {
+      predictions <-
+        as.vector(h2o.predict(nearby_models[[1]], info)$predict)
+    }
   } else {
     predictions <- initial_prediction
   }
   message(class(predictions))
 
   message("Writing Predictions!")
-  predictions <- data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
+  predictions <-
+    data.frame(as.vector(info[[get_site_var()]]), as.vector(info[[get_date_var()]]), predictions)
 
   names(predictions) <- c("site", "date", "MonitorData")
 
   message(class(predictions[["MonitorData"]]))
-  saveRDS(predictions, file=file.path(get_predict_output(), "debug.rds"))
+  saveRDS(predictions, file = file.path(get_predict_output(), "debug.rds"))
 
   if (get_normalize()) {
-  predictions <- denormalize_all(predictions)
+    predictions <- denormalize_all(predictions)
   }
   if (get_transform()) {
-  predictions <- detransform_all(predictions)
+    predictions <- detransform_all(predictions)
   }
   saveRDS(predictions, file = file.path(get_predict_output(), "predictions.rds"))
   if (class(predictions[["MonitorData"]]) == "list") {
@@ -112,32 +135,28 @@ airpred.predict <- function(prepped = T) {
 #'
 #' @export
 load_predict_data <- function() {
-
   mid_process_path <- get_predict_mid_process()
   data_path <- get_predict_data()
   info <- load_data(data_path)
 
   if (get_transform()) {
-  message("Transforming Data")
-  info <- transform_all(info, store = F, load = T)
-  saveRDS(info, file = file.path(mid_process_path, "predict_post_transform.rds"))
+    message("Transforming Data")
+    info <- transform_all(info, store = F, load = T)
+    saveRDS(info,
+            file = file.path(mid_process_path, "predict_post_transform.rds"))
   }
 
   if (get_normalize()) {
-
     message("Normalizing Data")
-  info <- normalize_all(info, store = F, load = T)
-  saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
+    info <- normalize_all(info, store = F, load = T)
+    saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
   }
 
   if (get_impute()) {
-  message("Imputing Data")
-  info <- predict_impute_all(info)
+    message("Imputing Data")
+    info <- h2o_predict_impute_all(info)
   }
   saveRDS(info, file = file.path(mid_process_path, "predict_prepped.rds"))
 
   return(info)
 }
-
-
-

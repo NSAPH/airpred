@@ -4,12 +4,10 @@
 \alias{train_gradboost}
 \title{Train Gradient Boost}
 \usage{
-train_gradboost(info, train_ind)
+train_gradboost(info)
 }
 \arguments{
 \item{info}{data frame with model data}
-
-\item{train_ind}{vector with randomly selected indicies for use as the training set}
 }
 \value{
 h2o model
