@@ -27,6 +27,7 @@ Collate:
     'Train.R'
     'Transform.R'
     'data.r'
+    'file_structure.R'
     'gen_weights.R'
     'grid_search.R'
     'model_params.R'
