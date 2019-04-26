@@ -98,6 +98,28 @@ train_gradboost <- function(info, model_name) {
   return(model)
 }
 
+#' Train h2o ensemble model
+#'
+#' @param info h2o data training frame
+#' @param models list of h2o trained models
+#' @param model_name name with which to save the model
+#'
+#' @return
+#'
+#' @examples
+train_ensemble <- function(info, models, model_name) {
+  model <- h2o.stackedEnsemble(y = get_output_var(),
+                               x = setdiff(
+                                 names(info),
+                                 c(get_output_var(), get_site_var(), get_date_var(), "year")
+                               ),
+                               training_frame = info,
+                               model_id = model_name,
+                               base_models = models)
+
+  return(model)
+}
+
 #' Train an h2o model using the generic architecture
 #'
 #' Not currently developed
@@ -158,29 +180,15 @@ train <- function(init = T, shutdown = F) {
   if (length(names(models)) > 1) {
     ## Initial ensemble
     ## Assemble ensemble data frame
-    ensemble_data <- data.frame(as.vector(info$MonitorData))
-    names(ensemble_data)[1] <- get_output_var()
-    for (model_name in names(trained)) {
-      ensemble_data[[model_name]] <-
-        as.vector(h2o.predict(trained[[model_name]], info)$predict)
-    }
-    saveRDS(ensemble_data,
-            file.path(train_out_path, "ensemble1_data.RDS"))
-
-    ## Run Model
-    ensemble <-
-      bam(as.formula(ensemble_formula(trained)),
-          data = ensemble_data,
-          nthreads = detectCores())
-    saveRDS(ensemble,
-            file.path(train_out_path, "initial_ensemble.RDS"))
+    ensemble <- train_ensemble(info, trained, "initial_ensemble")
+    h2o.saveModel(ensemble, path = file.path(train_out_path, "initial_ensemble"))
   }
 
   if (get_two_stage()) {
     if (length(names(models)) == 1) {
       new_vals <- as.vector(h2o.predict(trained[[1]], info)$predict)
     } else{
-      new_vals <- predict(ensemble, ensemble_data)
+      new_vals <- as.vector(h2o.predict(ensemble, info)$predict)
     }
 
     ## use weights to generate nearby terms
@@ -211,23 +219,8 @@ train <- function(init = T, shutdown = F) {
 
 
     if (length(names(models)) > 1) {
-      ensemble_data <- data.frame(as.vector(info$MonitorData))
-      names(ensemble_data)[1] <- get_output_var()
-      for (model_name in names(trained)) {
-        ensemble_data[[model_name]] <-
-          as.vector(h2o.predict(trained[[model_name]], info)$predict)
-      }
-
-      saveRDS(ensemble_data,
-              file.path(train_out_path, "ensemble2_data.RDS"))
-
-      ensemble <-
-        bam(as.formula(ensemble_formula(trained)),
-            data = ensemble_data,
-            nthreads = detectCores())
-      saveRDS(ensemble,
-              file.path(train_out_path, "nearby_ensemble.RDS"))
-      new_vals <- predict(ensemble, ensemble_data)
+      ensemble <- train_ensemble(info, trained, "nearby_ensemble")
+      h2o.saveModel(ensemble, path = file.path(train_out_path, "nearby_ensemble"))
     }
   }
   if (shutdown) {
