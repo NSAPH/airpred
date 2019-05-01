@@ -37,24 +37,8 @@ airpred.predict <- function(prepped = T) {
   message("Models Loaded")
 
   if (length(names(initial_models)) > 1) {
-    preensemble <- data.table(start = rep_len(0, nrow(info)))
-    for (model in names(initial_models)) {
-      preensemble[[model]] <-
-        as.vector(h2o.predict(initial_models[[model]], info)$predict)
-    }
-
-    message("Predictions Generated")
-
-
-    preensemble$start <- NULL
-
-    initial_ensemble <-
-      readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
-
-    initial_prediction <-
-      as.vector(predict(initial_ensemble, newdata = preensemble))
-
-    message("Ensemble Completed")
+    ensemble_model <- h2o.loadModel(list.files(file.path(training_output_dir, "initial_ensemble")))
+    initial_prediction <- as.vector(h2o.predict(ensemble_model, info)$predict)
   } else {
     message("Single model, no ensemble")
     initial_prediction <-
@@ -81,13 +65,8 @@ airpred.predict <- function(prepped = T) {
     }
 
     if (length(names(nearby_models)) > 1) {
-      for (model in names(nearby_models)) {
-        preensemble[[model]] <-
-          as.vector(h2o.predict(nearby_models[[model]], newdata = info)$predict)
-      }
-      nearby_ensemble <-
-        readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
-      predictions <- predict(nearby_ensemble, newdata = preensemble)
+      ensemble_model <- h2o.loadModel(list.files(file.path(training_output_dir, "nearby_ensemble")))
+      predictions <- as.vector(h2o.predict(ensemble_model, info)$predict)
     } else {
       predictions <-
         as.vector(h2o.predict(nearby_models[[1]], info)$predict)
