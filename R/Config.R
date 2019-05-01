@@ -19,20 +19,6 @@
 #' the model to run successfully.
 #'
 #' \itemize{
-#'   \item{\code{monitor}} {The pollution type the data will be trained on}
-#'   \item{\code{data_location}} {The directory holding the required data files}
-#'   \item{\code{input_file_type}} {The extension of the files holding the data matrices}
-#'   \item{\code{data_save_location}} {The directory processed data files
-#'                                     should be saved in}
-#'   \item{\code{use_default_vars}} {Should the default list of files and its file structure be used
-#'                                   when reading the .mat files}
-#'   \item{\code{add_custom_vars}} {Should a custom list of .mat files be looked for. If this is TRUE
-#'                                 and \code{use_default_vars} is FALSE, then only the custom variables
-#'                                 will be used.}
-#'   \item{\code{custom_var_list}} {The location of the .yml file specifying the file structure of
-#'                                 the custom variable files.}
-#'   \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
-#'                        the run is going to be used to create predictions}
 #'   \item{\code{impute}} {A boolean. If TRUE, airpred will generate imputations for
 #'                         specified variables}
 #'   \item{\code{impute_vars}} {Either "default" or a path to a yaml file listing the variables to be
@@ -78,18 +64,9 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
                                     "Config_Default.yml"))
   } else {
     out <- list()
-    out$monitor <- ""
-    out$data_location <- ""
-    out$input_file_type <- ""
-    out$data_save_location <- ""
-    out$use_default_vars <- TRUE
-    out$use_custom_vars <- FALSE
-    out$custom_var_list <- ""
     out$impute <- TRUE
     out$transform <- TRUE
     out$normalize <- TRUE
-    out$train <- TRUE
-    out$finalday <- 20180101
     out$csv_path <- ""
     out$monitor_list <- ""
     out$pre_generated_weights <- FALSE
@@ -122,12 +99,6 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
 
 }
 
-get_final_date <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-  return(ymd(yaml.load_file("config.yml")$finalday))
-}
 
 get_monitor_list <- function() {
   if (!file.exists("config.yml")) {
@@ -136,19 +107,6 @@ get_monitor_list <- function() {
   return(yaml.load_file("config.yml")$monitor_list)
 }
 
-get_data_location <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-  return(yaml.load_file("config.yml")$data_location)
-}
-
-get_save_location <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-  return(yaml.load_file("config.yml")$data_save_location)
-}
 
 get_csv_location <- function() {
   if (!file.exists("config.yml")) {
@@ -210,47 +168,6 @@ get_training_models <- function() {
   }
 
   return(out)
-}
-
-get_use_default_vars <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-
-  return(yaml.load_file("config.yml")$use_default_vars)
-}
-
-get_add_custom_vars <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-
-  return(yaml.load_file("config.yml")$add_custom_vars)
-}
-
-get_custom_vars <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-
-  out <- yaml.load_file("config.yml")$custom_var_list
-
-  if (!file.exists(out)) {
-    stop(sprintf("Provided custom variable list (%s) not found,
-                 check the 'custom_var_list' field of the config file", out))
-  }
-  message("Custom variable list in use. if default variables are also in use,
-          their values will be overwritten if they share a name with a custom variable.
-          Formatting errors in the custom variable list may cause the data prep to fail.")
-  return(out)
-}
-
-get_input_file_type <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-
-  return(yaml.load_file("config.yml")$input_file_type)
 }
 
 get_predict_data <- function() {
