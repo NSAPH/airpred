@@ -1,21 +1,3 @@
-monitor:
-- AQRVPM25
-data_location:
-- ~/shared_space/ci3_d_airpred/processed_data/AQRVPM25
-input_file_type:
-- mat
-use_default_vars:
-- TRUE
-add_custom_vars:
-- FALSE
-custom_var_list:
-- IF add_custom_vars is True, put the file name here.
-data_save_location:
-- ../test_data/process_data
-train:
-- TRUE
-finalday:
-- 20180101
 csv_path:
 - training_input/input.csv
 rds_path:
