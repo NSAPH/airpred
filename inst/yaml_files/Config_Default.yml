@@ -12,7 +12,9 @@ training_output:
 - training_output
 monitor_list:
 - ~/shared_space/ci3_d_airpred/sites/AQRVPM25Site_North_America_Equidistant_Conic.mat
-date_var: date
+date_var:
+- date
+- year
 site_var: site
 output_var: MonitorData
 impute: TRUE
