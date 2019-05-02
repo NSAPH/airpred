@@ -138,7 +138,7 @@ train_generic <- function(model, info) {
 #' @return NULL, but saves the models required to predict.
 #' @export
 #'
-#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind h2o.saveModel
+#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind h2o.saveModel h2o.stackedEnsemble
 #' @importFrom mgcv bam s
 #' @importFrom parallel detectCores
 #'
