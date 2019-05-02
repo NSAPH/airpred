@@ -4,10 +4,12 @@
 \alias{train_forest}
 \title{Train Random Forest}
 \usage{
-train_forest(info)
+train_forest(info, model_name)
 }
 \arguments{
 \item{info}{data frame with model data}
+
+\item{model_name}{name with which to save the model}
 }
 \value{
 h2o model
