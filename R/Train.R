@@ -174,14 +174,14 @@ train <- function(init = T, shutdown = F) {
   }
 
   for (model in names(trained)) {
-    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)))
+    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)), force = T)
   }
 
   if (length(names(models)) > 1) {
     ## Initial ensemble
     ## Assemble ensemble data frame
     ensemble <- train_ensemble(info, trained, "initial_ensemble")
-    h2o.saveModel(ensemble, path = file.path(train_out_path, "initial_ensemble"))
+    h2o.saveModel(ensemble, path = file.path(train_out_path, "initial_ensemble"), force = T)
   }
 
   if (get_two_stage()) {
@@ -214,13 +214,13 @@ train <- function(init = T, shutdown = F) {
       trained$gradboost <- train_gradboost(info, model_name = "nearby_gradient_boost")
     }
     for (model in names(trained)) {
-      h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
+      h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)), force = T)
     }
 
 
     if (length(names(models)) > 1) {
       ensemble <- train_ensemble(info, trained, "nearby_ensemble")
-      h2o.saveModel(ensemble, path = file.path(train_out_path, "nearby_ensemble"))
+      h2o.saveModel(ensemble, path = file.path(train_out_path, "nearby_ensemble"), force = T)
     }
   }
   if (shutdown) {
