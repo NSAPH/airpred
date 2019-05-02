@@ -54,7 +54,7 @@ train_forest <- function(info) {
     keep_cross_validation_predictions = get_model_param("forest", "keep_cross_validation_predictions"),
     ntrees = get_model_param("forest", "ntrees"),
     max_depth = get_model_param("forest", "max_depth"),
-    nbins = get_model_param("forest", "bins"),
+    nbins = get_model_param("forest", "nbins"),
     nbins_cats = get_model_param("forest", "nbins_cats"),
     mtries = get_model_param("forest", "mtries"),
     sample_rate = get_model_param("forest", "sample_rate")
