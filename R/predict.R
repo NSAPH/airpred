@@ -16,7 +16,7 @@ airpred.predict <- function(prepped = T) {
     info <-
       load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
   } else {
-    info <- load_predict_data()
+    info <- load_predict_data(shutdown = F)
   }
   message("Data Loaded")
   message(class(info))
@@ -109,11 +109,15 @@ airpred.predict <- function(prepped = T) {
 
 #' Load and prepare data for prediction
 #'
+#' @param init should an h2o cluster be initialized during
+#'     the imputation process (default = TRUE)
+#' @param shutdown should the h2o cluster used during imputation
+#'     be shutdown after imputation (default = TRUE)
 #' Uses \code{predict_mid_process} and \code{predict_data} from the
 #' configuration file.
 #'
 #' @export
-load_predict_data <- function() {
+load_predict_data <- function(init = T, shutdown = T) {
   mid_process_path <- get_predict_mid_process()
   data_path <- get_predict_data()
   info <- load_data(data_path)
@@ -133,7 +137,7 @@ load_predict_data <- function() {
 
   if (get_impute()) {
     message("Imputing Data")
-    info <- h2o_predict_impute_all(info)
+    info <- h2o_predict_impute_all(info, init = init, shutdown = shutdown)
   }
   saveRDS(info, file = file.path(mid_process_path, "predict_prepped.rds"))
 
