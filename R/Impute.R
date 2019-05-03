@@ -201,6 +201,8 @@ h2o_predict_impute_all <- function(info, init = T, shutdown = T) {
   if (shutdown) {
     h2o.shutdown(prompt = F)
   }
+
+  return(info)
 }
 
 predict_impute <- function(info, var) {
