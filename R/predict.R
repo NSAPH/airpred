@@ -37,7 +37,9 @@ airpred.predict <- function(prepped = T) {
   message("Models Loaded")
 
   if (length(names(initial_models)) > 1) {
-    ensemble_model <- h2o.loadModel(list.files(file.path(training_output_dir, "initial_ensemble")))
+    ensemble_model <- h2o.loadModel(file.path(training_output_dir, "initial_ensemble",
+                                              list.files(file.path(training_output_dir,
+                                                                   "initial_ensemble"))))
     initial_prediction <- as.vector(h2o.predict(ensemble_model, info)$predict)
   } else {
     message("Single model, no ensemble")
@@ -65,7 +67,9 @@ airpred.predict <- function(prepped = T) {
     }
 
     if (length(names(nearby_models)) > 1) {
-      ensemble_model <- h2o.loadModel(list.files(file.path(training_output_dir, "nearby_ensemble")))
+      ensemble_model <- h2o.loadModel(file.path(training_output_dir, "nearby_ensemble",
+                                                list.files(file.path(training_output_dir,
+                                                                     "nearby_ensemble"))))
       predictions <- as.vector(h2o.predict(ensemble_model, info)$predict)
     } else {
       predictions <-
