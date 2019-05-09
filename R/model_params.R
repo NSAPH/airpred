@@ -122,6 +122,35 @@ param_config_check <- function(path = ".") {
   return(TRUE)
 }
 
+#' Check that the model parameters allow for the h2o ensemble to run
+#'
+#' @return
+#' @export
+#'
+ensemble_config_check <- function() {
+  models <- get_training_models()
+  if (length(names(models)) == 1) {
+    return(TRUE)
+  } else {
+    for (model in names(models)) {
+      if (get_model_param(model, "nfolds") <= 1) {
+        stop("Multiple models selected, nfolds for ", model,
+             " must be greater than 1 for ensemble to run.")
+      }
+      if (!get_model_param(model, "keep_cross_validation_predictions")) {
+        stop("Multiple models selected, keep_cross_validation_predictions for ", model,
+             " must be TRUE for ensemble to run.")
+      }
+      if (get_model_param(model, "fold_assignment") != "Modulo") {
+        stop("Multiple models selected, fold_assignment for ", model,
+             " must be 'Modulo' for ensemble to run.")
+      }
+    }
+  }
+
+  return(TRUE)
+}
+
 #' Remove model config file from current directory
 #'
 #' @export

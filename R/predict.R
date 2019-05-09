@@ -16,7 +16,7 @@ airpred.predict <- function(prepped = T) {
     info <-
       load_data(file.path(get_predict_mid_process(), "predict_prepped.rds"))
   } else {
-    info <- load_predict_data()
+    info <- load_predict_data(shutdown = F)
   }
   message("Data Loaded")
   message(class(info))
@@ -37,24 +37,10 @@ airpred.predict <- function(prepped = T) {
   message("Models Loaded")
 
   if (length(names(initial_models)) > 1) {
-    preensemble <- data.table(start = rep_len(0, nrow(info)))
-    for (model in names(initial_models)) {
-      preensemble[[model]] <-
-        as.vector(h2o.predict(initial_models[[model]], info)$predict)
-    }
-
-    message("Predictions Generated")
-
-
-    preensemble$start <- NULL
-
-    initial_ensemble <-
-      readRDS(file.path(training_output_dir, "initial_ensemble.RDS"))
-
-    initial_prediction <-
-      as.vector(predict(initial_ensemble, newdata = preensemble))
-
-    message("Ensemble Completed")
+    ensemble_model <- h2o.loadModel(file.path(training_output_dir, "initial_ensemble",
+                                              list.files(file.path(training_output_dir,
+                                                                   "initial_ensemble"))))
+    initial_prediction <- as.vector(h2o.predict(ensemble_model, info)$predict)
   } else {
     message("Single model, no ensemble")
     initial_prediction <-
@@ -81,13 +67,10 @@ airpred.predict <- function(prepped = T) {
     }
 
     if (length(names(nearby_models)) > 1) {
-      for (model in names(nearby_models)) {
-        preensemble[[model]] <-
-          as.vector(h2o.predict(nearby_models[[model]], newdata = info)$predict)
-      }
-      nearby_ensemble <-
-        readRDS(file.path(training_output_dir, "nearby_ensemble.RDS"))
-      predictions <- predict(nearby_ensemble, newdata = preensemble)
+      ensemble_model <- h2o.loadModel(file.path(training_output_dir, "nearby_ensemble",
+                                                list.files(file.path(training_output_dir,
+                                                                     "nearby_ensemble"))))
+      predictions <- as.vector(h2o.predict(ensemble_model, info)$predict)
     } else {
       predictions <-
         as.vector(h2o.predict(nearby_models[[1]], info)$predict)
@@ -130,11 +113,15 @@ airpred.predict <- function(prepped = T) {
 
 #' Load and prepare data for prediction
 #'
+#' @param init should an h2o cluster be initialized during
+#'     the imputation process (default = TRUE)
+#' @param shutdown should the h2o cluster used during imputation
+#'     be shutdown after imputation (default = TRUE)
 #' Uses \code{predict_mid_process} and \code{predict_data} from the
 #' configuration file.
 #'
 #' @export
-load_predict_data <- function() {
+load_predict_data <- function(init = T, shutdown = T) {
   mid_process_path <- get_predict_mid_process()
   data_path <- get_predict_data()
   info <- load_data(data_path)
@@ -154,7 +141,7 @@ load_predict_data <- function() {
 
   if (get_impute()) {
     message("Imputing Data")
-    info <- h2o_predict_impute_all(info)
+    info <- h2o_predict_impute_all(info, init = init, shutdown = shutdown)
   }
   saveRDS(info, file = file.path(mid_process_path, "predict_prepped.rds"))
 

@@ -53,7 +53,7 @@ h2o_impute <- function(info, var) {
                                    x = covars,
                                    training_frame = info,
                                    model_id = paste0(var, "_impute"))
-  h2o.saveModel(impute_model,path = file.path(get_impute_location(), var))
+  h2o.saveModel(impute_model,path = file.path(get_impute_location(), var), force = T)
   return(as.vector(h2o.predict(impute_model, info)))
 }
 
@@ -201,6 +201,8 @@ h2o_predict_impute_all <- function(info, init = T, shutdown = T) {
   if (shutdown) {
     h2o.shutdown(prompt = F)
   }
+
+  return(info)
 }
 
 predict_impute <- function(info, var) {

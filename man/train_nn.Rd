@@ -4,10 +4,12 @@
 \alias{train_nn}
 \title{Train Neural Net}
 \usage{
-train_nn(info)
+train_nn(info, model_name)
 }
 \arguments{
 \item{info}{data frame with model data}
+
+\item{model_name}{name with which to save the model}
 }
 \value{
 h2o model
