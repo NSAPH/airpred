@@ -29,7 +29,7 @@ training_models:
 - nn
 - forest
 - gradboost
-two_stage: TRUE
+two_stage: FALSE
 predict_data:
 - predictions/input/predict_input.csv
 predict_mid_process:

@@ -4,10 +4,12 @@
 \alias{train_gradboost}
 \title{Train Gradient Boost}
 \usage{
-train_gradboost(info)
+train_gradboost(info, model_name)
 }
 \arguments{
 \item{info}{data frame with model data}
+
+\item{model_name}{name with which to save the model}
 }
 \value{
 h2o model

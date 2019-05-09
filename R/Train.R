@@ -4,11 +4,12 @@
 #' Train Neural Net
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.deeplearning
-train_nn <- function(info) {
+train_nn <- function(info, model_name) {
   model <- h2o.deeplearning(
     y = get_output_var(),
     x = setdiff(
@@ -27,7 +28,8 @@ train_nn <- function(info) {
     l1 = get_model_param("nn", "l1"),
     distribution = get_model_param("nn", "distribution"),
     reproducible = get_model_param("nn", "reproducible"),
-    standardize = get_model_param("nn", "standardize")
+    standardize = get_model_param("nn", "standardize"),
+    model_id = model_name
   )
 
   return(model)
@@ -36,11 +38,12 @@ train_nn <- function(info) {
 #' Train Random Forest
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.randomForest
-train_forest <- function(info) {
+train_forest <- function(info, model_name) {
   model <- h2o.randomForest(
     y = get_output_var(),
     x = setdiff(
@@ -57,7 +60,8 @@ train_forest <- function(info) {
     nbins = get_model_param("forest", "nbins"),
     nbins_cats = get_model_param("forest", "nbins_cats"),
     mtries = get_model_param("forest", "mtries"),
-    sample_rate = get_model_param("forest", "sample_rate")
+    sample_rate = get_model_param("forest", "sample_rate"),
+    model_id = model_name
   )
 
   return(model)
@@ -66,11 +70,12 @@ train_forest <- function(info) {
 #' Train Gradient Boost
 #'
 #' @param info data frame with model data
+#' @param model_name name with which to save the model
 #'
 #' @return h2o model
 #'
 #' @importFrom h2o h2o.gbm
-train_gradboost <- function(info) {
+train_gradboost <- function(info, model_name) {
   model <- h2o.gbm(
     y = get_output_var(),
     x = setdiff(
@@ -86,8 +91,31 @@ train_gradboost <- function(info) {
     learn_rate = get_model_param("gradboost", "learn_rate"),
     max_depth = get_model_param("gradboost", "max_depth"),
     sample_rate = get_model_param("gradboost", "sample_rate"),
-    col_sample_rate = get_model_param("gradboost", "col_sample_rate")
+    col_sample_rate = get_model_param("gradboost", "col_sample_rate"),
+    model_id = model_name
   )
+
+  return(model)
+}
+
+#' Train h2o ensemble model
+#'
+#' @param info h2o data training frame
+#' @param models list of h2o trained models
+#' @param model_name name with which to save the model
+#'
+#' @return
+#'
+#' @examples
+train_ensemble <- function(info, models, model_name) {
+  model <- h2o.stackedEnsemble(y = get_output_var(),
+                               x = setdiff(
+                                 names(info),
+                                 c(get_output_var(), get_site_var(), get_date_var(), "year")
+                               ),
+                               training_frame = info,
+                               model_id = model_name,
+                               base_models = models)
 
   return(model)
 }
@@ -110,7 +138,7 @@ train_generic <- function(model, info) {
 #' @return NULL, but saves the models required to predict.
 #' @export
 #'
-#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind h2o.saveModel
+#' @importFrom h2o h2o.init as.h2o h2o.shutdown h2o.predict h2o.cbind h2o.saveModel h2o.stackedEnsemble
 #' @importFrom mgcv bam s
 #' @importFrom parallel detectCores
 #'
@@ -133,46 +161,34 @@ train <- function(init = T, shutdown = F) {
     edit_params()
   }
 
+  ensemble_config_check() ## Check if model parameters will work with the ensemble
+
   if (!is.null(models$nn)) {
-    trained$nn <- train_nn(info)
+    trained$nn <- train_nn(info, model_name = "initial_nn")
   }
   if (!is.null(models$forest)) {
-    trained$forest <- train_forest(info)
+    trained$forest <- train_forest(info, model_name = "initial_random_forest")
   }
   if (!is.null(models$gradboost)) {
-    trained$gradboost <- train_gradboost(info)
+    trained$gradboost <- train_gradboost(info, model_name = "initial_gradient_boost")
   }
 
   for (model in names(trained)) {
-    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)))
+    h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("initial_", model)), force = T)
   }
 
   if (length(names(models)) > 1) {
     ## Initial ensemble
     ## Assemble ensemble data frame
-    ensemble_data <- data.frame(as.vector(info$MonitorData))
-    names(ensemble_data)[1] <- get_output_var()
-    for (model_name in names(trained)) {
-      ensemble_data[[model_name]] <-
-        as.vector(h2o.predict(trained[[model_name]], info)$predict)
-    }
-    saveRDS(ensemble_data,
-            file.path(train_out_path, "ensemble1_data.RDS"))
-
-    ## Run Model
-    ensemble <-
-      bam(as.formula(ensemble_formula(trained)),
-          data = ensemble_data,
-          nthreads = detectCores())
-    saveRDS(ensemble,
-            file.path(train_out_path, "initial_ensemble.RDS"))
+    ensemble <- train_ensemble(info, trained, "initial_ensemble")
+    h2o.saveModel(ensemble, path = file.path(train_out_path, "initial_ensemble"), force = T)
   }
 
   if (get_two_stage()) {
     if (length(names(models)) == 1) {
       new_vals <- as.vector(h2o.predict(trained[[1]], info)$predict)
     } else{
-      new_vals <- predict(ensemble, ensemble_data)
+      new_vals <- as.vector(h2o.predict(ensemble, info)$predict)
     }
 
     ## use weights to generate nearby terms
@@ -189,37 +205,22 @@ train <- function(init = T, shutdown = F) {
 
 
     if (!is.null(models$nn)) {
-      trained$nn <- train_nn(info)
+      trained$nn <- train_nn(info, model_name = "nearby_nn")
     }
     if (!is.null(models$forest)) {
-      trained$forest <- train_forest(info)
+      trained$forest <- train_forest(info, model_name = "nearby_random_forest")
     }
     if (!is.null(models$gradboost)) {
-      trained$gradboost <- train_gradboost(info)
+      trained$gradboost <- train_gradboost(info, model_name = "nearby_gradient_boost")
     }
     for (model in names(trained)) {
-      h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)))
+      h2o.saveModel(trained[[model]], path = file.path(train_out_path, paste0("nearby_", model)), force = T)
     }
 
 
     if (length(names(models)) > 1) {
-      ensemble_data <- data.frame(as.vector(info$MonitorData))
-      names(ensemble_data)[1] <- get_output_var()
-      for (model_name in names(trained)) {
-        ensemble_data[[model_name]] <-
-          as.vector(h2o.predict(trained[[model_name]], info)$predict)
-      }
-
-      saveRDS(ensemble_data,
-              file.path(train_out_path, "ensemble2_data.RDS"))
-
-      ensemble <-
-        bam(as.formula(ensemble_formula(trained)),
-            data = ensemble_data,
-            nthreads = detectCores())
-      saveRDS(ensemble,
-              file.path(train_out_path, "nearby_ensemble.RDS"))
-      new_vals <- predict(ensemble, ensemble_data)
+      ensemble <- train_ensemble(info, trained, "nearby_ensemble")
+      h2o.saveModel(ensemble, path = file.path(train_out_path, "nearby_ensemble"), force = T)
     }
   }
   if (shutdown) {
