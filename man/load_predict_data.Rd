@@ -4,9 +4,17 @@
 \alias{load_predict_data}
 \title{Load and prepare data for prediction}
 \usage{
-load_predict_data()
+load_predict_data(init = T, shutdown = T)
+}
+\arguments{
+\item{init}{should an h2o cluster be initialized during
+the imputation process (default = TRUE)}
+
+\item{shutdown}{should the h2o cluster used during imputation
+    be shutdown after imputation (default = TRUE)
+Uses \code{predict_mid_process} and \code{predict_data} from the
+configuration file.}
 }
 \description{
-Uses \code{predict_mid_process} and \code{predict_data} from the
-configuration file.
+Load and prepare data for prediction
 }

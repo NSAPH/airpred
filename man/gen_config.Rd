@@ -37,10 +37,8 @@ the model to run successfully.
                              used as inputs to the imputation model. If a custom file is being used, the top level of the
                              yaml file should be "base" or the name of a variable being imputed with the elements being the
                              names of the variables being used for imputation.}
-  \item{\code{transform}} {A boolean. If TRUE, airpred will perform transformations on
+  \item{\code{standardize}} {A boolean. If TRUE, airpred will perform Z score standardization on
                         specified variables}
-  \item{\code{normalize}} {{A boolean. If TRUE, airpred will perform normalizations
-                        on all variables}}
   \item{\code{finalday}} {The date of the last day covered by the data set}
   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
