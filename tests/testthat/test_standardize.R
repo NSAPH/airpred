@@ -16,6 +16,6 @@ test_that("Check normalization, denormalization",{
   normal.data <- destandardize_all(std.data)
   clean_up_stats()
   clean_up_config()
-  expect_equivalent(std.data, test.data)
+  expect_equivalent(normal.data, test.data[1:3])
 })
 

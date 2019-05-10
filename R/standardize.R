@@ -65,7 +65,7 @@ standardize_all <- function(info, store = TRUE, load = FALSE) {
     info[[var]] <-
       sapply(info[[var]], standardize, the_mean = stats[[var]][1],
              stddev = stats[[var]][2])
-    if (is.null(norm.terms[[var]])) {
+    if (is.null(stats[[var]])) {
       info[[var]] <- NULL
     }
   }
@@ -92,13 +92,16 @@ destandardize_all <- function(info, store = FALSE, load = TRUE) {
     info[[var]] <-
       sapply(info[[var]], destandardize, the_mean = stats[[var]][1],
              stddev = stats[[var]][2])
-    if (is.null(norm.terms[[var]])) {
+    if (is.null(stats[[var]])) {
       info[[var]] <- NULL
     }
   }
   return(info)
 }
 
+#' Remove Statistic file
+#'
+#' @export
 clean_up_stats <- function(path=".") {
   file.remove(file.path(path, "standardize_terms.csv"))
 }

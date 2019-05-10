@@ -20,8 +20,7 @@ output_var: MonitorData
 impute: TRUE
 impute_vars: default
 impute_formula: default
-normalize: TRUE
-transform: TRUE
+standardize: TRUE
 pre_generated_weights: FALSE
 weight_matrix_paths:
 - path_1

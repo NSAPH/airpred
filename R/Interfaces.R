@@ -14,10 +14,10 @@ get_csv_data <- function() {
   csv_path <- get_csv_location()
   save_path <- get_mid_process_location()
   data <- fread(csv_path)
-  if (get_transform()) {
-  message("Standardizing Data")
-  data <- transform_all(data)
-  saveRDS(data, file.path(save_path,"post_transform.RDS"))
+  if (get_standardize()) {
+    message("Standardizing Data")
+    data <- standardize_all(data)
+    saveRDS(data, file.path(save_path,"standardized.RDS"))
   }
 
   if (get_impute()) {
@@ -38,14 +38,14 @@ get_rds_data <- function() {
   rds_path <- get_rds_location()
   save_path <- get_mid_process_location()
   data <- readRDS(rds_path)
-  if (get_transform()) {
-  print("Standardizing Data")
-  data <- transform_all(data)
-  saveRDS(data, file.path(save_path,"post_transform.RDS"))
+  if (get_standardize()) {
+    print("Standardizing Data")
+    data <- standardize_all(data)
+    saveRDS(data, file.path(save_path,"standardized.RDS"))
   }
   if (get_impute()) {
-  print("Imputing Data")
-  data <- h2o_impute_all(data)
+    print("Imputing Data")
+    data <- h2o_impute_all(data)
   }
   saveRDS(data, file.path(save_path,"prepped.RDS"))
   return(data)

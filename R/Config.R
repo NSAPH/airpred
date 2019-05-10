@@ -29,10 +29,8 @@
 #'                              used as inputs to the imputation model. If a custom file is being used, the top level of the
 #'                              yaml file should be "base" or the name of a variable being imputed with the elements being the
 #'                              names of the variables being used for imputation.}
-#'   \item{\code{transform}} {A boolean. If TRUE, airpred will perform transformations on
+#'   \item{\code{standardize}} {A boolean. If TRUE, airpred will perform Z score standardization on
 #'                         specified variables}
-#'   \item{\code{normalize}} {{A boolean. If TRUE, airpred will perform normalizations
-#'                         on all variables}}
 #'   \item{\code{finalday}} {The date of the last day covered by the data set}
 #'   \item{\code{csv_path}} {The path where the assembled data is stored as a csv}
 #'   \item{\code{rds_path}} {The path where the assembled data is stored as an rds file}
@@ -65,8 +63,7 @@ gen_config <- function(default = TRUE, path = ".", in_list = NULL) {
   } else {
     out <- list()
     out$impute <- TRUE
-    out$transform <- TRUE
-    out$normalize <- TRUE
+    out$standardize <- TRUE
     out$csv_path <- ""
     out$monitor_list <- ""
     out$pre_generated_weights <- FALSE
@@ -210,20 +207,12 @@ get_impute <- function() {
   return(yaml.load_file("config.yml")$impute)
 }
 
-get_transform <- function() {
+get_standardize <- function() {
   if (!file.exists("config.yml")) {
     stop("No config file found, try running gen_config()")
   }
 
-  return(yaml.load_file("config.yml")$transform)
-}
-
-get_normalize <- function() {
-  if (!file.exists("config.yml")) {
-    stop("No config file found, try running gen_config()")
-  }
-
-  return(yaml.load_file("config.yml")$normalize)
+  return(yaml.load_file("config.yml")$standardize)
 }
 
 get_date_var <- function() {
