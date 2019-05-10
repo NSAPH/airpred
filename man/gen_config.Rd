@@ -27,20 +27,6 @@ The following are the items contained in the config file. All of them must be pr
 the model to run successfully.
 
 \itemize{
-  \item{\code{monitor}} {The pollution type the data will be trained on}
-  \item{\code{data_location}} {The directory holding the required data files}
-  \item{\code{input_file_type}} {The extension of the files holding the data matrices}
-  \item{\code{data_save_location}} {The directory processed data files
-                                    should be saved in}
-  \item{\code{use_default_vars}} {Should the default list of files and its file structure be used
-                                  when reading the .mat files}
-  \item{\code{add_custom_vars}} {Should a custom list of .mat files be looked for. If this is TRUE
-                                and \code{use_default_vars} is FALSE, then only the custom variables
-                                will be used.}
-  \item{\code{custom_var_list}} {The location of the .yml file specifying the file structure of
-                                the custom variable files.}
-  \item{\code{train}} {A boolean. If TRUE, the model run is a training run. If false,
-                       the run is going to be used to create predictions}
   \item{\code{impute}} {A boolean. If TRUE, airpred will generate imputations for
                         specified variables}
   \item{\code{impute_vars}} {Either "default" or a path to a yaml file listing the variables to be

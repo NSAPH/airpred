@@ -126,19 +126,12 @@ load_predict_data <- function(init = T, shutdown = T) {
   data_path <- get_predict_data()
   info <- load_data(data_path)
 
-  if (get_transform()) {
-    message("Transforming Data")
-    info <- transform_all(info, store = F, load = T)
+  if (get_standardize()) {
+    message("Standardizing Data")
+    info <- standardize_all(info, store = F, load = T)
     saveRDS(info,
-            file = file.path(mid_process_path, "predict_post_transform.rds"))
+            file = file.path(mid_process_path, "predict_standardized.rds"))
   }
-
-  if (get_normalize()) {
-    message("Normalizing Data")
-    info <- normalize_all(info, store = F, load = T)
-    saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
-  }
-
   if (get_impute()) {
     message("Imputing Data")
     info <- h2o_predict_impute_all(info, init = init, shutdown = shutdown)
