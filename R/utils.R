@@ -60,6 +60,7 @@ implemented_models <- function() {
 #' Load a data.frame like object stored as a csv or rds file. Passing any other
 #' data type will return an error.
 #'
+#' @importFrom tools file_ext
 #' @export
 load_data <- function(path) {
   if (file_ext(path) == "csv") {

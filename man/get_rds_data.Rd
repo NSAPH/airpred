@@ -4,7 +4,12 @@
 \alias{get_rds_data}
 \title{Generate training data from RDS}
 \usage{
-get_rds_data()
+get_rds_data(init = T, shutdown = T)
+}
+\arguments{
+\item{init}{should a h2o cluster be initialized during the imputation step}
+
+\item{shutdown}{should the imputation h2o cluster be shut down after imputation}
 }
 \value{
 data frame

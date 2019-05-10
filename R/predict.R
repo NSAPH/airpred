@@ -89,12 +89,10 @@ airpred.predict <- function(prepped = T) {
   message(class(predictions[["MonitorData"]]))
   saveRDS(predictions, file = file.path(get_predict_output(), "debug.rds"))
 
-  if (get_normalize()) {
-    predictions <- denormalize_all(predictions)
+  if (get_standardize()) {
+    predictions <- destandardize_all(predictions)
   }
-  if (get_transform()) {
-    predictions <- detransform_all(predictions)
-  }
+
   saveRDS(predictions, file = file.path(get_predict_output(), "predictions.rds"))
   if (class(predictions[["MonitorData"]]) == "list") {
     stop("Error in predictions, output as list")
@@ -126,19 +124,12 @@ load_predict_data <- function(init = T, shutdown = T) {
   data_path <- get_predict_data()
   info <- load_data(data_path)
 
-  if (get_transform()) {
-    message("Transforming Data")
-    info <- transform_all(info, store = F, load = T)
+  if (get_standardize()) {
+    message("Standardizing Data")
+    info <- standardize_all(info, store = F, load = T)
     saveRDS(info,
-            file = file.path(mid_process_path, "predict_post_transform.rds"))
+            file = file.path(mid_process_path, "predict_standardized.rds"))
   }
-
-  if (get_normalize()) {
-    message("Normalizing Data")
-    info <- normalize_all(info, store = F, load = T)
-    saveRDS(info, file = file.path(mid_process_path, "predict_post_normal.rds"))
-  }
-
   if (get_impute()) {
     message("Imputing Data")
     info <- h2o_predict_impute_all(info, init = init, shutdown = shutdown)
