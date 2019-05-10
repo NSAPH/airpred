@@ -89,12 +89,10 @@ airpred.predict <- function(prepped = T) {
   message(class(predictions[["MonitorData"]]))
   saveRDS(predictions, file = file.path(get_predict_output(), "debug.rds"))
 
-  if (get_normalize()) {
-    predictions <- denormalize_all(predictions)
+  if (get_standardize()) {
+    predictions <- destandardize_all(predictions)
   }
-  if (get_transform()) {
-    predictions <- detransform_all(predictions)
-  }
+
   saveRDS(predictions, file = file.path(get_predict_output(), "predictions.rds"))
   if (class(predictions[["MonitorData"]]) == "list") {
     stop("Error in predictions, output as list")
