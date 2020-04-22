@@ -23,3 +23,12 @@
 #'
 #'
 "airpred_assembled"
+
+#' WGS84 Lat and Lon locations of the PM2.5 monitors
+#'
+#' Locations of all the PM2.5 monitors, can be linked using the site number variable
+#'
+#' @format 2156 observations and 3 variables.
+#'
+#'
+"airpred_monitor_locations"
